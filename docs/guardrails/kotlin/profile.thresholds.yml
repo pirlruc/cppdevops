@@ -1,0 +1,6 @@
+statement_coverage: 95
+branch_coverage: 95
+doc_coverage: 95
+max_cyclomatic_complexity: 10
+min_maintainability_index: 40
+pr_size_soft_limit_lines: 500
