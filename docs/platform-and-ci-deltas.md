@@ -36,6 +36,8 @@ See `docs/guardrails/cpp/profile.thresholds.yml`: statement/branch/doc coverage 
 - Standalone repo layout: `CMakeLists.txt`, `CMakePresets.json`, `.devcontainer/`, `docs/{ai-agent-handoff,improvements}.md`, `docs/guardrails/` + `.github/scaffold/` submodules.
 - CI callers: prefer `pirlruc/cppdevops/.github/workflows/*.yml@<sha>` (`CI-018`).
 - Mobile matrix: `cpp-mobile-matrix.yml` where required (`CI-014`).
+- Dynamic analysis: libraries ship CMake preset `ci-asan`; `cpp-dynamic.yml` configures via `cmake --preset ci-asan` (`CPP-DYN-001`).
+- SBOM / vuln scans (`CPP-SEC-003`): `cpp-security.yml` input `run_sbom` defaults to `false`. Set `run_sbom: true` on merge/release (or a dedicated release workflow), not on every PR/Quality dispatch.
 
 ## External dependency policy (shared)
 

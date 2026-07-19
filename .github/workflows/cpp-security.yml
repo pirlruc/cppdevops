@@ -10,6 +10,11 @@ on:
         required: false
         type: boolean
         default: false
+      run_sbom:
+        description: Run Syft/Grype/Trivy (org default CPP-SEC-003 — merge/release only)
+        required: false
+        type: boolean
+        default: false
 
 env:
   ADVISORY: ${{ inputs.blocking == false }}
@@ -45,6 +50,7 @@ jobs:
           fi
 
   sbom:
+    if: inputs.run_sbom
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:

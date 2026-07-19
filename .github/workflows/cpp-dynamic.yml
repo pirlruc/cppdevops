@@ -35,15 +35,13 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ninja-build clang libc++-dev libc++abi-dev
 
-      - name: Configure ASan/UBSan
+      - name: Configure ASan/UBSan (ci-asan preset)
         continue-on-error: ${{ env.ADVISORY == 'true' }}
         working-directory: ${{ inputs.library_path }}
         run: |
-          cmake -B build-asan -G Ninja \
-            -DCMAKE_CXX_COMPILER=clang++ \
-            -DCMAKE_BUILD_TYPE=Debug \
-            -DIMPROC_WITH_TESTS=ON \
-            -DCMAKE_CXX_FLAGS="-stdlib=libc++ -fsanitize=address,undefined -fno-omit-frame-pointer"
+          # Org expectation CPP-DYN-001: use library CMakePresets.json `ci-asan`
+          cmake --preset ci-asan
+          # Build full tree (build preset may target only the library)
           cmake --build build-asan -j
 
       - name: Test under ASan/UBSan

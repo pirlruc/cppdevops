@@ -32,7 +32,8 @@ Backlog for the reusable CI workflows repository.
 
 ## Guardrails / methodology compliance
 
-- Pins: `docs/guardrails` @ `06bf913`, `.github/scaffold` @ `11f4393` (synced templates).
+- Pins: `docs/guardrails` @ `256f707`, `.github/scaffold` @ `11f4393` (synced templates).
+- Delta compliance (06bf913 → 256f707): `cpp-dynamic.yml` uses `cmake --preset ci-asan` (`CPP-DYN-001`); `cpp-security.yml` gates Syft/Grype/Trivy behind `run_sbom` (default false, merge/release) (`CPP-SEC-003`); dual SAST + Metrix++ + CI-023 infra lint already wired.
 - Cite stable Guardrail IDs (`CI-*`) in new Epics/deviations.
 - C++ library layout gates (`CPP-BUILD-*` CMake/vcpkg/devcontainer) are **N/A** for this infra repo; quality profile still applies to scripts/workflows where relevant.
 - Thresholds: read from pinned `docs/guardrails/`, do not duplicate org defaults locally.
