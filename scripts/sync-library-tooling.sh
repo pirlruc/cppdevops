@@ -24,7 +24,7 @@ LIB_BASENAME="$(basename "$LIB")"
 resolve_cmake_target() {
   case "$1" in
     draupnir-cpp|drawer) echo "improc-drawer" ;;
-    runa-cpp) echo "traits" ;;
+    runa-cpp) echo "runa" ;;
     mjolnir-cpp) echo "patterns" ;;
     bor-cpp) echo "core" ;;
     mimir-cpp) echo "logging" ;;
@@ -69,9 +69,10 @@ if [[ -f "$TEMPLATE/codeql/codeql-config.yml" ]]; then
 fi
 
 mkdir -p "$LIB/.github/workflows"
+CPPDEVOPS_REF="${CPPDEVOPS_WORKFLOW_REF:-$(git -C "$CPPDEVOPS_ROOT" rev-parse HEAD 2>/dev/null || echo main)}"
 if [[ "$STANDALONE" == "1" ]]; then
   # Quota mode: manual workflow_dispatch only (CI-TRIGGER-001)
-  cat > "$LIB/.github/workflows/ci-quality.yml" <<'EOF'
+  cat > "$LIB/.github/workflows/ci-quality.yml" <<EOF
 name: Quality
 
 on:
@@ -88,39 +89,40 @@ on:
 
 jobs:
   quality:
-    uses: pirlruc/cppdevops/.github/workflows/cpp-quality.yml@main
+    uses: pirlruc/cppdevops/.github/workflows/cpp-quality.yml@${CPPDEVOPS_REF}
     with:
       library_path: .
-      blocking: ${{ inputs.blocking }}
+      blocking: \${{ inputs.blocking }}
   tests:
-    uses: pirlruc/cppdevops/.github/workflows/cpp-tests.yml@main
+    uses: pirlruc/cppdevops/.github/workflows/cpp-tests.yml@${CPPDEVOPS_REF}
     with:
       library_path: .
-      blocking: ${{ inputs.blocking }}
+      blocking: \${{ inputs.blocking }}
   docs:
-    uses: pirlruc/cppdevops/.github/workflows/cpp-docs.yml@main
+    uses: pirlruc/cppdevops/.github/workflows/cpp-docs.yml@${CPPDEVOPS_REF}
     with:
       library_path: .
-      blocking: ${{ inputs.blocking }}
+      blocking: \${{ inputs.blocking }}
   security:
-    uses: pirlruc/cppdevops/.github/workflows/cpp-security.yml@main
+    uses: pirlruc/cppdevops/.github/workflows/cpp-security.yml@${CPPDEVOPS_REF}
     with:
       library_path: .
-      blocking: ${{ inputs.blocking }}
+      blocking: \${{ inputs.blocking }}
+      run_sbom: true
   codeql:
-    uses: pirlruc/cppdevops/.github/workflows/cpp-codeql.yml@main
+    uses: pirlruc/cppdevops/.github/workflows/cpp-codeql.yml@${CPPDEVOPS_REF}
     with:
       library_path: .
-      blocking: ${{ inputs.blocking }}
+      blocking: \${{ inputs.blocking }}
   dynamic:
-    uses: pirlruc/cppdevops/.github/workflows/cpp-dynamic.yml@main
+    uses: pirlruc/cppdevops/.github/workflows/cpp-dynamic.yml@${CPPDEVOPS_REF}
     with:
       library_path: .
-      blocking: ${{ inputs.blocking }}
+      blocking: \${{ inputs.blocking }}
 EOF
   mkdir -p "$LIB/cmake"
-  if [[ ! -f "$LIB/cmake/improc_library.cmake" ]]; then
-    cp "$CPPDEVOPS_ROOT/templates/cmake/improc_library.cmake" "$LIB/cmake/improc_library.cmake"
+  if [[ ! -f "$LIB/cmake/pirlruc_library.cmake" ]]; then
+    cp "$CPPDEVOPS_ROOT/templates/cmake/pirlruc_library.cmake" "$LIB/cmake/pirlruc_library.cmake"
   fi
   bash "$CPPDEVOPS_ROOT/scripts/sync-library-devcontainer.sh" "$LIB" "$CMAKE_TARGET" "$LIB_BASENAME"
 else

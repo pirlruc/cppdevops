@@ -1,17 +1,18 @@
-# Shared CMake helpers for image_proc libraries (OpenCV-style layout).
+# Shared CMake helpers for pirlruc C++ libraries (OpenCV-style layout).
+# Canonical source for sync into standalone library repos.
 
-macro(improc_library_defaults LIB_NAME)
-  if(NOT DEFINED IMPROC_SUPERPROJECT_VERSION)
-    set(IMPROC_SUPERPROJECT_VERSION 1.0.0)
+macro(pirlruc_library_defaults LIB_NAME)
+  if(NOT DEFINED PIRLRUC_SUPERPROJECT_VERSION)
+    set(PIRLRUC_SUPERPROJECT_VERSION 1.0.0)
   endif()
-  if(IMPROC_WITH_TESTS OR IMPROC_WITH_COVERAGE)
+  if(PIRLRUC_WITH_TESTS OR PIRLRUC_WITH_COVERAGE)
     list(APPEND VCPKG_MANIFEST_FEATURES "tests")
   endif()
   string(REPLACE "-" "_" _alias ${LIB_NAME})
-  set(IMPROC_${_alias}_WITH_TESTS OFF CACHE BOOL "Build ${LIB_NAME} tests")
+  set(PIRLRUC_${_alias}_WITH_TESTS OFF CACHE BOOL "Build ${LIB_NAME} tests")
 endmacro()
 
-function(improc_add_header_library TARGET)
+function(pirlruc_add_header_library TARGET)
   cmake_parse_arguments(ARG "" "NAMESPACE;ALIAS" "HEADERS;DEPS" ${ARGN})
   add_library(${TARGET} INTERFACE ${ARG_HEADERS})
   if(ARG_ALIAS)
@@ -26,7 +27,7 @@ function(improc_add_header_library TARGET)
   set_target_properties(${TARGET} PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED ON)
 endfunction()
 
-function(improc_add_shared_library TARGET)
+function(pirlruc_add_shared_library TARGET)
   cmake_parse_arguments(ARG "" "ALIAS" "SOURCES;HEADERS;DEPS;COMPILE_DEFS" ${ARGN})
   if(NOT ARG_SOURCES)
     add_library(${TARGET} INTERFACE)
@@ -40,7 +41,7 @@ function(improc_add_shared_library TARGET)
     endif()
     set_target_properties(${TARGET} PROPERTIES
       CXX_STANDARD 20 CXX_STANDARD_REQUIRED ON
-      VERSION ${IMPROC_SUPERPROJECT_VERSION})
+      VERSION ${PIRLRUC_SUPERPROJECT_VERSION})
   endif()
   if(ARG_ALIAS)
     add_library(${ARG_ALIAS} ALIAS ${TARGET})
@@ -51,7 +52,7 @@ function(improc_add_shared_library TARGET)
       $<INSTALL_INTERFACE:include>)
     set_target_properties(${TARGET} PROPERTIES
       CXX_STANDARD 20 CXX_STANDARD_REQUIRED ON
-      VERSION ${IMPROC_SUPERPROJECT_VERSION})
+      VERSION ${PIRLRUC_SUPERPROJECT_VERSION})
   else()
     target_include_directories(${TARGET} INTERFACE
       $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

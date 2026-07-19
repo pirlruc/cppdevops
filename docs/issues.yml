@@ -80,7 +80,8 @@ milestones:
     title: Centralized blocking quality workflow
     overview:
       problem: Libraries need shared cpp-quality.yml that actually runs static analysis.
-      goal: Run clang-format, cpplint, clang-tidy, cppcheck, lizard, Metrix++; remove silent || true; keep advisory continue-on-error.
+      goal: Run clang-format, cpplint, clang-tidy, cppcheck, lizard, Metrix++; remove
+        silent || true; keep advisory continue-on-error.
     architecture:
       target: cppdevops/.github/workflows/cpp-quality.yml
       modules:
@@ -141,7 +142,8 @@ milestones:
     title: Manual-first workflow triggers (Actions quota)
     overview:
       problem: Auto push/PR CI burns GitHub Actions minutes during refactor.
-      goal: Library callers and scaffold use workflow_dispatch only; document re-enable ladder.
+      goal: Library callers and scaffold use workflow_dispatch only; document re-enable
+        ladder.
     architecture:
       target: library ci-quality.yml + cppdevops scaffold/templates
       modules:
@@ -165,7 +167,8 @@ milestones:
     title: Publish missing analysis configs in templates
     overview:
       problem: Guardrails name configs that were missing from templates/libs.
-      goal: Template owns semgrep, cppcheck, CodeQL, Metrix knobs, Syft/Grype/Trivy, ShellCheck, actionlint; sync to libraries.
+      goal: Template owns semgrep, cppcheck, CodeQL, Metrix knobs, Syft/Grype/Trivy,
+        ShellCheck, actionlint; sync to libraries.
     architecture:
       target: cppdevops/templates/cpp/
       modules:
@@ -215,7 +218,8 @@ milestones:
     title: valgrind and ASan/UBSan reusable jobs
     overview:
       problem: Dynamic analysis not available as shared workflows.
-      goal: Provide cpp-dynamic.yml with ASan/UBSan and valgrind; ci-asan preset in templates.
+      goal: Provide cpp-dynamic.yml with ASan/UBSan and valgrind; ci-asan preset in
+        templates.
     architecture:
       target: cppdevops/.github/workflows/cpp-dynamic.yml
       modules:
@@ -242,7 +246,8 @@ milestones:
     status: open
     title: Harden cpp-security.yml
     overview:
-      problem: gitleaks skipped when missing; semgrep used --config auto; || true swallowed failures.
+      problem: gitleaks skipped when missing; semgrep used --config auto; || true
+        swallowed failures.
       goal: Install gitleaks; use .semgrep.yml + p/c; remove || true.
     architecture:
       target: cppdevops/.github/workflows/cpp-security.yml
@@ -345,3 +350,36 @@ milestones:
         - cppdevops/actionlint.yaml
       verification:
       - infra workflow runs under workflow_dispatch
+  - id: MOBILE-MECH-001
+    status: open
+    source_adr: ADR-0022
+    title: Real Android NDK and iOS Xcode mobile matrix builds
+    overview:
+      problem: cpp-mobile-matrix.yml is a placeholder (echo only); library callers
+        cannot validate pinned NDK/Xcode toolchains.
+      goal: Cross-compile a header-including smoke TU on Android NDK (min pin) and
+        iOS SDK (min Xcode pin) with clang + libc++; fail the job on compile error.
+    architecture:
+      target: cppdevops/.github/workflows/cpp-mobile-matrix.yml
+      modules:
+      - cppdevops
+    acceptance_criteria:
+    - Android job compiles smoke TU with pinned NDK.
+    - iOS job compiles smoke TU with pinned Xcode on macos runner.
+    - Library callers (e.g. runa-cpp MOBILE-001) go green with real builds.
+    tasks:
+    - id: MOBILE-MECH-001-T1
+      status: open
+      title: Replace placeholder android/ios steps with real cross-compile smoke
+      instructions:
+        files:
+        - cppdevops/.github/workflows/cpp-mobile-matrix.yml
+        - cppdevops/scripts/
+      verification:
+      - android job compiles sample TU
+      - ios job compiles sample TU
+      guardrail_refs:
+      - CI-014
+    guardrail_refs:
+    - CI-014
+    - CPP-BUILD-004

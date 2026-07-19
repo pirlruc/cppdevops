@@ -71,7 +71,7 @@ jobs:
           cmake -B build-vg -G Ninja \
             -DCMAKE_CXX_COMPILER=clang++ \
             -DCMAKE_BUILD_TYPE=Debug \
-            -DIMPROC_WITH_TESTS=ON \
+            -DPIRLRUC_WITH_TESTS=ON \
             -DCMAKE_CXX_FLAGS="-stdlib=libc++"
           cmake --build build-vg -j
 

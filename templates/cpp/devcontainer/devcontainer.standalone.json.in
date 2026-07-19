@@ -24,9 +24,15 @@
 				"cmake.buildDirectory": "/workspaces/@LIB_DISPLAY_NAME@/build",
 				"cmake.configureSettings": {
 					"CMAKE_TOOLCHAIN_FILE": "/usr/local/vcpkg/scripts/buildsystems/vcpkg.cmake"
-				}
+				},
+				"C_Cpp.default.compilerPath": "/usr/bin/clang++-18",
+				"C_Cpp.clang_format_path": "/usr/bin/clang-format-18"
 			}
 		}
 	},
-	"postCreateCommand": "cmake --preset ci-linux -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake && cmake --build --preset ci-linux"
+	"remoteEnv": {
+		"CC": "clang-18",
+		"CXX": "clang++-18"
+	},
+	"postCreateCommand": "cmake --preset ci-linux -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake && cmake --build --preset ci-linux && python3 -m pip install --user pre-commit || true"
 }

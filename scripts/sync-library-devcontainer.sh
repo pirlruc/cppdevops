@@ -3,7 +3,7 @@
 set -euo pipefail
 
 LIB_ARG="${1:?library path (absolute or relative to cwd)}"
-CMAKE_TARGET="${2:?cmake build target name, e.g. traits or heimdallcv-core}"
+CMAKE_TARGET="${2:?cmake build target name, e.g. runa or heimdallcv-core}"
 LIB_DISPLAY="${3:-$(basename "$(cd "$LIB_ARG" && pwd)")}"
 
 CPPDEVOPS_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -15,7 +15,7 @@ mkdir -p "$LIB/.devcontainer" "$LIB/docs"
 cp "$TEMPLATE/devcontainer/Dockerfile" "$LIB/.devcontainer/Dockerfile"
 cp "$TEMPLATE/devcontainer/reinstall-cmake.sh" "$LIB/.devcontainer/reinstall-cmake.sh"
 
-APT_PACKAGES="${DEVCONTAINER_APT_PACKAGES:-clang libc++-dev libc++abi-dev ninja-build pkg-config}"
+APT_PACKAGES="${DEVCONTAINER_APT_PACKAGES:-clang-18 libc++-18-dev libc++abi-18-dev clang-format-18 clang-tidy-18 cppcheck ninja-build pkg-config python3-pip python3-venv}"
 sed -e "s|@LIB_DISPLAY_NAME@|${LIB_DISPLAY}|g" \
   -e "s|@DEVCONTAINER_APT_PACKAGES@|${APT_PACKAGES}|g" \
   "$TEMPLATE/devcontainer/devcontainer.standalone.json.in" > "$LIB/.devcontainer/devcontainer.json"

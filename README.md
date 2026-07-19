@@ -32,7 +32,7 @@ gh workflow run Quality -f blocking=false
 ```bash
 pre-commit install
 pre-commit run --all-files
-cmake --preset default -DIMPROC_WITH_TESTS=ON && cmake --build build -j && ctest --test-dir build --output-on-failure
+cmake --preset default -DPIRLRUC_WITH_TESTS=ON && cmake --build build -j && ctest --test-dir build --output-on-failure
 ```
 
 ## Usage (standalone library caller)

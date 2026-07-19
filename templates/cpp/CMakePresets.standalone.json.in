@@ -17,9 +17,9 @@
       "inherits": "default",
       "displayName": "CI Linux (Clang + libc++)",
       "cacheVariables": {
-        "CMAKE_CXX_COMPILER": "clang++",
+        "CMAKE_CXX_COMPILER": "clang++-18",
         "CMAKE_CXX_FLAGS": "-stdlib=libc++",
-        "IMPROC_WITH_TESTS": "OFF"
+        "PIRLRUC_WITH_TESTS": "OFF"
       }
     },
     {
@@ -29,7 +29,7 @@
       "binaryDir": "${sourceDir}/build-asan",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
-        "IMPROC_WITH_TESTS": "ON",
+        "PIRLRUC_WITH_TESTS": "ON",
         "CMAKE_CXX_FLAGS": "-stdlib=libc++ -fsanitize=address,undefined -fno-omit-frame-pointer"
       }
     }

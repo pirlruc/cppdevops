@@ -5,6 +5,7 @@ Backlog for the reusable CI workflows repository.
 ## High
 
 - Consumers should pin `pirlruc/cppdevops@<sha>` (`CI-018`) once libraries split from the OS folder (thin callers currently may still use `@main` from sync script — prefer SHA).
+- **Real mobile matrix builds** (`MOBILE-MECH-001`): replace placeholder `echo` steps in `cpp-mobile-matrix.yml` with Android NDK + iOS SDK cross-compile smoke of a header-including TU. Blocks library `MOBILE-001` (e.g. runa-cpp #27/#28).
 
 ## Medium
 
@@ -13,6 +14,7 @@ Backlog for the reusable CI workflows repository.
 - **Upstream github-scaffold:** update `scripts/issues-sync-all.sh` / `issues-resync-all.sh` path lists from legacy `traits/`…`drawer/` to Nordic folder names (`runa-cpp/`, …).
 - **Upstream github-scaffold:** `scripts/setup-library-submodules.sh` still defaults `GUARDRAILS_REF=9285d36` — change default to `main`.
 - When Actions quota recovers: re-enable push/PR or label-gated `run-ci` (`CI-TRIGGER-001`).
+- Coverage gate: gcov-compatible `--coverage` + `gcovr --gcov-executable "llvm-cov gcov"`; zero-instrumentable header-only libs pass (`COV-MECH-001` follow-up).
 
 ## Low
 
