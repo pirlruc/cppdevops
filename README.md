@@ -6,24 +6,54 @@
 
 | Workflow | Purpose |
 |----------|---------|
-| `cpp-quality.yml` | clang-format, clang-tidy, cppcheck, cpplint, lizard CCN |
-| `cpp-tests.yml` | CMake build + CTest + coverage |
+| `cpp-quality.yml` | clang-format, clang-tidy, cppcheck, cpplint, lizard, Metrix++ |
+| `cpp-tests.yml` | CMake build + CTest + coverage gate |
 | `cpp-docs.yml` | Doxygen + coverxygen doc coverage |
-| `cpp-security.yml` | gitleaks, semgrep |
-| `cpp-mobile-matrix.yml` | iOS / Android matrix |
+| `cpp-security.yml` | gitleaks, semgrep, Syft/Grype/Trivy |
+| `cpp-codeql.yml` | CodeQL SAST (in addition to semgrep) |
+| `cpp-dynamic.yml` | ASan/UBSan + valgrind memcheck |
+| `cpp-infra.yml` | ShellCheck, actionlint, hadolint (this repo) |
+| `cpp-mobile-matrix.yml` | iOS / Android matrix (placeholder) |
+
+## Actions quota mode (CI-TRIGGER-001)
+
+Library thin callers use **`workflow_dispatch` only** so pushes/PRs do not consume Actions minutes. Re-enable `push`/`pull_request` or label-gated `run-ci` when quota allows.
+
+### Run CI manually
+
+```bash
+# From a library checkout
+gh workflow run Quality -f blocking=false
+# or via the GitHub Actions UI → Quality → Run workflow
+```
+
+### Local quality loop (preferred during quota pressure)
+
+```bash
+pre-commit install
+pre-commit run --all-files
+cmake --preset default -DIMPROC_WITH_TESTS=ON && cmake --build build -j && ctest --test-dir build --output-on-failure
+```
 
 ## Usage (standalone library caller)
 
 ```yaml
+on:
+  workflow_dispatch:
+    inputs:
+      blocking:
+        type: boolean
+        default: false
+
 jobs:
   quality:
     uses: pirlruc/cppdevops/.github/workflows/cpp-quality.yml@<sha>
     with:
       library_path: .
-      blocking: true
+      blocking: ${{ inputs.blocking }}
 ```
 
-During local OS-folder development you may still call sibling `./cppdevops/...` paths; prefer SHA-pinned remote callers for published Nordic repos (`CI-018`).
+Pin `@<sha>` for published Nordic repos (`CI-018`). Advisory mode: `blocking: false` keeps `continue-on-error` so findings are visible without failing the workflow during refactor.
 
 ## Thresholds
 
@@ -31,20 +61,19 @@ Read from `docs/guardrails/cpp/profile.thresholds.yml` (pinned central profile).
 
 ## Library bootstrap (templates + scripts)
 
-This repo owns the shared C++ library bootstrap assets formerly under the image_proc OS folder:
-
 ```bash
-# From a sibling Nordic checkout (or any path)
 ./scripts/sync-library-tooling.sh /path/to/bor-cpp
 ./scripts/sync-library-devcontainer.sh /path/to/bor-cpp core bor-cpp
 ./scripts/generate-doxyfile.sh /path/to/bor-cpp
 ```
 
+Synced configs include: clang-format/tidy, cpplint, gitleaks, semgrep, Metrix++ knobs (`.metrixpp.yml`), cppcheck suppressions, CodeQL, Syft/Grype/Trivy, ShellCheck, actionlint.
+
 See [`docs/platform-and-ci-deltas.md`](docs/platform-and-ci-deltas.md) for platform/CI policy deltas vs central guardrails.
 
 ## Methodology
 
-[GitHub Issue-native ADR](https://github.com/pirlruc/methodologies/tree/main/github-issue-adr) — Epic = decision record, optional Y-statement, no ADR markdown files. Templates: [pirlruc/github-scaffold](https://github.com/pirlruc/github-scaffold). Quality: pin [pirlruc/guardrails](https://github.com/pirlruc/guardrails) at `docs/guardrails/`. Applies to **new issues only**.
+[GitHub Issue-native ADR](https://github.com/pirlruc/methodologies/tree/main/github-issue-adr) — Epic = decision record. Templates: [pirlruc/github-scaffold](https://github.com/pirlruc/github-scaffold). Quality: pin [pirlruc/guardrails](https://github.com/pirlruc/guardrails) at `docs/guardrails/`.
 
 ## Documentation
 

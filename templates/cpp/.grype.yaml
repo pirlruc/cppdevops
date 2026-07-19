@@ -1,0 +1,6 @@
+# Grype config (CPP-SEC-003) — block High/Critical in CI when blocking=true.
+fail-on-severity: high
+output:
+  - format: table
+  - format: json
+    file: grype-report.json

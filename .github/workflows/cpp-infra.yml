@@ -1,0 +1,59 @@
+name: Infra lint (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      blocking:
+        required: false
+        type: boolean
+        default: false
+  workflow_dispatch:
+    inputs:
+      blocking:
+        description: Fail the job on lint errors
+        type: boolean
+        default: false
+
+env:
+  ADVISORY: ${{ inputs.blocking == false }}
+
+jobs:
+  infra:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364edf1e46 # v4.2.2
+
+      - name: Install ShellCheck actionlint hadolint
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+          bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+          sudo mv actionlint /usr/local/bin/
+          curl -sSL https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-x86_64 \
+            -o /usr/local/bin/hadolint && sudo chmod +x /usr/local/bin/hadolint
+
+      - name: ShellCheck
+        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        run: |
+          mapfile -t SCRIPTS < <(find scripts -name '*.sh' 2>/dev/null)
+          if [[ ${#SCRIPTS[@]} -gt 0 ]]; then
+            shellcheck -x "${SCRIPTS[@]}"
+          else
+            echo "No scripts"
+          fi
+
+      - name: actionlint
+        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        run: |
+          actionlint -config-file actionlint.yaml .github/workflows/*.yml || actionlint .github/workflows/*.yml
+
+      - name: hadolint
+        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        run: |
+          mapfile -t DFS < <(find . -name 'Dockerfile*' 2>/dev/null | head -20)
+          if [[ ${#DFS[@]} -gt 0 ]]; then
+            hadolint "${DFS[@]}"
+          else
+            echo "No Dockerfiles"
+          fi

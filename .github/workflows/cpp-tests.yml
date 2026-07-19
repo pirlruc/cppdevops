@@ -36,15 +36,45 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364edf1e46 # v4.2.2
 
+      - name: Checkout cppdevops scripts
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364edf1e46 # v4.2.2
+        with:
+          repository: pirlruc/cppdevops
+          path: _cppdevops
+          sparse-checkout: |
+            scripts
+            docs/guardrails/cpp
+          sparse-checkout-cone-mode: false
+
+      - name: Install build deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build clang libc++-dev libc++abi-dev python3-pip
+          pip3 install gcovr
+
       - name: Configure and build
         continue-on-error: ${{ env.ADVISORY == 'true' }}
         working-directory: ${{ inputs.library_path }}
         run: |
-          cmake --preset ${{ inputs.cmake_preset }} -DIMPROC_WITH_TESTS=ON || \
-            cmake -B build -DIMPROC_WITH_TESTS=ON
+          cmake --preset ${{ inputs.cmake_preset }} \
+            -DIMPROC_WITH_TESTS=ON \
+            -DIMPROC_WITH_COVERAGE=ON \
+            -DCMAKE_CXX_FLAGS="-stdlib=libc++ -fprofile-instr-generate -fcoverage-mapping" \
+            || cmake -B build \
+              -DIMPROC_WITH_TESTS=ON \
+              -DIMPROC_WITH_COVERAGE=ON \
+              -DCMAKE_CXX_COMPILER=clang++ \
+              -DCMAKE_CXX_FLAGS="-stdlib=libc++ -fprofile-instr-generate -fcoverage-mapping"
           cmake --build build -j
 
       - name: Run tests
         continue-on-error: ${{ env.ADVISORY == 'true' }}
         working-directory: ${{ inputs.library_path }}
-        run: ctest --test-dir build --output-on-failure || ctest --test-dir build --output-on-failure -R test
+        env:
+          LLVM_PROFILE_FILE: ${{ github.workspace }}/${{ inputs.library_path }}/build/default.profraw
+        run: ctest --test-dir build --output-on-failure
+
+      - name: Coverage gate
+        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        run: |
+          bash _cppdevops/scripts/check-coverage.sh "${{ inputs.library_path }}"

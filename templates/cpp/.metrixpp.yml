@@ -1,0 +1,11 @@
+# Metrix++ project knobs for cppdevops scripts/run-metrixpp.sh (GR-CPP-CPLX-001).
+# Upstream Metrix++ is CLI-driven; this file is NOT read by metrix++.py directly.
+paths:
+  - include
+  - src
+metrics:
+  - std.code.complexity.cyclomatic
+  - std.code.maintindex.simple
+  - std.code.lines.code
+# MI gate: compare against docs/guardrails/cpp/profile.thresholds.yml min_maintainability_index
+maintainability_index_metric: std.code.maintindex:simple

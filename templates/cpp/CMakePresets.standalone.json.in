@@ -21,6 +21,17 @@
         "CMAKE_CXX_FLAGS": "-stdlib=libc++",
         "IMPROC_WITH_TESTS": "OFF"
       }
+    },
+    {
+      "name": "ci-asan",
+      "inherits": "ci-linux",
+      "displayName": "CI ASan/UBSan",
+      "binaryDir": "${sourceDir}/build-asan",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "IMPROC_WITH_TESTS": "ON",
+        "CMAKE_CXX_FLAGS": "-stdlib=libc++ -fsanitize=address,undefined -fno-omit-frame-pointer"
+      }
     }
   ],
   "buildPresets": [
@@ -31,6 +42,11 @@
     {
       "name": "ci-linux",
       "configurePreset": "ci-linux",
+      "targets": ["@CMAKE_TARGET@"]
+    },
+    {
+      "name": "ci-asan",
+      "configurePreset": "ci-asan",
       "targets": ["@CMAKE_TARGET@"]
     }
   ]

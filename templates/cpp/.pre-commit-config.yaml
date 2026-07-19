@@ -11,6 +11,12 @@ repos:
     hooks:
       - id: clang-format
         types_or: [c++, c]
+  - repo: https://github.com/semgrep/semgrep
+    rev: v1.100.0
+    hooks:
+      - id: semgrep
+        args: ["--config", "p/c", "--config", ".semgrep.yml", "--error", "--quiet"]
+        pass_filenames: false
   - repo: local
     hooks:
       - id: gitleaks

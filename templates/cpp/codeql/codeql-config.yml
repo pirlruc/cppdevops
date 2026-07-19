@@ -1,0 +1,13 @@
+name: "pirlruc C++ CodeQL"
+
+paths:
+  - include
+  - src
+paths-ignore:
+  - build/**
+  - "**/test/**"
+  - "**/*_test.cpp"
+  - "**/vcpkg_installed/**"
+
+queries:
+  - uses: security-and-quality

@@ -25,13 +25,29 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364edf1e46 # v4.2.2
 
+      - name: Checkout cppdevops scripts
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364edf1e46 # v4.2.2
+        with:
+          repository: pirlruc/cppdevops
+          path: _cppdevops
+          sparse-checkout: |
+            scripts
+            docs/guardrails/cpp
+          sparse-checkout-cone-mode: false
+
+      - name: Install Doxygen
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y doxygen graphviz python3-pip
+          pip3 install coverxygen
+
       - name: Generate Doxygen
         continue-on-error: ${{ env.ADVISORY == 'true' }}
         working-directory: ${{ inputs.library_path }}
         run: |
-          if [ -f Doxyfile ]; then doxygen Doxyfile; else echo "No Doxyfile — advisory skip"; fi
+          if [ -f Doxyfile ]; then doxygen Doxyfile; else echo "No Doxyfile — advisory skip"; exit 0; fi
 
-      - name: Doc coverage gate
+      - name: Doc coverage gate (coverxygen)
         continue-on-error: ${{ env.ADVISORY == 'true' }}
         run: |
-          echo "Doc coverage target: ${{ inputs.doc_coverage }}% (coverxygen in M7)"
+          bash _cppdevops/scripts/check-doc-coverage.sh "${{ inputs.library_path }}" "${{ inputs.doc_coverage }}"

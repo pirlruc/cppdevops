@@ -40,41 +40,83 @@ if [[ -z "$CMAKE_TARGET" ]]; then
   CMAKE_TARGET="$(resolve_cmake_target "$LIB_BASENAME")"
 fi
 
-for f in .clang-format .clang-tidy .editorconfig .cpplint .gitleaks.toml .pre-commit-config.yaml; do
-  cp "$TEMPLATE/$f" "$LIB/$f"
+# Core analysis / editor configs
+for f in \
+  .clang-format \
+  .clang-tidy \
+  .editorconfig \
+  .cpplint \
+  .gitleaks.toml \
+  .pre-commit-config.yaml \
+  .semgrep.yml \
+  .metrixpp.yml \
+  .grype.yaml \
+  .syft.yaml \
+  trivy.yaml \
+  .shellcheckrc \
+  actionlint.yaml \
+  cppcheck-suppressions.xml
+do
+  if [[ -f "$TEMPLATE/$f" ]]; then
+    cp "$TEMPLATE/$f" "$LIB/$f"
+  fi
 done
+
+# CodeQL config
+mkdir -p "$LIB/.github/codeql"
+if [[ -f "$TEMPLATE/codeql/codeql-config.yml" ]]; then
+  cp "$TEMPLATE/codeql/codeql-config.yml" "$LIB/.github/codeql/codeql-config.yml"
+fi
 
 mkdir -p "$LIB/.github/workflows"
 if [[ "$STANDALONE" == "1" ]]; then
-  cat > "$LIB/.github/workflows/ci-quality.yml" <<EOF
+  # Quota mode: manual workflow_dispatch only (CI-TRIGGER-001)
+  cat > "$LIB/.github/workflows/ci-quality.yml" <<'EOF'
 name: Quality
 
 on:
-  push:
-    branches: [main]
-  pull_request:
+  workflow_dispatch:
+    inputs:
+      blocking:
+        description: Pass blocking=true when ready to enforce
+        type: boolean
+        default: false
+  # Re-enable when Actions quota allows:
+  # push:
+  #   branches: [main]
+  # pull_request:
 
 jobs:
   quality:
     uses: pirlruc/cppdevops/.github/workflows/cpp-quality.yml@main
     with:
       library_path: .
-      blocking: false
+      blocking: ${{ inputs.blocking }}
   tests:
     uses: pirlruc/cppdevops/.github/workflows/cpp-tests.yml@main
     with:
       library_path: .
-      blocking: false
+      blocking: ${{ inputs.blocking }}
   docs:
     uses: pirlruc/cppdevops/.github/workflows/cpp-docs.yml@main
     with:
       library_path: .
-      blocking: false
+      blocking: ${{ inputs.blocking }}
   security:
     uses: pirlruc/cppdevops/.github/workflows/cpp-security.yml@main
     with:
       library_path: .
-      blocking: false
+      blocking: ${{ inputs.blocking }}
+  codeql:
+    uses: pirlruc/cppdevops/.github/workflows/cpp-codeql.yml@main
+    with:
+      library_path: .
+      blocking: ${{ inputs.blocking }}
+  dynamic:
+    uses: pirlruc/cppdevops/.github/workflows/cpp-dynamic.yml@main
+    with:
+      library_path: .
+      blocking: ${{ inputs.blocking }}
 EOF
   mkdir -p "$LIB/cmake"
   if [[ ! -f "$LIB/cmake/improc_library.cmake" ]]; then
@@ -87,6 +129,11 @@ fi
 
 if [[ -x "$LIB/.github/scaffold/scripts/sync-templates.sh" ]]; then
   bash "$LIB/.github/scaffold/scripts/sync-templates.sh"
+fi
+
+# Ensure Doxyfile exists when template generator is available
+if [[ ! -f "$LIB/Doxyfile" ]] && [[ -x "$CPPDEVOPS_ROOT/scripts/generate-doxyfile.sh" ]]; then
+  bash "$CPPDEVOPS_ROOT/scripts/generate-doxyfile.sh" "$LIB" || true
 fi
 
 echo "Synced tooling to $LIB (target: $CMAKE_TARGET, standalone: $STANDALONE)"

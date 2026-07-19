@@ -1,0 +1,3 @@
+# Project-specific Semgrep rules (CPP-SEC-002).
+# CI/pre-commit also load pack p/c alongside this file.
+rules: []

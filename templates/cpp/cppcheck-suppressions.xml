@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  cppcheck suppressions for pirlruc C++ libraries (CPP-LINT-001).
+  Add targeted suppressions with rationale; prefer fixing code over suppressing.
+-->
+<suppressions>
+  <!-- Example:
+  <suppress>
+    <id>unusedFunction</id>
+    <fileName>*test*</fileName>
+  </suppress>
+  -->
+</suppressions>

@@ -17,21 +17,84 @@ env:
 jobs:
   security:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364edf1e46 # v4.2.2
+
+      - name: Install gitleaks
+        run: |
+          curl -sSL https://github.com/gitleaks/gitleaks/releases/download/v8.21.2/gitleaks_8.21.2_linux_x64.tar.gz \
+            | sudo tar -xz -C /usr/local/bin gitleaks
+          gitleaks version
 
       - name: gitleaks
         continue-on-error: ${{ env.ADVISORY == 'true' }}
         run: |
-          if command -v gitleaks >/dev/null 2>&1; then
-            gitleaks detect --source . --no-git --redact || true
-          else
-            echo "gitleaks not installed — advisory skip"
-          fi
+          gitleaks detect --source . --no-git --redact --config "${{ inputs.library_path }}/.gitleaks.toml" \
+            || gitleaks detect --source "${{ inputs.library_path }}" --no-git --redact
 
       - name: semgrep
         continue-on-error: ${{ env.ADVISORY == 'true' }}
         run: |
           pip3 install semgrep
-          semgrep scan --config auto --error ${{ inputs.library_path }} || true
+          CFG="${{ inputs.library_path }}/.semgrep.yml"
+          if [[ -f "$CFG" ]]; then
+            semgrep scan --config p/c --config "$CFG" --error "${{ inputs.library_path }}"
+          else
+            semgrep scan --config p/c --error "${{ inputs.library_path }}"
+          fi
+
+  sbom:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364edf1e46 # v4.2.2
+
+      - name: Install Syft Grype Trivy
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+          curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
+          sudo apt-get update && sudo apt-get install -y wget apt-transport-https gnupg lsb-release
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+          echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update && sudo apt-get install -y trivy || \
+            curl -sSfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+
+      - name: Syft SBOM
+        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        working-directory: ${{ inputs.library_path }}
+        run: |
+          SYFT_CFG=.syft.yaml
+          if [[ -f "$SYFT_CFG" ]]; then
+            syft dir:. -c "$SYFT_CFG" || syft dir:. -o cyclonedx-json=sbom.cdx.json
+          else
+            syft dir:. -o cyclonedx-json=sbom.cdx.json
+          fi
+
+      - name: Grype (block High/Critical when not advisory)
+        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        working-directory: ${{ inputs.library_path }}
+        run: |
+          if [[ -f .grype.yaml ]]; then
+            if [[ -f sbom.cdx.json ]]; then
+              grype sbom:sbom.cdx.json --config .grype.yaml --fail-on high
+            else
+              grype dir:. --config .grype.yaml --fail-on high
+            fi
+          else
+            if [[ -f sbom.cdx.json ]]; then
+              grype sbom:sbom.cdx.json --fail-on high
+            else
+              grype dir:. --fail-on high
+            fi
+          fi
+
+      - name: Trivy advisory
+        continue-on-error: true
+        working-directory: ${{ inputs.library_path }}
+        run: |
+          if [[ -f trivy.yaml ]]; then
+            trivy fs --config trivy.yaml .
+          else
+            trivy fs --severity HIGH,CRITICAL --exit-code 0 .
+          fi

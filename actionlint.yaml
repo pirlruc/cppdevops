@@ -1,0 +1,4 @@
+# actionlint config for GitHub Actions workflows.
+self-hosted-runner:
+  labels: []
+config-variables: null

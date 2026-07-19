@@ -1,0 +1,11 @@
+# Trivy config (CPP-SEC-003) — advisory second opinion alongside Grype.
+severity:
+  - HIGH
+  - CRITICAL
+exit-code: 0
+format: table
+scan:
+  skip-dirs:
+    - build
+    - .git
+    - vcpkg_installed

@@ -4,26 +4,23 @@ on:
   workflow_call:
     inputs:
       library_path:
-        description: Path to library folder (e.g. traits, core, drawer)
+        description: Path to library folder (e.g. . or traits)
         required: true
         type: string
       blocking:
-        description: When false, failures are advisory only (WP1/M1)
+        description: When false, failures are advisory only
         required: false
         type: boolean
         default: false
       statement_coverage:
-        description: Minimum statement coverage percent
         required: false
         type: string
         default: '95'
       branch_coverage:
-        description: Minimum branch coverage percent
         required: false
         type: string
         default: '95'
       max_cyclomatic_complexity:
-        description: Maximum CCN per function
         required: false
         type: string
         default: '10'
@@ -34,7 +31,7 @@ env:
 jobs:
   quality:
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 45
     concurrency:
       group: quality-${{ inputs.library_path }}-${{ github.ref }}
       cancel-in-progress: true
@@ -44,11 +41,21 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364edf1e46 # v4.2.2
 
+      - name: Checkout cppdevops scripts
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364edf1e46 # v4.2.2
+        with:
+          repository: pirlruc/cppdevops
+          path: _cppdevops
+          sparse-checkout: |
+            scripts
+            docs/guardrails/cpp
+          sparse-checkout-cone-mode: false
+
       - name: Install tooling
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang-format clang-tidy cppcheck cpplint python3-pip
-          pip3 install lizard
+          sudo apt-get install -y clang-format clang-tidy cppcheck python3-pip ninja-build clang libc++-dev libc++abi-dev
+          pip3 install lizard metrixpp pyyaml cpplint
 
       - name: clang-format
         continue-on-error: ${{ env.ADVISORY == 'true' }}
@@ -59,11 +66,47 @@ jobs:
       - name: cpplint
         continue-on-error: ${{ env.ADVISORY == 'true' }}
         run: |
-          if [ -f ../.cpplint ]; then CPPLINT=../.cpplint; elif [ -f ../../.cpplint ]; then CPPLINT=../../.cpplint; else CPPLINT=../../.cpplint; fi
-          find include src -name '*.cpp' -o -name '*.hpp' 2>/dev/null | head -200 | \
-            xargs -r cpplint --filter=-build/include_subdir --linelength=120 2>/dev/null || true
+          find include src \( -name '*.cpp' -o -name '*.hpp' \) 2>/dev/null | \
+            xargs -r cpplint --recursive --linelength=120
+
+      - name: Configure compile_commands
+        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        run: |
+          cmake --preset ci-linux -DIMPROC_WITH_TESTS=OFF -DCMAKE_EXPORT_COMPILE_COMMANDS=ON || \
+            cmake -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_CXX_FLAGS='-stdlib=libc++'
+          cmake --build build -j
+
+      - name: clang-tidy
+        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        run: |
+          if [[ ! -f build/compile_commands.json ]]; then
+            echo "compile_commands.json missing — skip clang-tidy"
+            exit 0
+          fi
+          mapfile -t SRC < <(find include src \( -name '*.cpp' -o -name '*.hpp' \) 2>/dev/null | head -400)
+          if [[ ${#SRC[@]} -eq 0 ]]; then
+            echo "No sources"
+            exit 0
+          fi
+          clang-tidy -p build "${SRC[@]}"
+
+      - name: cppcheck
+        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        run: |
+          SUPP=cppcheck-suppressions.xml
+          EXTRA=()
+          [[ -f "$SUPP" ]] && EXTRA=(--suppressions-list="$SUPP")
+          cppcheck --enable=warning,style,performance,portability \
+            --error-exitcode=1 --inline-suppr \
+            --std=c++20 "${EXTRA[@]}" include src
 
       - name: lizard complexity
         continue-on-error: ${{ env.ADVISORY == 'true' }}
         run: |
-          lizard include src -l cpp -C ${{ inputs.max_cyclomatic_complexity }} -w || true
+          lizard include src -l cpp -C ${{ inputs.max_cyclomatic_complexity }} -w
+
+      - name: Metrix++ maintainability
+        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        working-directory: ${{ github.workspace }}
+        run: |
+          bash _cppdevops/scripts/run-metrixpp.sh "${{ inputs.library_path }}"

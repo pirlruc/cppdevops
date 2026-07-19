@@ -79,14 +79,17 @@ milestones:
     source_adr: ADR-0003
     title: Centralized blocking quality workflow
     overview:
-      problem: Libraries need shared cpp-quality.yml implementation.
-      goal: Maintain reusable cpp-quality.yml with blocking inputs.
+      problem: Libraries need shared cpp-quality.yml that actually runs static analysis.
+      goal: Run clang-format, cpplint, clang-tidy, cppcheck, lizard, Metrix++; remove silent || true; keep advisory continue-on-error.
     architecture:
       target: cppdevops/.github/workflows/cpp-quality.yml
       modules:
       - cppdevops
     acceptance_criteria:
     - workflow_call contract stable; blocking input documented.
+    - clang-tidy and cppcheck execute in CI.
+    - Metrix++ MI gate wired via scripts/run-metrixpp.sh.
+    - No unconditional || true on quality steps.
     tasks:
     - id: GATE-MECH-001-T1
       status: open
@@ -94,8 +97,16 @@ milestones:
       instructions:
         files:
         - cppdevops/.github/workflows/cpp-quality.yml
+        - cppdevops/scripts/run-metrixpp.sh
       verification:
-      - library caller green
+      - library caller green (advisory or blocking)
+      guardrail_refs:
+      - CPP-LINT-001
+      - CPP-CPLX-001
+    guardrail_refs:
+    - CPP-LINT-001
+    - CPP-CPLX-001
+    - CI-009
   - id: COV-MECH-001
     status: open
     source_adr: ADR-0019
@@ -109,6 +120,7 @@ milestones:
       - cppdevops
     acceptance_criteria:
     - check-coverage.sh reads profile.thresholds.yml.
+    - cpp-tests.yml invokes the gate after CTest.
     tasks:
     - id: COV-MECH-001-T1
       status: open
@@ -116,5 +128,220 @@ milestones:
       instructions:
         files:
         - cppdevops/.github/workflows/cpp-tests.yml
+        - cppdevops/scripts/check-coverage.sh
       verification:
-      - fails under 95/95
+      - fails under 95/95 when report present
+      guardrail_refs:
+      - CPP-TEST-003
+    guardrail_refs:
+    - CPP-TEST-003
+    - CI-010
+  - id: CI-TRIGGER-001
+    status: open
+    title: Manual-first workflow triggers (Actions quota)
+    overview:
+      problem: Auto push/PR CI burns GitHub Actions minutes during refactor.
+      goal: Library callers and scaffold use workflow_dispatch only; document re-enable ladder.
+    architecture:
+      target: library ci-quality.yml + cppdevops scaffold/templates
+      modules:
+      - cppdevops
+    acceptance_criteria:
+    - All Nordic library callers are workflow_dispatch-only.
+    - README documents manual run and re-enable options (label-gated, push/PR).
+    tasks:
+    - id: CI-TRIGGER-001-T1
+      status: open
+      title: Switch callers and sync script to workflow_dispatch
+      instructions:
+        files:
+        - cppdevops/scripts/sync-library-tooling.sh
+        - cppdevops/.github/scaffold/templates/ci-quality.yml
+        - cppdevops/README.md
+      verification:
+      - no push/pull_request triggers on library Quality workflows
+  - id: TOOL-CFG-001
+    status: open
+    title: Publish missing analysis configs in templates
+    overview:
+      problem: Guardrails name configs that were missing from templates/libs.
+      goal: Template owns semgrep, cppcheck, CodeQL, Metrix knobs, Syft/Grype/Trivy, ShellCheck, actionlint; sync to libraries.
+    architecture:
+      target: cppdevops/templates/cpp/
+      modules:
+      - cppdevops
+    acceptance_criteria:
+    - sync-library-tooling.sh copies all new configs.
+    - pre-commit includes semgrep.
+    tasks:
+    - id: TOOL-CFG-001-T1
+      status: open
+      title: Add configs to templates and sync script
+      instructions:
+        files:
+        - cppdevops/templates/cpp/
+        - cppdevops/scripts/sync-library-tooling.sh
+      verification:
+      - Nordic libs contain .semgrep.yml and cppcheck-suppressions.xml
+  - id: DOC-MECH-001
+    status: open
+    title: coverxygen in cpp-docs.yml
+    overview:
+      problem: Doc coverage not enforced.
+      goal: Wire coverxygen gate vs doc_coverage threshold.
+    architecture:
+      target: cppdevops/.github/workflows/cpp-docs.yml
+      modules:
+      - cppdevops
+    acceptance_criteria:
+    - check-doc-coverage.sh runs in cpp-docs.yml.
+    tasks:
+    - id: DOC-MECH-001-T1
+      status: open
+      title: Implement coverxygen gate script and docs workflow step
+      instructions:
+        files:
+        - cppdevops/scripts/check-doc-coverage.sh
+        - cppdevops/.github/workflows/cpp-docs.yml
+      verification:
+      - docs job can fail below threshold when blocking
+      guardrail_refs:
+      - CPP-DOC-001
+    guardrail_refs:
+    - CPP-DOC-001
+    - CPP-DOC-003
+  - id: DYN-MECH-001
+    status: open
+    title: valgrind and ASan/UBSan reusable jobs
+    overview:
+      problem: Dynamic analysis not available as shared workflows.
+      goal: Provide cpp-dynamic.yml with ASan/UBSan and valgrind; ci-asan preset in templates.
+    architecture:
+      target: cppdevops/.github/workflows/cpp-dynamic.yml
+      modules:
+      - cppdevops
+    acceptance_criteria:
+    - cpp-dynamic.yml callable from library thin callers.
+    - CMakePresets template includes ci-asan.
+    tasks:
+    - id: DYN-MECH-001-T1
+      status: open
+      title: Add cpp-dynamic.yml and ci-asan preset
+      instructions:
+        files:
+        - cppdevops/.github/workflows/cpp-dynamic.yml
+        - cppdevops/templates/cpp/CMakePresets.standalone.json.in
+      verification:
+      - workflow_call contract documented
+      guardrail_refs:
+      - CPP-DYN-001
+    guardrail_refs:
+    - CPP-DYN-001
+    - CPP-DYN-002
+  - id: SEC-MECH-001
+    status: open
+    title: Harden cpp-security.yml
+    overview:
+      problem: gitleaks skipped when missing; semgrep used --config auto; || true swallowed failures.
+      goal: Install gitleaks; use .semgrep.yml + p/c; remove || true.
+    architecture:
+      target: cppdevops/.github/workflows/cpp-security.yml
+      modules:
+      - cppdevops
+    acceptance_criteria:
+    - gitleaks always installed in job.
+    - semgrep reads library .semgrep.yml.
+    tasks:
+    - id: SEC-MECH-001-T1
+      status: open
+      title: Install gitleaks and wire semgrep config
+      instructions:
+        files:
+        - cppdevops/.github/workflows/cpp-security.yml
+      verification:
+      - security job does not skip gitleaks
+      guardrail_refs:
+      - CPP-SEC-001
+      - CPP-SEC-002
+    guardrail_refs:
+    - CPP-SEC-001
+    - CPP-SEC-002
+  - id: SEC-MECH-002
+    status: open
+    title: Reusable CodeQL workflow
+    overview:
+      problem: CodeQL only on draupnir legacy workflow.
+      goal: Shared cpp-codeql.yml workflow_call using .github/codeql/codeql-config.yml.
+    architecture:
+      target: cppdevops/.github/workflows/cpp-codeql.yml
+      modules:
+      - cppdevops
+    acceptance_criteria:
+    - Libraries can call cpp-codeql.yml from Quality workflow.
+    tasks:
+    - id: SEC-MECH-002-T1
+      status: open
+      title: Add cpp-codeql.yml and template codeql-config
+      instructions:
+        files:
+        - cppdevops/.github/workflows/cpp-codeql.yml
+        - cppdevops/templates/cpp/codeql/codeql-config.yml
+      verification:
+      - workflow_call accepts library_path and blocking
+      guardrail_refs:
+      - CPP-SEC-002
+    guardrail_refs:
+    - CPP-SEC-002
+  - id: SEC-MECH-003
+    status: open
+    title: Syft Grype Trivy SBOM and vuln scan
+    overview:
+      problem: Dependency vuln/SBOM tools in profile but not in CI.
+      goal: SBOM via Syft; Grype fail-on high; Trivy advisory in cpp-security.yml.
+    architecture:
+      target: cppdevops/.github/workflows/cpp-security.yml
+      modules:
+      - cppdevops
+    acceptance_criteria:
+    - Syft produces SBOM artifact path.
+    - Grype --fail-on high when not advisory.
+    tasks:
+    - id: SEC-MECH-003-T1
+      status: open
+      title: Wire Syft Grype Trivy into cpp-security.yml
+      instructions:
+        files:
+        - cppdevops/.github/workflows/cpp-security.yml
+        - cppdevops/templates/cpp/.syft.yaml
+        - cppdevops/templates/cpp/.grype.yaml
+        - cppdevops/templates/cpp/trivy.yaml
+      verification:
+      - sbom job present in security workflow
+      guardrail_refs:
+      - CPP-SEC-003
+    guardrail_refs:
+    - CPP-SEC-003
+  - id: INFRA-MECH-001
+    status: open
+    title: ShellCheck actionlint hadolint on cppdevops
+    overview:
+      problem: Scripts and workflows lack infra lint.
+      goal: cpp-infra.yml with ShellCheck, actionlint, hadolint; configs at repo root.
+    architecture:
+      target: cppdevops/.github/workflows/cpp-infra.yml
+      modules:
+      - cppdevops
+    acceptance_criteria:
+    - workflow_dispatch and workflow_call supported.
+    - .shellcheckrc and actionlint.yaml present.
+    tasks:
+    - id: INFRA-MECH-001-T1
+      status: open
+      title: Add cpp-infra.yml and infra configs
+      instructions:
+        files:
+        - cppdevops/.github/workflows/cpp-infra.yml
+        - cppdevops/.shellcheckrc
+        - cppdevops/actionlint.yaml
+      verification:
+      - infra workflow runs under workflow_dispatch
