@@ -1,0 +1,10 @@
+PROJECT_NAME           = "@LIB@"
+OUTPUT_DIRECTORY       = docs/doxygen
+INPUT                  = include
+RECURSIVE              = YES
+EXTRACT_ALL            = NO
+EXTRACT_PRIVATE        = NO
+EXTRACT_STATIC         = NO
+GENERATE_LATEX         = NO
+WARN_IF_UNDOCUMENTED   = YES
+FILE_PATTERNS          = *.hpp *.h

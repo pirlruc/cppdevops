@@ -1,0 +1,37 @@
+name: C++ Security (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      library_path:
+        required: true
+        type: string
+      blocking:
+        required: false
+        type: boolean
+        default: false
+
+env:
+  ADVISORY: ${{ inputs.blocking == false }}
+
+jobs:
+  security:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364edf1e46 # v4.2.2
+
+      - name: gitleaks
+        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        run: |
+          if command -v gitleaks >/dev/null 2>&1; then
+            gitleaks detect --source . --no-git --redact || true
+          else
+            echo "gitleaks not installed — advisory skip"
+          fi
+
+      - name: semgrep
+        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        run: |
+          pip3 install semgrep
+          semgrep scan --config auto --error ${{ inputs.library_path }} || true

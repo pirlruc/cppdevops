@@ -1,0 +1,46 @@
+name: C++ Mobile matrix (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      library_path:
+        required: true
+        type: string
+      min_ndk:
+        required: false
+        type: string
+        default: '26.1.10909125'
+      min_xcode:
+        required: false
+        type: string
+        default: '15.4'
+      blocking:
+        required: false
+        type: boolean
+        default: false
+
+env:
+  ADVISORY: ${{ inputs.blocking == false }}
+
+jobs:
+  android:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364edf1e46 # v4.2.2
+      - name: Android NDK build (placeholder)
+        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        run: |
+          echo "NDK pin: ${{ inputs.min_ndk }}"
+          echo "Configure Android build for ${{ inputs.library_path }} with clang + libc++"
+
+  ios:
+    runs-on: macos-14
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364edf1e46 # v4.2.2
+      - name: iOS Xcode build (placeholder)
+        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        run: |
+          echo "Xcode pin: ${{ inputs.min_xcode }}"
+          echo "Configure iOS build for ${{ inputs.library_path }} with clang + libc++"

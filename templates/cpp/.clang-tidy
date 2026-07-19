@@ -1,0 +1,9 @@
+Checks:
+  modernize-*,
+  portability-*,
+  performance-*,
+  readability-*,
+  cppcoreguidelines-*,
+  -modernize-use-trailing-return-type
+
+WarningsAsErrors: ''

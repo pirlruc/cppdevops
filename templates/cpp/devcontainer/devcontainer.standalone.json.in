@@ -1,0 +1,32 @@
+{
+	"name": "@LIB_DISPLAY_NAME@",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"workspaceFolder": "/workspaces/@LIB_DISPLAY_NAME@",
+	"features": {
+		"ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
+			"packages": "@DEVCONTAINER_APT_PACKAGES@"
+		}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-vscode.cmake-tools",
+				"ms-vscode.cpptools",
+				"ms-vscode.cpptools-extension-pack",
+				"ms-vscode.makefile-tools",
+				"mhutchie.git-graph",
+				"gruntfuggly.todo-tree"
+			],
+			"settings": {
+				"cmake.sourceDirectory": "/workspaces/@LIB_DISPLAY_NAME@",
+				"cmake.buildDirectory": "/workspaces/@LIB_DISPLAY_NAME@/build",
+				"cmake.configureSettings": {
+					"CMAKE_TOOLCHAIN_FILE": "/usr/local/vcpkg/scripts/buildsystems/vcpkg.cmake"
+				}
+			}
+		}
+	},
+	"postCreateCommand": "cmake --preset ci-linux -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake && cmake --build --preset ci-linux"
+}
