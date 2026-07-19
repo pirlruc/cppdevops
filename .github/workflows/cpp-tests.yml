@@ -56,22 +56,22 @@ jobs:
         continue-on-error: ${{ env.ADVISORY == 'true' }}
         working-directory: ${{ inputs.library_path }}
         run: |
+          # Use gcov-compatible --coverage (not llvm source-based profiling) so
+          # check-coverage.sh / gcovr can produce a numeric coverage.json.
           cmake --preset ${{ inputs.cmake_preset }} \
-            -DIMPROC_WITH_TESTS=ON \
-            -DIMPROC_WITH_COVERAGE=ON \
-            -DCMAKE_CXX_FLAGS="-stdlib=libc++ -fprofile-instr-generate -fcoverage-mapping" \
+            -DPIRLRUC_WITH_TESTS=ON \
+            -DPIRLRUC_WITH_COVERAGE=ON \
+            -DCMAKE_CXX_FLAGS="-stdlib=libc++ --coverage" \
             || cmake -B build \
-              -DIMPROC_WITH_TESTS=ON \
-              -DIMPROC_WITH_COVERAGE=ON \
+              -DPIRLRUC_WITH_TESTS=ON \
+              -DPIRLRUC_WITH_COVERAGE=ON \
               -DCMAKE_CXX_COMPILER=clang++ \
-              -DCMAKE_CXX_FLAGS="-stdlib=libc++ -fprofile-instr-generate -fcoverage-mapping"
+              -DCMAKE_CXX_FLAGS="-stdlib=libc++ --coverage"
           cmake --build build -j
 
       - name: Run tests
         continue-on-error: ${{ env.ADVISORY == 'true' }}
         working-directory: ${{ inputs.library_path }}
-        env:
-          LLVM_PROFILE_FILE: ${{ github.workspace }}/${{ inputs.library_path }}/build/default.profraw
         run: ctest --test-dir build --output-on-failure
 
       - name: Coverage gate

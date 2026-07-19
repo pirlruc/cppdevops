@@ -1,4 +1,4 @@
-Checks:
+Checks: >
   modernize-*,
   portability-*,
   performance-*,
@@ -6,4 +6,6 @@ Checks:
   cppcoreguidelines-*,
   -modernize-use-trailing-return-type
 
-WarningsAsErrors: ''
+HeaderFilterRegex: 'include/(runa|traits|patterns|core|logging|json|io|flow|heimdallcv|drawer)/.*'
+
+WarningsAsErrors: '*'

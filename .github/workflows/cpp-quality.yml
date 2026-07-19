@@ -72,7 +72,7 @@ jobs:
       - name: Configure compile_commands
         continue-on-error: ${{ env.ADVISORY == 'true' }}
         run: |
-          cmake --preset ci-linux -DIMPROC_WITH_TESTS=OFF -DCMAKE_EXPORT_COMPILE_COMMANDS=ON || \
+          cmake --preset ci-linux -DPIRLRUC_WITH_TESTS=OFF -DCMAKE_EXPORT_COMPILE_COMMANDS=ON || \
             cmake -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_CXX_FLAGS='-stdlib=libc++'
           cmake --build build -j
 
