@@ -32,7 +32,8 @@
 	},
 	"remoteEnv": {
 		"CC": "clang-18",
-		"CXX": "clang++-18"
+		"CXX": "clang++-18",
+		"VCPKG_ROOT": "/usr/local/vcpkg"
 	},
-	"postCreateCommand": "cmake --preset ci-linux -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake && cmake --build --preset ci-linux && python3 -m pip install --user pre-commit || true"
+	"postCreateCommand": "cmake --preset ci-linux -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake && cmake --build --preset ci-linux && python3 -m pip install --user pre-commit"
 }

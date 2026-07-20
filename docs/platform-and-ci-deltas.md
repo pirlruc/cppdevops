@@ -58,7 +58,7 @@ See `docs/guardrails/cpp/profile.thresholds.yml`: statement/branch/doc coverage 
 Canonical C++ library bootstrap templates and scripts:
 
 - `templates/cpp/` — clang/format/tidy, pre-commit, gitleaks, standalone presets + devcontainer, `Doxyfile.in`
-- `templates/cmake/improc_library.cmake`
+- `templates/cmake/pirlruc_library.cmake`
 - `scripts/sync-library-tooling.sh <lib-path>`
 - `scripts/sync-library-devcontainer.sh <lib-path> <cmake-target> [display-name]`
 - `scripts/generate-doxyfile.sh <lib-path>`
