@@ -71,8 +71,11 @@ fi
 mkdir -p "$LIB/.github/workflows"
 CPPDEVOPS_REF="${CPPDEVOPS_WORKFLOW_REF:-$(git -C "$CPPDEVOPS_ROOT" rev-parse HEAD 2>/dev/null || echo main)}"
 if [[ "$STANDALONE" == "1" ]]; then
-  # Quota mode: manual workflow_dispatch only (CI-TRIGGER-001)
-  cat > "$LIB/.github/workflows/ci-quality.yml" <<EOF
+  # Create-once: libraries customize callers (mobile, doc_coverage, run_sbom, SHA pins).
+  # Overwriting would strip those customizations (CI-018 / CPP-SEC-003).
+  if [[ ! -f "$LIB/.github/workflows/ci-quality.yml" ]]; then
+    # Quota mode: manual workflow_dispatch only (CI-TRIGGER-001)
+    cat > "$LIB/.github/workflows/ci-quality.yml" <<EOF
 name: Quality
 
 on:
@@ -103,12 +106,14 @@ jobs:
     with:
       library_path: .
       blocking: \${{ inputs.blocking }}
+      doc_coverage: '95'
   security:
     uses: pirlruc/cppdevops/.github/workflows/cpp-security.yml@${CPPDEVOPS_REF}
     with:
       library_path: .
       blocking: \${{ inputs.blocking }}
-      run_sbom: true
+      # CPP-SEC-003: false for routine Quality; enable on release/merge dispatches
+      run_sbom: false
   codeql:
     uses: pirlruc/cppdevops/.github/workflows/cpp-codeql.yml@${CPPDEVOPS_REF}
     with:
@@ -119,7 +124,15 @@ jobs:
     with:
       library_path: .
       blocking: \${{ inputs.blocking }}
+  mobile:
+    uses: pirlruc/cppdevops/.github/workflows/cpp-mobile-matrix.yml@${CPPDEVOPS_REF}
+    with:
+      library_path: .
+      blocking: \${{ inputs.blocking }}
 EOF
+  else
+    echo "keep existing $LIB/.github/workflows/ci-quality.yml (create-once)"
+  fi
   mkdir -p "$LIB/cmake"
   if [[ ! -f "$LIB/cmake/pirlruc_library.cmake" ]]; then
     cp "$CPPDEVOPS_ROOT/templates/cmake/pirlruc_library.cmake" "$LIB/cmake/pirlruc_library.cmake"
