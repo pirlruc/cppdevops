@@ -28,7 +28,7 @@ resolve_cmake_target() {
     mjolnir-cpp) echo "patterns" ;;
     bor-cpp) echo "core" ;;
     mimir-cpp) echo "logging" ;;
-    edda-cpp) echo "json" ;;
+    edda-cpp) echo "edda" ;;
     bifrost-cpp) echo "io" ;;
     nornir-cpp) echo "flow" ;;
     heimdallcv) echo "heimdallcv-core" ;;
