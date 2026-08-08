@@ -326,6 +326,41 @@ milestones:
       - CPP-SEC-003
     guardrail_refs:
     - CPP-SEC-003
+  - id: SEC-MECH-004
+    status: open
+    title: Least-privilege permissions on reusable cpp workflows
+    overview:
+      problem: >-
+        Several cppdevops reusable workflows and the ci-quality.yml caller
+        template omit permissions:, inheriting the default GITHUB_TOKEN scope.
+        Issue id CI-001 already exists in this repo — do not reuse that string
+        for this epic; cite Guardrail CI-001 for SHA pins separately.
+      goal: >-
+        Explicit least-privilege permissions: on reusable workflows and the
+        thin caller template; persist-credentials: false on checkout where
+        applicable.
+    architecture:
+      target: cppdevops/.github/workflows/
+      modules:
+      - cppdevops
+    acceptance_criteria:
+    - Every reusable workflow declares permissions
+    - templates/ci-quality.yml (or equivalent caller) declares permissions
+    - actionlint passes
+    tasks:
+    - id: SEC-MECH-004-T1
+      status: open
+      title: Add permissions blocks to reusable workflows and caller template
+      instructions:
+        files:
+        - cppdevops/.github/workflows/
+        - templates/ci-quality.yml
+      verification:
+      - actionlint on touched workflows
+      guardrail_refs:
+      - CI-001
+    guardrail_refs:
+    - CI-001
   - id: INFRA-MECH-001
     status: open
     title: ShellCheck actionlint hadolint on cppdevops
