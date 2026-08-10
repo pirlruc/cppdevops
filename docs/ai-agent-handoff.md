@@ -18,7 +18,7 @@ Owns reusable workflows under `.github/workflows/`:
 
 Also owns library bootstrap assets under `templates/` and `scripts/sync-library-*.sh` / `generate-doxyfile.sh`.
 
-Standalone library callers should pin `pirlruc/cppdevops@<sha>` (`CI-018`).
+Standalone library callers should pin `pirlruc/cppdevops@1.0.0` or `@<sha>` (`CI-018`).
 
 ## Upstream gaps (github-scaffold)
 
@@ -28,11 +28,17 @@ Recorded in [`improvements.md`](improvements.md): Nordic path lists in `issues-*
 
 Epic issues are decision records ([github-issue-adr](https://github.com/pirlruc/methodologies/tree/main/github-issue-adr)). Submodules: `docs/guardrails/`, `.github/scaffold/`. Templates: `.github/ISSUE_TEMPLATE/` (synced from scaffold). Do not retroactively edit existing GitHub issues.
 
+## Suggested next work
+
+- Rebase open PR #32 onto `main` after this `1.0.0` changelog lands.
+- Prefer SHA or tag pins in consumer callers; github-scaffold CI seed should track `@1.0.0`.
+
 ## See also
 
 - [platform-and-ci-deltas.md](platform-and-ci-deltas.md)
 - [improvements.md](improvements.md)
 - [README.md](../README.md)
 - [guardrails](guardrails/) (pinned profile)
+- [CHANGELOG.md](../CHANGELOG.md)
 
-*Last updated: 2026-07-19*
+*Last updated: 2026-08-10*
