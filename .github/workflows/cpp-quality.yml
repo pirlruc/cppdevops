@@ -24,6 +24,12 @@ on:
         required: false
         type: string
         default: '10'
+    secrets:
+      checkout_token:
+        required: false
+
+# CI-025
+permissions: {}
 
 env:
   ADVISORY: ${{ inputs.blocking == false }}
@@ -31,7 +37,11 @@ env:
 jobs:
   quality:
     runs-on: ubuntu-24.04
+    # Prefer :local for host-built images until ghcr.io/pirlruc/ci-cpp is published.
+    container: ghcr.io/pirlruc/ci-cpp:latest
     timeout-minutes: 45
+    permissions:
+      contents: read
     concurrency:
       group: quality-${{ inputs.library_path }}-${{ github.ref }}
       cancel-in-progress: true
@@ -39,23 +49,21 @@ jobs:
       run:
         working-directory: ${{ inputs.library_path }}
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364edf1e46 # v4.2.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Checkout cppdevops scripts
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364edf1e46 # v4.2.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: pirlruc/cppdevops
+          token: ${{ secrets.checkout_token || github.token }}
+          persist-credentials: false
           path: _cppdevops
           sparse-checkout: |
             scripts
             docs/guardrails/cpp
           sparse-checkout-cone-mode: false
-
-      - name: Install tooling
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y clang-format clang-tidy cppcheck python3-pip ninja-build clang libc++-dev libc++abi-dev
-          pip3 install lizard metrixpp pyyaml cpplint
 
       - name: clang-format
         continue-on-error: ${{ env.ADVISORY == 'true' }}

@@ -90,6 +90,9 @@ on:
   #   branches: [main]
   # pull_request:
 
+# CI-025: default-deny; reusable workflows grant what they need.
+permissions: {}
+
 jobs:
   quality:
     uses: pirlruc/cppdevops/.github/workflows/cpp-quality.yml@${CPPDEVOPS_REF}
@@ -112,8 +115,8 @@ jobs:
     with:
       library_path: .
       blocking: \${{ inputs.blocking }}
-      # CPP-SEC-003: false for routine Quality; enable on release/merge dispatches
-      run_sbom: false
+      # SC-SBOM-001 / CPP-SEC-003: default true; set false only with a deviation
+      run_sbom: true
   codeql:
     uses: pirlruc/cppdevops/.github/workflows/cpp-codeql.yml@${CPPDEVOPS_REF}
     with:

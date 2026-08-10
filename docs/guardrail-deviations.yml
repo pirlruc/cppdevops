@@ -1,0 +1,32 @@
+# Recorded departures from the guardrails pinned at docs/guardrails/.
+#
+# Field definitions: https://github.com/pirlruc/guardrails#deviation-rule
+# Approval flow:     https://github.com/pirlruc/methodologies/blob/1.1.0/github-issue-adr/docs/process/guardrail-compliance.md
+#
+# Being stricter than the org default is always allowed and needs no entry here.
+
+deviations:
+  - id: CI-014
+    why: >-
+      cpp-mobile-matrix.yml is still a placeholder (echo-only) until real NDK/Xcode
+      smoke builds land under MOBILE-MECH-001.
+    epic: MOBILE-MECH-001
+    owner: pirlruc
+    approved_by: Engineering Lead
+    review: 2026-12-31
+  - id: CPP-BUILD-010
+    why: >-
+      iOS matrix job does not yet compile a smoke TU on a pinned Xcode toolchain
+      (placeholder until MOBILE-MECH-001).
+    epic: MOBILE-MECH-001
+    owner: pirlruc
+    approved_by: Engineering Lead
+    review: 2026-12-31
+  - id: CPP-BUILD-011
+    why: >-
+      Android matrix job does not yet compile a smoke TU on a pinned NDK toolchain
+      (placeholder until MOBILE-MECH-001).
+    epic: MOBILE-MECH-001
+    owner: pirlruc
+    approved_by: Engineering Lead
+    review: 2026-12-31

@@ -52,7 +52,7 @@ milestones:
   status: open
   epics:
   - id: CI-001
-    status: open
+    status: done
     source_adr: ADR-0023
     title: Externalize cppdevops to pirlruc/cppdevops
     overview:
@@ -66,7 +66,7 @@ milestones:
     - All library repos use external workflow pin.
     tasks:
     - id: CI-001-T1
-      status: open
+      status: done
       title: Publish workflows and document pin update process
       instructions:
         files:
@@ -75,7 +75,7 @@ milestones:
       verification:
       - smoke test one library caller
   - id: GATE-MECH-001
-    status: open
+    status: done
     source_adr: ADR-0003
     title: Centralized blocking quality workflow
     overview:
@@ -93,7 +93,7 @@ milestones:
     - No unconditional || true on quality steps.
     tasks:
     - id: GATE-MECH-001-T1
-      status: open
+      status: done
       title: Harden cpp-quality.yml
       instructions:
         files:
@@ -109,7 +109,7 @@ milestones:
     - CPP-CPLX-001
     - CI-009
   - id: COV-MECH-001
-    status: open
+    status: done
     source_adr: ADR-0019
     title: Centralized coverage gate workflow
     overview:
@@ -124,7 +124,7 @@ milestones:
     - cpp-tests.yml invokes the gate after CTest.
     tasks:
     - id: COV-MECH-001-T1
-      status: open
+      status: done
       title: Wire check-coverage.sh in cpp-tests.yml
       instructions:
         files:
@@ -138,7 +138,7 @@ milestones:
     - CPP-TEST-003
     - CI-010
   - id: CI-TRIGGER-001
-    status: open
+    status: done
     title: Manual-first workflow triggers (Actions quota)
     overview:
       problem: Auto push/PR CI burns GitHub Actions minutes during refactor.
@@ -153,7 +153,7 @@ milestones:
     - README documents manual run and re-enable options (label-gated, push/PR).
     tasks:
     - id: CI-TRIGGER-001-T1
-      status: open
+      status: done
       title: Switch callers and sync script to workflow_dispatch
       instructions:
         files:
@@ -163,7 +163,7 @@ milestones:
       verification:
       - no push/pull_request triggers on library Quality workflows
   - id: TOOL-CFG-001
-    status: open
+    status: done
     title: Publish missing analysis configs in templates
     overview:
       problem: Guardrails name configs that were missing from templates/libs.
@@ -178,7 +178,7 @@ milestones:
     - pre-commit includes semgrep.
     tasks:
     - id: TOOL-CFG-001-T1
-      status: open
+      status: done
       title: Add configs to templates and sync script
       instructions:
         files:
@@ -187,7 +187,7 @@ milestones:
       verification:
       - Nordic libs contain .semgrep.yml and cppcheck-suppressions.xml
   - id: DOC-MECH-001
-    status: open
+    status: done
     title: coverxygen in cpp-docs.yml
     overview:
       problem: Doc coverage not enforced.
@@ -200,7 +200,7 @@ milestones:
     - check-doc-coverage.sh runs in cpp-docs.yml.
     tasks:
     - id: DOC-MECH-001-T1
-      status: open
+      status: done
       title: Implement coverxygen gate script and docs workflow step
       instructions:
         files:
@@ -214,7 +214,7 @@ milestones:
     - CPP-DOC-001
     - CPP-DOC-003
   - id: DYN-MECH-001
-    status: open
+    status: done
     title: valgrind and ASan/UBSan reusable jobs
     overview:
       problem: Dynamic analysis not available as shared workflows.
@@ -229,7 +229,7 @@ milestones:
     - CMakePresets template includes ci-asan.
     tasks:
     - id: DYN-MECH-001-T1
-      status: open
+      status: done
       title: Add cpp-dynamic.yml and ci-asan preset
       instructions:
         files:
@@ -243,7 +243,7 @@ milestones:
     - CPP-DYN-001
     - CPP-DYN-002
   - id: SEC-MECH-001
-    status: open
+    status: done
     title: Harden cpp-security.yml
     overview:
       problem: gitleaks skipped when missing; semgrep used --config auto; || true
@@ -258,7 +258,7 @@ milestones:
     - semgrep reads library .semgrep.yml.
     tasks:
     - id: SEC-MECH-001-T1
-      status: open
+      status: done
       title: Install gitleaks and wire semgrep config
       instructions:
         files:
@@ -272,7 +272,7 @@ milestones:
     - CPP-SEC-001
     - CPP-SEC-002
   - id: SEC-MECH-002
-    status: open
+    status: done
     title: Reusable CodeQL workflow
     overview:
       problem: CodeQL only on draupnir legacy workflow.
@@ -285,7 +285,7 @@ milestones:
     - Libraries can call cpp-codeql.yml from Quality workflow.
     tasks:
     - id: SEC-MECH-002-T1
-      status: open
+      status: done
       title: Add cpp-codeql.yml and template codeql-config
       instructions:
         files:
@@ -298,7 +298,7 @@ milestones:
     guardrail_refs:
     - CPP-SEC-002
   - id: SEC-MECH-003
-    status: open
+    status: done
     title: Syft Grype Trivy SBOM and vuln scan
     overview:
       problem: Dependency vuln/SBOM tools in profile but not in CI.
@@ -312,7 +312,7 @@ milestones:
     - Grype --fail-on high when not advisory.
     tasks:
     - id: SEC-MECH-003-T1
-      status: open
+      status: done
       title: Wire Syft Grype Trivy into cpp-security.yml
       instructions:
         files:
@@ -327,7 +327,7 @@ milestones:
     guardrail_refs:
     - CPP-SEC-003
   - id: SEC-MECH-004
-    status: open
+    status: done
     title: Least-privilege permissions on reusable cpp workflows
     overview:
       problem: >-
@@ -349,7 +349,7 @@ milestones:
     - actionlint passes
     tasks:
     - id: SEC-MECH-004-T1
-      status: open
+      status: done
       title: Add permissions blocks to reusable workflows and caller template
       instructions:
         files:
@@ -362,7 +362,7 @@ milestones:
     guardrail_refs:
     - CI-001
   - id: INFRA-MECH-001
-    status: open
+    status: done
     title: ShellCheck actionlint hadolint on cppdevops
     overview:
       problem: Scripts and workflows lack infra lint.
@@ -376,7 +376,7 @@ milestones:
     - .shellcheckrc and actionlint.yaml present.
     tasks:
     - id: INFRA-MECH-001-T1
-      status: open
+      status: done
       title: Add cpp-infra.yml and infra configs
       instructions:
         files:
@@ -418,3 +418,87 @@ milestones:
     guardrail_refs:
     - CI-014
     - CPP-BUILD-004
+
+- name: Continuous improvement
+  epics:
+  - id: DEP-MECH-001
+    status: open
+    title: Adopt and verify multi-ecosystem Dependabot (SC-DEP-*)
+    overview:
+      problem: >-
+        Dependency updates may still use per-ecosystem schedules, missing
+        ecosystems, or shapes that do not produce one monthly multi-ecosystem
+        PR. SC-DEP-001/002/003 require covering every package ecosystem, a
+        single grouped PR, and the org cadence/semver policy.
+      goal: >-
+        Align .github/dependabot.yml with the org multi-ecosystem monthly
+        shape (seed from github-scaffold templates/dependabot.example.yml when
+        needed); confirm Insights grouping after the config is on the default
+        branch; document any justified deviations.
+    architecture:
+      target: .github/dependabot.yml
+      modules:
+      - .github/dependabot.yml
+      - docs/ai-agent-handoff.md
+    acceptance_criteria:
+    - dependabot.yml uses a monthly multi-ecosystem group covering this repo's ecosystems
+    - open-pull-requests-limit and semver policy match SC-DEP-003 / supply-chain thresholds
+    - Insights confirmation recorded in handoff after merge to default branch (or GitHub limitation noted)
+    guardrail_refs:
+    - SC-DEP-001
+    - SC-DEP-002
+    - SC-DEP-003
+    tasks:
+    - id: DEP-MECH-001-T1
+      status: open
+      title: Rewrite or confirm Dependabot multi-ecosystem config
+      instructions:
+        files:
+        - .github/dependabot.yml
+      verification:
+      - rg -n "multi-ecosystem|schedule|package-ecosystem" .github/dependabot.yml
+      guardrail_refs:
+      - SC-DEP-001
+      - SC-DEP-002
+    - id: DEP-MECH-001-T2
+      status: open
+      title: Record Insights confirmation in handoff after default-branch land
+      instructions:
+        files:
+        - docs/ai-agent-handoff.md
+      verification:
+      - Handoff notes Insights one-PR grouping outcome or documents blocker
+      guardrail_refs:
+      - SC-DEP-003
+  - id: AIREV-MECH-001
+    status: open
+    title: Review for improvements, bugs, and design flaws
+    overview:
+      problem: >-
+        Backlog and automation can drift toward process or docs hygiene only.
+        The repo needs a deliberate review of the current implementation that
+        surfaces improvements, bugs, and design flaws — not only polish — and
+        records material follow-ups in docs/issues.yml.
+      goal: >-
+        Run an ai-reviewer (or equivalent) pass against this repository's
+        current code, workflows, scripts, and docs; append only material new
+        epics/tasks under Continuous improvement (or record a justified no-op).
+    architecture:
+      target: Repository review into docs/issues.yml
+      modules:
+      - docs/issues.yml
+      - docs/ai-agent-handoff.md
+    acceptance_criteria:
+    - Review explicitly covers improvements, bugs, and design flaws in shipped implementation
+    - Material findings appended to docs/issues.yml via PR (budget at most 2 epics / 6 tasks) or handoff records justified no-op
+    - Does not re-file work already covered by existing epic/task ids
+    tasks:
+    - id: AIREV-MECH-001-T1
+      status: open
+      title: Run review pass and append material issues.yml findings
+      instructions:
+        files:
+        - docs/issues.yml
+        - docs/ai-agent-handoff.md
+      verification:
+      - PR appends material findings within budget, or handoff records justified no-op

@@ -1,5 +1,8 @@
 name: Infra lint (reusable)
 
+# Migrated to pirlruc/commondevops common-infra-lint.yml (actionlint, shellcheck,
+# hadolint, zizmor). Pin matches scripts_ref (CI-018).
+
 on:
   workflow_call:
     inputs:
@@ -7,6 +10,22 @@ on:
         required: false
         type: boolean
         default: false
+      working_directory:
+        required: false
+        type: string
+        default: .
+      shell_scripts:
+        required: false
+        type: string
+        default: ""
+      dockerfiles:
+        required: false
+        type: string
+        default: ""
+    secrets:
+      # Required when the caller is a different private repo (CI-024).
+      checkout_token:
+        required: false
   workflow_dispatch:
     inputs:
       blocking:
@@ -14,46 +33,20 @@ on:
         type: boolean
         default: false
 
-env:
-  ADVISORY: ${{ inputs.blocking == false }}
+# CI-025: default-deny; reusable jobs grant the minimum they need.
+permissions: {}
 
 jobs:
   infra:
-    runs-on: ubuntu-24.04
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364edf1e46 # v4.2.2
-
-      - name: Install ShellCheck actionlint hadolint
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y shellcheck
-          bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
-          sudo mv actionlint /usr/local/bin/
-          curl -sSL https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-x86_64 \
-            -o /usr/local/bin/hadolint && sudo chmod +x /usr/local/bin/hadolint
-
-      - name: ShellCheck
-        continue-on-error: ${{ env.ADVISORY == 'true' }}
-        run: |
-          mapfile -t SCRIPTS < <(find scripts -name '*.sh' 2>/dev/null)
-          if [[ ${#SCRIPTS[@]} -gt 0 ]]; then
-            shellcheck -x "${SCRIPTS[@]}"
-          else
-            echo "No scripts"
-          fi
-
-      - name: actionlint
-        continue-on-error: ${{ env.ADVISORY == 'true' }}
-        run: |
-          actionlint -config-file actionlint.yaml .github/workflows/*.yml || actionlint .github/workflows/*.yml
-
-      - name: hadolint
-        continue-on-error: ${{ env.ADVISORY == 'true' }}
-        run: |
-          mapfile -t DFS < <(find . -name 'Dockerfile*' 2>/dev/null | head -20)
-          if [[ ${#DFS[@]} -gt 0 ]]; then
-            hadolint "${DFS[@]}"
-          else
-            echo "No Dockerfiles"
-          fi
+    # CI-024: Dependabot PRs cannot use Actions secrets for private reusables.
+    if: github.actor != 'dependabot[bot]'
+    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@74695e83a7b79784ee81fd970d9051d8efd711e8
+    with:
+      blocking: ${{ inputs.blocking }}
+      working_directory: ${{ inputs.working_directory || '.' }}
+      shell_scripts: ${{ inputs.shell_scripts || '' }}
+      dockerfiles: ${{ inputs.dockerfiles || '' }}
+      # Must match uses: @pin (CI-018).
+      scripts_ref: 74695e83a7b79784ee81fd970d9051d8efd711e8
+    secrets:
+      checkout_token: ${{ secrets.checkout_token }}

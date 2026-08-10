@@ -37,7 +37,7 @@ See `docs/guardrails/cpp/profile.thresholds.yml`: statement/branch/doc coverage 
 - CI callers: prefer `pirlruc/cppdevops/.github/workflows/*.yml@<sha>` (`CI-018`).
 - Mobile matrix: `cpp-mobile-matrix.yml` where required (`CI-014`).
 - Dynamic analysis: libraries ship CMake preset `ci-asan`; `cpp-dynamic.yml` configures via `cmake --preset ci-asan` (`CPP-DYN-001`).
-- SBOM / vuln scans (`CPP-SEC-003`): `cpp-security.yml` input `run_sbom` defaults to `false`. Set `run_sbom: true` on merge/release (or a dedicated release workflow), not on every PR/Quality dispatch.
+- SBOM / vuln scans (`CPP-SEC-003`): `cpp-security.yml` input `run_sbom` defaults to `true` (SC-SBOM-001). Set `run_sbom: false` only with a recorded deviation when a library cannot afford SBOM on every run.
 
 ## External dependency policy (shared)
 

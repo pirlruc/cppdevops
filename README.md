@@ -9,10 +9,10 @@
 | `cpp-quality.yml` | clang-format, clang-tidy, cppcheck, cpplint, lizard, Metrix++ |
 | `cpp-tests.yml` | CMake build + CTest + coverage gate |
 | `cpp-docs.yml` | Doxygen + coverxygen doc coverage |
-| `cpp-security.yml` | gitleaks, semgrep, Syft/Grype/Trivy |
+| `cpp-security.yml` | Forwards to commondevops secrets-sast + supply-chain (CodeQL in `cpp-codeql.yml`) |
 | `cpp-codeql.yml` | CodeQL SAST (in addition to semgrep) |
 | `cpp-dynamic.yml` | ASan/UBSan + valgrind memcheck |
-| `cpp-infra.yml` | ShellCheck, actionlint, hadolint (this repo) |
+| `cpp-infra.yml` | Thin caller → `commondevops` `common-infra-lint.yml` |
 | `cpp-mobile-matrix.yml` | iOS / Android matrix (placeholder) |
 
 ## Actions quota mode (CI-TRIGGER-001)
