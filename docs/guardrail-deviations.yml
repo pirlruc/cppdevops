@@ -15,6 +15,9 @@ deviations:
       Ubuntu 24.04. Measured uncompressed rootfs via `du -sxm /` is 1065 MB
       (2026-08-12). Cannot meet the 300 MB org default without dropping the C++
       reference toolchain required by CPP-BUILD-004/009. Gate uses 2000 MB headroom.
+      Layer efficiency measured 94.48% vs org floor 95% on the first CI build; Dockerfile
+      was tightened (single apt+user RUN, drop unused curl/python3-venv) — re-measure after
+      publish; keep this entry until efficiency stays ≥95 without a further override.
     epic: CPPD-IMG-001
     owner: pirlruc
     approved_by: Engineering Lead
