@@ -78,7 +78,10 @@ python3 .github/scaffold/scripts/issues-sync.py \
 ## Known pitfalls
 
 - **`ghcr.io/pirlruc/ci-cpp` is unpublished** — `container: …:latest` fails at job start until release 2.0.0 publishes; zizmor `unpinned-images` temporarily ignored in `.github/config/zizmor.yml` until digest-pin.
-- Threshold drift CI checks out `pirlruc/guardrails` via `COMMONDEVOPS_READ_TOKEN` (private; do not use `submodules: true` with `github.token`).
+- Threshold drift CI checks out `pirlruc/guardrails` with `GUARDRAILS_READ_TOKEN`
+  (preferred) or `COMMONDEVOPS_READ_TOKEN` when that PAT also covers guardrails.
+  Without either, the job soft-skips; run `scripts/check-threshold-drift.sh` locally.
+  Do not use `submodules: true` with `github.token` (private clone 403/404).
 - Seven consumer libraries still pin `@main` (CPPD-ECO-001 / CI-018 on their side).
 - Private nested checkout needs a PAT when private.
 
