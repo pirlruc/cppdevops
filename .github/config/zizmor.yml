@@ -1,17 +1,7 @@
 ---
 # zizmor policy (loaded by common-infra-lint when present at .github/config/zizmor.yml).
-# Prefer fixing findings; ignore only when a follow-up epic owns the remotion.
 rules:
   unpinned-uses:
     config:
       policies:
         "*": ref-pin
-  # Floating :latest until CPPD-REL-001 publishes ci-cpp and a follow-up digest-pins
-  # container: refs (then delete this ignore list).
-  unpinned-images:
-    ignore:
-      - cpp-quality.yml
-      - cpp-tests.yml
-      - cpp-docs.yml
-      - cpp-dynamic.yml
-      - cpp-codeql.yml
