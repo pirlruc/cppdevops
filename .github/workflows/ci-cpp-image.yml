@@ -49,7 +49,8 @@ jobs:
       run_infra_lint: false
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
     secrets:
-      checkout_token: ${{ github.token }}
+      # Private commondevops: github.token cannot clone it for secrets-sast.
+      checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
       scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
 
   build:

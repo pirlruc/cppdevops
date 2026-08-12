@@ -37,7 +37,9 @@ RUN python3 -m venv /opt/venv \
       gcovr \
       lizard \
       metrixpp \
-      pyyaml
+      pyyaml \
+ && find /opt/venv -type d -name '__pycache__' -exec rm -rf {} + 2>/dev/null || true \
+ && find /opt/venv -type f -name '*.pyc' -delete
 
 # ---------------------------------------------------------------------------
 # Final image
@@ -58,6 +60,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
+# Single RUN for apt + non-root user to keep dive efficiency above org floor.
 # Base image is digest-pinned; apt package versions float within Ubuntu 24.04.
 # hadolint ignore=DL3008
 RUN apt-get update \
@@ -74,23 +77,20 @@ RUN apt-get update \
       llvm \
       ninja-build \
       python3 \
-      python3-venv \
       valgrind \
       ca-certificates \
-      curl \
       git \
- && rm -rf /var/lib/apt/lists/*
-
-COPY --from=pybuild /opt/venv /opt/venv
-
-WORKDIR /workspace
-
-# Non-root default user (DOCKER-RUN-001). Ubuntu 24.04 already ships uid 1000.
-RUN if ! id -u 1000 >/dev/null 2>&1; then \
+ && rm -rf /var/lib/apt/lists/* \
+ && if ! id -u 1000 >/dev/null 2>&1; then \
       useradd --uid 1000 --create-home --shell /bin/bash ci; \
     fi \
- && mkdir -p /home/ci \
- && chown -R 1000:1000 /workspace /opt/venv /home/ci
+ && mkdir -p /home/ci /workspace \
+ && chown -R 1000:1000 /workspace /home/ci
+
+COPY --from=pybuild /opt/venv /opt/venv
+RUN chown -R 1000:1000 /opt/venv
+
+WORKDIR /workspace
 USER 1000:1000
 
 ENTRYPOINT []
