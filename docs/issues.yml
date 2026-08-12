@@ -710,7 +710,7 @@ milestones:
       - CI-023
 
   - id: CPPD-REL-001
-    status: open
+    status: done
     title: LICENSE, CHANGELOG, and annotated-tag release hygiene
     overview:
       problem: >-
@@ -736,7 +736,7 @@ milestones:
     - REL-PUB-002
     tasks:
     - id: CPPD-REL-001-T1
-      status: open
+      status: done
       title: Add LICENSE and prepare 2.0.0 CHANGELOG entry
       instructions:
         files:
