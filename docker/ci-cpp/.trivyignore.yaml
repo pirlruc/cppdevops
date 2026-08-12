@@ -1,0 +1,4 @@
+# Time-boxed Trivy ignores for ci-cpp. Keep empty until a measured HIGH/CRITICAL
+# needs a review-dated path ignore (DOCKER-SEC-001 / vuln_ignore_max_days).
+# Review: 2026-11-12
+vulnerabilities: []

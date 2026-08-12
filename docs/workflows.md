@@ -142,6 +142,37 @@ Android NDK + iOS Xcode matrix. Placeholder until MOBILE-MECH-001; deviations
 
 ---
 
+## `ci-cpp-image.yml` (caller)
+
+Thin caller into containerdevops for lint/build/scan/publish of `docker/ci-cpp`.
+Triggers (same shape as commondevops `ci-lint-image.yml`):
+
+| Trigger | Behaviour |
+|---------|-----------|
+| `release: published` | Build + publish |
+| `schedule` (monthly, 20th 05:17 UTC) | Rebuild within `ci_image_max_age_days` (CI-027) |
+| `pull_request` → `main` (paths: `docker/ci-cpp/**`, workflow) | Lint/build/scan only |
+| `workflow_dispatch` | Optional `blocking` / `publish` |
+
+Secrets: `CONTAINERDEVOPS_READ_TOKEN`, `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`.
+Size gate `image_max_size_mb: "2000"` (measured rootfs 1065 MB; DOCKER-PERF-001 deviation).
+Private repo: `sign` is false (SC-SIGN-001 deviation).
+
+## `cppdevops-ci.yml` (self)
+
+`push` / `pull_request` on `main` plus `workflow_dispatch`. Calls commondevops
+`common-infra-lint` and runs `scripts/check-threshold-drift.sh`. Skips Dependabot
+actor (CI-024).
+
+## `cppdevops-security.yml` (scheduled)
+
+Weekly Wednesday 06:17 UTC (staggered vs commondevops Mon / containerdevops Tue)
+plus `workflow_dispatch`. Secrets/SAST + supply-chain via commondevops; published
+`ci-cpp:latest` rescan via containerdevops after a probe job confirms the package
+is pullable.
+
+---
+
 ## Thin caller example
 
 ```yaml

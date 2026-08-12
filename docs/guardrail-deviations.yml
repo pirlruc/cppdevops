@@ -30,3 +30,26 @@ deviations:
     owner: pirlruc
     approved_by: Engineering Lead
     review: 2026-12-31
+  - id: DOCKER-PERF-001
+    key: image_max_size_mb
+    org_default: 300
+    repo_value: 2000
+    why: >-
+      ci-cpp ships a full Clang/libc++/CMake/Ninja/valgrind/Doxygen toolchain on
+      Ubuntu 24.04. Measured uncompressed rootfs via `du -sxm /` is 1065 MB
+      (2026-08-12). Cannot meet the 300 MB org default without dropping the C++
+      reference toolchain required by CPP-BUILD-004/009. Gate uses 2000 MB headroom.
+    epic: CPPD-IMG-001
+    owner: pirlruc
+    approved_by: Engineering Lead
+    review: 2026-12-31
+  - id: SC-SIGN-001
+    why: >-
+      Repository is private; cosign keyless signing is enabled only when
+      repository.visibility == public (same pattern as commondevops/containerdevops).
+      Image publish sets sign=false for private Free-plan GHCR until the repo is public
+      or a signing key is provisioned.
+    epic: CPPD-IMG-002
+    owner: pirlruc
+    approved_by: Engineering Lead
+    review: 2026-12-31
