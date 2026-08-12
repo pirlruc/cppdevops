@@ -23,7 +23,6 @@ env:
 jobs:
   docs:
     runs-on: ubuntu-24.04
-    # Prefer :local for host-built images until ghcr.io/pirlruc/ci-cpp is published.
     container: ghcr.io/pirlruc/ci-cpp@sha256:54ea6b2354709b742a3b1ae289b82c0cbb1ad9241d59ee06b94331ecf945d7f9
     timeout-minutes: 20
     permissions:
