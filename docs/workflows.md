@@ -122,9 +122,8 @@ hadolint, zizmor).
 
 ## `cpp-mobile-matrix.yml`
 
-Android NDK + iOS Xcode matrix. Placeholder until MOBILE-MECH-001; deviations
-`CI-014`, `CPP-BUILD-010`, `CPP-BUILD-011` recorded in
-`docs/guardrail-deviations.yml`.
+Cross-compiles `scripts/mobile-smoke/smoke.cpp` on Android NDK (`min_ndk`) and
+iOS Xcode (`min_xcode`) with clang + libc++ (MOBILE-MECH-001).
 
 | Input | Default |
 |-------|---------|

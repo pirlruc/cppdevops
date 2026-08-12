@@ -15,7 +15,7 @@ image and library bootstrap templates.
 | `cpp-codeql.yml` | CodeQL SAST (in addition to semgrep) |
 | `cpp-dynamic.yml` | ASan/UBSan + valgrind memcheck |
 | `cpp-infra.yml` | Thin caller → `commondevops` `common-infra-lint.yml` |
-| `cpp-mobile-matrix.yml` | iOS / Android matrix (placeholder until MOBILE-MECH-001) |
+| `cpp-mobile-matrix.yml` | iOS / Android NDK+Xcode smoke compile (MOBILE-MECH-001) |
 
 Full input/output contract: [`docs/workflows.md`](docs/workflows.md).
 

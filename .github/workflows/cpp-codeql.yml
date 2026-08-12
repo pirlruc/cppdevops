@@ -52,8 +52,10 @@ jobs:
       - name: Build
         continue-on-error: ${{ env.ADVISORY == 'true' }}
         working-directory: ${{ inputs.library_path }}
+        env:
+          CMAKE_PRESET: ${{ inputs.cmake_preset }}
         run: |
-          cmake --preset ${{ inputs.cmake_preset }} -DPIRLRUC_WITH_TESTS=OFF || \
+          cmake --preset "${CMAKE_PRESET}" -DPIRLRUC_WITH_TESTS=OFF || \
             cmake -B build -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_CXX_FLAGS='-stdlib=libc++'
           cmake --build build -j
 

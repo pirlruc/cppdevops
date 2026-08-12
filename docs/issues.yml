@@ -386,7 +386,7 @@ milestones:
       verification:
       - infra workflow runs under workflow_dispatch
   - id: MOBILE-MECH-001
-    status: open
+    status: done
     source_adr: ADR-0022
     title: Real Android NDK and iOS Xcode mobile matrix builds
     overview:
@@ -404,7 +404,7 @@ milestones:
     - Library callers (e.g. runa-cpp MOBILE-001) go green with real builds.
     tasks:
     - id: MOBILE-MECH-001-T1
-      status: open
+      status: done
       title: Replace placeholder android/ios steps with real cross-compile smoke
       instructions:
         files:

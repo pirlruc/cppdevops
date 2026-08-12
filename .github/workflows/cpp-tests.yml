@@ -54,10 +54,12 @@ jobs:
       - name: Configure and build
         continue-on-error: ${{ env.ADVISORY == 'true' }}
         working-directory: ${{ inputs.library_path }}
+        env:
+          CMAKE_PRESET: ${{ inputs.cmake_preset }}
         run: |
           # Use gcov-compatible --coverage (not llvm source-based profiling) so
           # check-coverage.sh / gcovr can produce a numeric coverage.json.
-          cmake --preset ${{ inputs.cmake_preset }} \
+          cmake --preset "${CMAKE_PRESET}" \
             -DPIRLRUC_WITH_TESTS=ON \
             -DPIRLRUC_WITH_COVERAGE=ON \
             -DCMAKE_CXX_FLAGS="-stdlib=libc++ --coverage" \
@@ -75,5 +77,7 @@ jobs:
 
       - name: Coverage gate
         continue-on-error: ${{ env.ADVISORY == 'true' }}
+        env:
+          LIBRARY_PATH: ${{ inputs.library_path }}
         run: |
-          bash _cppdevops/scripts/check-coverage.sh "${{ inputs.library_path }}"
+          bash _cppdevops/scripts/check-coverage.sh "${LIBRARY_PATH}"
