@@ -32,7 +32,7 @@ Contract reference: [`docs/workflows.md`](workflows.md).
 |----------------------|-----|
 | `docs/guardrails` | `5a7ac83` (main tip after ci-base → ci-lint/ci-supply-chain; tag `1.1.0` is older) |
 | `.github/scaffold` | `f8a6ba1` (main tip) |
-| `ghcr.io/pirlruc/ci-cpp` | unpublished until annotated release triggers `ci-cpp-image.yml`; local `:local` rootfs **1065 MB** |
+| `ghcr.io/pirlruc/ci-cpp` | `@sha256:54ea6b2354709b742a3b1ae289b82c0cbb1ad9241d59ee06b94331ecf945d7f9` (tags `:latest` / `:20260812` / `:sha-3d09f6d`) |
 | commondevops `uses:` | tag **4.0.0** → `e4e902e62c35aa7e546536a0ba5a7782e377128e` |
 | containerdevops `uses:` | tag **2.4.0** → `ea908fd0feb87ab6615b71f5af1cce0637a6567b` |
 
@@ -53,7 +53,6 @@ Open companion PRs (not merged): [guardrails #58](https://github.com/pirlruc/gua
 | CPPD-REL-001 | Done — CHANGELOG 2.0.0 + annotated tag + GitHub Release |
 | CPPD-ECO-001 | Open (other repos) |
 | Deviations remaining | DOCKER-PERF-001, SC-SIGN-001 |
-| Follow-up | Digest-pin `container: ci-cpp@sha256:…` after first publish; drop zizmor `unpinned-images` ignores |
 
 ## Mobile toolchain pins (`CPP-BUILD-012`)
 
@@ -77,7 +76,7 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Known pitfalls
 
-- **`ghcr.io/pirlruc/ci-cpp` is unpublished** — `container: …:latest` fails at job start until release 2.0.0 publishes; zizmor `unpinned-images` temporarily ignored in `.github/config/zizmor.yml` until digest-pin.
+- Reusable workflows pin `container: ghcr.io/pirlruc/ci-cpp@sha256:54ea6b…` (digest-pin after first publish).
 - Threshold drift CI checks out `pirlruc/guardrails` with `GUARDRAILS_READ_TOKEN`
   (preferred) or `COMMONDEVOPS_READ_TOKEN` when that PAT also covers guardrails.
   Without either, the job soft-skips; run `scripts/check-threshold-drift.sh` locally.
@@ -87,8 +86,7 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Suggested next work
 
-1. Digest-pin `container: ghcr.io/pirlruc/ci-cpp@sha256:…` after 2.0.0 image publish; drop zizmor `unpinned-images` ignores.
-2. Provision `GUARDRAILS_READ_TOKEN` (contents:read on `pirlruc/guardrails`) so threshold-drift CI stops soft-skipping.
+1. Provision `GUARDRAILS_READ_TOKEN` (contents:read on `pirlruc/guardrails`) so threshold-drift CI stops soft-skipping.
 3. DEP-MECH-001-T2 Insights confirmation in handoff.
 4. CPPD-ECO-001 — consumer pin bumps to `@2.0.0` (other repos; needs approval).
 
