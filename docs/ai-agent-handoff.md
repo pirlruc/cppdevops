@@ -22,8 +22,7 @@ Owns reusable workflows under `.github/workflows/`:
 
 Also owns `templates/`, `scripts/sync-library-*.sh`, and `docker/ci-cpp/`.
 
-Standalone library callers should pin `pirlruc/cppdevops@1.0.0` or `@<sha>` (`CI-018`)
-until **2.0.0** lands.
+Standalone library callers should pin `pirlruc/cppdevops@2.0.0` or `@<sha>` (`CI-018`).
 
 Contract reference: [`docs/workflows.md`](workflows.md).
 
@@ -51,9 +50,10 @@ Open companion PRs (not merged): [guardrails #58](https://github.com/pirlruc/gua
 | DEP-MECH-001 | T1 done; T2 Insights after default-branch land |
 | AIREV-MECH-001 | Done — appended CPPD-* epics |
 | CPPD-IMG-001 / IMG-002 / WF-001 / WF-002 / CI-001 | Done on `main` |
-| CPPD-REL-001 | Open — CHANGELOG 2.0.0 + annotated tag + digest-pin follow-up |
+| CPPD-REL-001 | Done — CHANGELOG 2.0.0 + annotated tag + GitHub Release |
 | CPPD-ECO-001 | Open (other repos) |
 | Deviations remaining | DOCKER-PERF-001, SC-SIGN-001 |
+| Follow-up | Digest-pin `container: ci-cpp@sha256:…` after first publish; drop zizmor `unpinned-images` ignores |
 
 ## Mobile toolchain pins (`CPP-BUILD-012`)
 
@@ -87,10 +87,10 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Suggested next work
 
-1. Annotated tag **2.0.0** + GitHub release (triggers first `ci-cpp` publish).
-2. Digest-pin `container: ghcr.io/pirlruc/ci-cpp@sha256:…` and drop zizmor `unpinned-images` ignores.
+1. Digest-pin `container: ghcr.io/pirlruc/ci-cpp@sha256:…` after 2.0.0 image publish; drop zizmor `unpinned-images` ignores.
+2. Provision `GUARDRAILS_READ_TOKEN` (contents:read on `pirlruc/guardrails`) so threshold-drift CI stops soft-skipping.
 3. DEP-MECH-001-T2 Insights confirmation in handoff.
-4. CPPD-ECO-001 — consumer pin bumps (other repos; needs approval).
+4. CPPD-ECO-001 — consumer pin bumps to `@2.0.0` (other repos; needs approval).
 
 ## See also
 
