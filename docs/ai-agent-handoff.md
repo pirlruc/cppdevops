@@ -21,7 +21,7 @@ Owns reusable workflows under `.github/workflows/`:
 
 Also owns `templates/`, `scripts/sync-library-*.sh`, and `docker/ci-cpp/`.
 
-Standalone library callers should pin `pirlruc/cppdevops@<sha>` (`CI-018`).
+Standalone library callers should pin `pirlruc/cppdevops@1.0.0` or `@<sha>` (`CI-018`).
 
 ## Pins (2026-08-10)
 
@@ -74,6 +74,8 @@ python3 .github/scaffold/scripts/issues-sync.py \
 - [platform-and-ci-deltas.md](platform-and-ci-deltas.md)
 - [improvements.md](improvements.md)
 - [README.md](../README.md)
+- [CHANGELOG.md](../CHANGELOG.md)
 - [commondevops](https://github.com/pirlruc/commondevops)
+- [guardrails](https://github.com/pirlruc/guardrails) (pinned at `docs/guardrails/`)
 
 *Last updated: 2026-08-10*
