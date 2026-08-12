@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:1
 # C++ CI toolchain image — Ubuntu 24.04 (CPP-BUILD-004 / CPP-BUILD-009).
-# Scanner CLIs are COPY --from DHI / Hub donors to match commondevops ci-base.
+# Lint/secrets/SAST and SBOM scanners live in commondevops ci-lint /
+# ci-supply-chain; this image keeps the C++ compile toolchain only.
 # Publish target: ghcr.io/pirlruc/ci-cpp
 
 FROM docker.io/library/ubuntu:24.04@sha256:561618e2c15bf2397621dd04f96926663a3b5616c189cf7e38db7e82f5c538ea
@@ -45,7 +46,8 @@ RUN python3 -m venv /opt/venv \
       metrixpp \
       pyyaml
 
-# Shared scanners (same digests as commondevops ci-base, 2026-08-10)
+# Shared scanners (digest-pinned DHI / Hub donors; unused by cpp-* forwards —
+# scheduled for removal under CPPD-IMG-001)
 COPY --from=dhi.io/syft:1-debian13@sha256:3484ac184dd20f130a2f7b7ceb57b2e4f21a264338bb384295ea72bb825b2e3c \
   /usr/bin/syft /usr/local/bin/syft
 COPY --from=dhi.io/grype:0-debian13@sha256:b5af85761b7c2cd5afbfc8e75ca3b23d6a706c14c3831966f2e25218ff2da23f \

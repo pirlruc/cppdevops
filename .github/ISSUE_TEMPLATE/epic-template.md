@@ -37,20 +37,22 @@ assignees: ''
 
 Only constraints that override the in-repo guardrails set (`docs/guardrails/`). Cite stable **Guardrail IDs** (e.g. `CPP-TEST-003`) — do not restate full gate text.
 
-### Deviation (when lowering a gate)
+### Deviations
 
-<!-- Duplicate this block per deviation. Delete if none. -->
+<!--
+Do not write deviation values here. Record each one in docs/guardrail-deviations.yml with
+`epic:` set to this epic's ID; issues-sync.py renders them into the Guardrails section below.
+Field definitions: https://github.com/pirlruc/guardrails#deviation-rule
+-->
 
-- **Guardrail ID:** <!-- e.g. CPP-TEST-003 -->
-- **Org default:**
-- **Epic value:**
-- **Why:**
+<!-- List the Guardrail IDs this epic authorizes a deviation for, or delete this section. -->
+
 
 ## References
 
 <!-- Guardrail IDs, related epics, legacy source_adr IDs, methodology tag — not task verification commands -->
 <!-- Example: CPP-TEST-003, CPP-DOC-001 — https://github.com/pirlruc/guardrails -->
-<!-- Methodology: https://github.com/pirlruc/methodologies/tree/1.0.0/github-issue-adr -->
+<!-- Methodology: https://github.com/pirlruc/methodologies/tree/1.1.0/github-issue-adr -->
 
 ## Epic Acceptance Criteria
 

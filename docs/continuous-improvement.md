@@ -95,6 +95,8 @@ Use milestone `Continuous improvement` (or whatever already exists).
 | `AIREV-MECH-…` | Review / continuous improvement (existing) |
 | `CPPD-WF-…` | Reusable workflow contracts / CI-024/025 |
 | `CPPD-IMG-…` | ci-cpp image |
+| `CPPD-CI-…` | Self-CI / local parity |
+| `CPPD-REL-…` | Release / LICENSE / CHANGELOG |
 | `CPPD-MOB-…` | Mobile matrix / CI-014 |
 | `CPPD-ECO-…` | Ecosystem work owned by another repo (name it) |
 

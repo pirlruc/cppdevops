@@ -1,6 +1,8 @@
 # cppdevops
 
-[pirlruc/cppdevops](https://github.com/pirlruc/cppdevops) — reusable GitHub Actions workflows (`workflow_call`) for pirlruc C++ libraries.
+[pirlruc/cppdevops](https://github.com/pirlruc/cppdevops) — reusable GitHub Actions
+workflows (`workflow_call`) for pirlruc C++ libraries, plus the `ci-cpp` toolchain
+image and library bootstrap templates.
 
 ## Workflows
 
@@ -13,11 +15,15 @@
 | `cpp-codeql.yml` | CodeQL SAST (in addition to semgrep) |
 | `cpp-dynamic.yml` | ASan/UBSan + valgrind memcheck |
 | `cpp-infra.yml` | Thin caller → `commondevops` `common-infra-lint.yml` |
-| `cpp-mobile-matrix.yml` | iOS / Android matrix (placeholder) |
+| `cpp-mobile-matrix.yml` | iOS / Android matrix (placeholder until MOBILE-MECH-001) |
+
+Full input/output contract: [`docs/workflows.md`](docs/workflows.md).
 
 ## Actions quota mode (CI-TRIGGER-001)
 
-Library thin callers use **`workflow_dispatch` only** so pushes/PRs do not consume Actions minutes. Re-enable `push`/`pull_request` or label-gated `run-ci` when quota allows.
+Library thin callers use **`workflow_dispatch` only** so pushes/PRs do not consume
+Actions minutes. Re-enable `push`/`pull_request` or label-gated `run-ci` when quota
+allows.
 
 ### Run CI manually
 
@@ -53,11 +59,14 @@ jobs:
       blocking: ${{ inputs.blocking }}
 ```
 
-Pin `@<sha>` for published Nordic repos (`CI-018`). Advisory mode: `blocking: false` keeps `continue-on-error` so findings are visible without failing the workflow during refactor.
+Pin `@<sha>` or an annotated tag (`CI-018`). Advisory mode: `blocking: false`
+keeps `continue-on-error` so findings are visible without failing the workflow
+during refactor.
 
 ## Thresholds
 
 Read from `docs/guardrails/cpp/profile.thresholds.yml` (pinned central profile).
+A vendored copy under `scripts/` is planned (CPPD-WF-001) for sparse-checkout CI.
 
 ## Library bootstrap (templates + scripts)
 
@@ -67,20 +76,35 @@ Read from `docs/guardrails/cpp/profile.thresholds.yml` (pinned central profile).
 ./scripts/generate-doxyfile.sh /path/to/bor-cpp
 ```
 
-Synced configs include: clang-format/tidy, cpplint, gitleaks, semgrep, Metrix++ knobs (`.metrixpp.yml`), cppcheck suppressions, CodeQL, Syft/Grype/Trivy, ShellCheck, actionlint.
+| Path | Role |
+|------|------|
+| `templates/cpp/` | clang/format/tidy, pre-commit, gitleaks, presets, Doxyfile, scanners |
+| `templates/cmake/pirlruc_library.cmake` | Shared CMake helper |
+| `scripts/sync-library-tooling.sh` | Copy analysis configs + create-once `ci-quality.yml` |
+| `scripts/sync-library-devcontainer.sh` | Standalone devcontainer from template |
+| `scripts/generate-doxyfile.sh` | Generate `Doxyfile` from `Doxyfile.in` |
 
-See [`docs/platform-and-ci-deltas.md`](docs/platform-and-ci-deltas.md) for platform/CI policy deltas vs central guardrails.
+Synced configs include: clang-format/tidy, cpplint, gitleaks, semgrep, Metrix++
+(`.metrixpp.yml`), cppcheck suppressions, CodeQL, Syft/Grype/Trivy, ShellCheck,
+actionlint.
+
+Issue/PR templates remain in [pirlruc/github-scaffold](https://github.com/pirlruc/github-scaffold).
 
 ## Methodology
 
-[GitHub Issue-native ADR](https://github.com/pirlruc/methodologies/tree/main/github-issue-adr) — Epic = decision record. Templates: [pirlruc/github-scaffold](https://github.com/pirlruc/github-scaffold). Quality: pin [pirlruc/guardrails](https://github.com/pirlruc/guardrails) at `docs/guardrails/`.
+[GitHub Issue-native ADR](https://github.com/pirlruc/methodologies/tree/1.1.0/github-issue-adr)
+— Epic = decision record. Templates: [pirlruc/github-scaffold](https://github.com/pirlruc/github-scaffold).
+Quality: pin [pirlruc/guardrails](https://github.com/pirlruc/guardrails) at `docs/guardrails/`.
+Deviations: [`docs/guardrail-deviations.yml`](docs/guardrail-deviations.yml) only.
 
 ## Documentation
 
 - Agent handoff: [`docs/ai-agent-handoff.md`](docs/ai-agent-handoff.md)
-- Platform/CI deltas: [`docs/platform-and-ci-deltas.md`](docs/platform-and-ci-deltas.md)
-- Backlog: [`docs/improvements.md`](docs/improvements.md)
+- Workflow contracts: [`docs/workflows.md`](docs/workflows.md)
+- Authored backlog: [`docs/issues.yml`](docs/issues.yml)
+- Changelog: [`CHANGELOG.md`](CHANGELOG.md)
 
 ## Review protocol
 
-Changes to reusable workflow bodies affect all libraries — submit as a separate reviewable changeset.
+Changes to reusable workflow bodies affect all libraries — submit as a separate
+reviewable changeset.

@@ -7,7 +7,7 @@
 | **Folder** | `cpp/cppdevops/` |
 | **Remote** | https://github.com/pirlruc/cppdevops |
 | **Branch** | `feature-dependency-update-policy` |
-| **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts |
+| **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
 ## Scope
@@ -23,14 +23,20 @@ Also owns `templates/`, `scripts/sync-library-*.sh`, and `docker/ci-cpp/`.
 
 Standalone library callers should pin `pirlruc/cppdevops@1.0.0` or `@<sha>` (`CI-018`).
 
-## Pins (2026-08-10)
+Contract reference: [`docs/workflows.md`](workflows.md).
+
+## Pins (2026-08-12)
 
 | Submodule / artifact | Pin |
 |----------------------|-----|
-| `docs/guardrails` | tag `1.0.0` → `925b9f32659936382c67850ec125a182261710bf` |
-| `.github/scaffold` | `0db5890f808e4a9b9d11eabfc9a95b2b90898fad` |
-| `ghcr.io/pirlruc/ci-cpp` | local tag `:local`; workflows use `:latest` until publish |
-| commondevops `uses:` | **`74695e83a7b79784ee81fd970d9051d8efd711e8`** — replace after first commondevops push |
+| `docs/guardrails` | `5a7ac83` (main tip after ci-base → ci-lint/ci-supply-chain; tag `1.1.0` is older) |
+| `.github/scaffold` | `f8a6ba1` (main tip) |
+| `ghcr.io/pirlruc/ci-cpp` | not published yet; workflows still use `:latest` (broken until CPPD-IMG-002) |
+| commondevops `uses:` | `74695e83…` (stale — bump to tag **4.0.0** / `e4e902e…` in CPPD-WF-002) |
+
+Open companion PRs (not merged): [guardrails #58](https://github.com/pirlruc/guardrails/pull/58),
+[github-scaffold #37](https://github.com/pirlruc/github-scaffold/pull/37),
+[methodologies #49](https://github.com/pirlruc/methodologies/pull/49).
 
 ## Delivery status
 
@@ -39,43 +45,56 @@ Standalone library callers should pin `pirlruc/cppdevops@1.0.0` or `@<sha>` (`CI
 | Phase 1 — CONS-* | Done |
 | Phase 2 — GATE/COV/CI-TRIGGER/TOOL-CFG/DOC/DYN/SEC-MECH-001…004/INFRA/CI-001 | Done (authored) |
 | MOBILE-MECH-001 | Open (placeholder + deviations CI-014 / CPP-BUILD-010/011) |
-| DEP-MECH-001 | Open (Dependabot rewritten; Insights after default-branch land) |
-| AIREV-MECH-001 | Open |
+| DEP-MECH-001 | T1 done (registries + cooldown); T2 Insights after default-branch land |
+| AIREV-MECH-001 | Done — appended CPPD-* epics |
+| CPPD-IMG-001 / IMG-002 / WF-001 / WF-002 / CI-001 / REL-001 / ECO-001 | Open |
 | `run_sbom` default | **true** (SC-SBOM-001) |
+
+## Mobile toolchain pins (`CPP-BUILD-012`)
+
+| Pin | Value | Review |
+|-----|-------|--------|
+| `MIN_ANDROID_NDK_VERSION` | 26.1.10909125 | 2027-01-01 |
+| `MIN_XCODE_VERSION` | 15.4 | 2027-01-01 |
+
+(Also defaults on `cpp-mobile-matrix.yml` inputs `min_ndk` / `min_xcode`.)
 
 ## Commands
 
 ```bash
-# Local CI image (already built on this host as :local):
 docker build -t ghcr.io/pirlruc/ci-cpp:local docker/ci-cpp
 ./scripts/sync-library-tooling.sh /path/to/library
+./scripts/sync-library-devcontainer.sh /path/to/library <cmake-target> [display-name]
+./scripts/generate-doxyfile.sh /path/to/library
 python3 .github/scaffold/scripts/issues-sync.py \
   --repo pirlruc/cppdevops --yaml docs/issues.yml --dry-run
 ```
 
 ## Known pitfalls
 
-- **`74695e83a7b79784ee81fd970d9051d8efd711e8`** in `cpp-infra.yml` / `cpp-security.yml` must be
-  replaced after commondevops's first push; keep `scripts_ref` identical to `uses:` pin.
-- Quality/tests/docs/dynamic/codeql jobs use `container: ghcr.io/pirlruc/ci-cpp:latest`
-  (apt/pip install steps removed). Image must be pullable or jobs fail.
+- **`ghcr.io/pirlruc/ci-cpp` is unpublished** — every `container:` job fails at startup until CPPD-IMG-002.
+- Threshold sparse-checkout does not init the guardrails submodule — coverage/doc/Metrix gates fail (CPPD-WF-001).
+- Stale commondevops pin `74695e83…` in `cpp-infra.yml` / `cpp-security.yml` (CPPD-WF-002).
 - Mobile matrix is echo-only — see `docs/guardrail-deviations.yml` and MOBILE-MECH-001.
-- Private nested checkout of this repo from library callers needs a PAT when private.
+- Seven consumer libraries still pin `@main` (CPPD-ECO-001 / CI-018 on their side).
+- Private nested checkout needs a PAT when private.
 
 ## Suggested next work
 
-1. First commondevops commit → replace `74695e83a7b79784ee81fd970d9051d8efd711e8`.
-2. Publish `ghcr.io/pirlruc/ci-cpp:latest`.
-3. Implement real NDK/Xcode smoke builds (MOBILE-MECH-001) and clear deviations.
-4. Merge branch; Dependabot Insights confirmation (DEP-MECH-001-T2).
+1. CPPD-WF-001 / WF-002 — vendor thresholds + gate correctness.
+2. CPPD-IMG-001 / IMG-002 — redesign + publish `ci-cpp`.
+3. CPPD-CI-001 — self-CI + local parity scripts.
+4. MOBILE-MECH-001 — real NDK/Xcode smoke; clear deviations.
+5. Annotated tag **2.0.0** + digest-pin `container:` refs.
+6. DEP-MECH-001-T2 Insights after merge to `main`.
 
 ## See also
 
-- [platform-and-ci-deltas.md](platform-and-ci-deltas.md)
-- [improvements.md](improvements.md)
+- [workflows.md](workflows.md)
 - [README.md](../README.md)
 - [CHANGELOG.md](../CHANGELOG.md)
 - [commondevops](https://github.com/pirlruc/commondevops)
-- [guardrails](https://github.com/pirlruc/guardrails) (pinned at `docs/guardrails/`)
+- [containerdevops](https://github.com/pirlruc/containerdevops)
+- [guardrails](https://github.com/pirlruc/guardrails)
 
-*Last updated: 2026-08-10*
+*Last updated: 2026-08-12*
