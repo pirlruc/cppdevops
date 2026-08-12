@@ -504,7 +504,7 @@ milestones:
       - PR appends material findings within budget, or handoff records justified no-op
 
   - id: CPPD-IMG-001
-    status: open
+    status: done
     title: Redesign ci-cpp — drop ci-base scanner duplication
     overview:
       problem: >-
@@ -531,7 +531,7 @@ milestones:
     - DOCKER-DOC-001
     tasks:
     - id: CPPD-IMG-001-T1
-      status: open
+      status: done
       title: Rewrite Dockerfile and add structure-test / trivyignore
       instructions:
         files:
@@ -544,7 +544,7 @@ milestones:
       - DOCKER-RUN-001
 
   - id: CPPD-IMG-002
-    status: open
+    status: done
     title: Publish ghcr.io/pirlruc/ci-cpp with monthly rebuild cadence
     overview:
       problem: >-
@@ -569,7 +569,7 @@ milestones:
     - CI-027
     tasks:
     - id: CPPD-IMG-002-T1
-      status: open
+      status: done
       title: Add ci-cpp-image.yml thin caller
       instructions:
         files:
@@ -670,7 +670,7 @@ milestones:
       - CI-023
 
   - id: CPPD-CI-001
-    status: open
+    status: done
     title: Self-CI and local parity scripts
     overview:
       problem: >-
@@ -695,7 +695,7 @@ milestones:
     - CI-023
     tasks:
     - id: CPPD-CI-001-T1
-      status: open
+      status: done
       title: Add self-CI workflows and local check scripts
       instructions:
         files:

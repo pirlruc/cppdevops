@@ -1,0 +1,53 @@
+name: Cppdevops CI (self)
+
+# Deterministic infra lint + threshold drift. Time-varying security stays on
+# cppdevops-security.yml (schedule). Dependabot actor skipped (CI-024).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      blocking:
+        description: Fail jobs on gate errors
+        type: boolean
+        default: false
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# CI-025
+permissions: {}
+
+jobs:
+  infra-lint:
+    if: github.actor != 'dependabot[bot]'
+    permissions:
+      contents: read
+    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@e4e902e62c35aa7e546536a0ba5a7782e377128e
+    with:
+      # Push/PR are blocking; workflow_dispatch honours the input.
+      blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
+      working_directory: .
+      shell_scripts: scripts/*.sh
+      dockerfiles: docker/ci-cpp/Dockerfile
+      scripts_ref: e4e902e62c35aa7e546536a0ba5a7782e377128e
+    secrets:
+      checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
+
+  threshold-drift:
+    if: github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          submodules: true
+      - name: Drift-check vendored C++ thresholds
+        run: bash scripts/check-threshold-drift.sh

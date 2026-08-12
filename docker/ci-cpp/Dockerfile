@@ -1,14 +1,56 @@
 # syntax=docker/dockerfile:1
 # C++ CI toolchain image — Ubuntu 24.04 (CPP-BUILD-004 / CPP-BUILD-009).
 # Lint/secrets/SAST and SBOM scanners live in commondevops ci-lint /
-# ci-supply-chain; this image keeps the C++ compile toolchain only.
+# ci-supply-chain; cpp-* workflows forward there. This image keeps the
+# compile/test/doc/quality toolchain only.
+#
+# uv is COPY --from a digest-pinned donor (build stage only). The venv is
+# built on Ubuntu so it matches the final Python (3.12), not a Debian 13 donor.
+#
+# No HEALTHCHECK: short-lived CI toolchain (CLI job container), not a supervised
+# service (DOCKER-RUN-002 / DOCKER-RUN-006).
 # Publish target: ghcr.io/pirlruc/ci-cpp
 
-FROM docker.io/library/ubuntu:24.04@sha256:561618e2c15bf2397621dd04f96926663a3b5616c189cf7e38db7e82f5c538ea
+ARG BASE=docker.io/library/ubuntu:24.04@sha256:561618e2c15bf2397621dd04f96926663a3b5616c189cf7e38db7e82f5c538ea
+
+# ---------------------------------------------------------------------------
+# pybuild — install Python CLIs into /opt/venv; uv stays out of the final image.
+# ---------------------------------------------------------------------------
+# hadolint ignore=DL3006
+FROM ${BASE} AS pybuild
+# hadolint ignore=DL3008
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+      ca-certificates \
+      python3 \
+      python3-venv \
+ && rm -rf /var/lib/apt/lists/*
+COPY --from=ghcr.io/astral-sh/uv:0.12.0@sha256:606e70c71c852d03f611b1e56a195d08648507018a7057fab82c4974c4eae105 \
+  /uv /usr/local/bin/uv
+ENV UV_PYTHON=/usr/bin/python3 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+RUN python3 -m venv /opt/venv \
+ && /usr/local/bin/uv pip install --python /opt/venv/bin/python --no-cache \
+      coverxygen \
+      cpplint \
+      gcovr \
+      lizard \
+      metrixpp \
+      pyyaml
+
+# ---------------------------------------------------------------------------
+# Final image
+# ---------------------------------------------------------------------------
+# hadolint ignore=DL3006
+FROM ${BASE}
 
 LABEL org.opencontainers.image.title="ci-cpp" \
-      org.opencontainers.image.description="C++ CI toolchain for pirlruc/cppdevops" \
+      org.opencontainers.image.description="Short-lived C++ CI toolchain for pirlruc/cppdevops: Clang/libc++, CMake, Ninja, cppcheck, clang-tidy/format, Doxygen, gcovr, lizard, Metrix++, coverxygen, valgrind. Ubuntu 24.04. Non-root 1000:1000, linux/amd64." \
       org.opencontainers.image.source="https://github.com/pirlruc/cppdevops" \
+      org.opencontainers.image.url="https://github.com/pirlruc/cppdevops/pkgs/container/ci-cpp" \
+      org.opencontainers.image.documentation="https://github.com/pirlruc/cppdevops/blob/main/docs/workflows.md" \
+      org.opencontainers.image.vendor="pirlruc" \
       org.opencontainers.image.licenses="MIT"
 
 ENV DEBIAN_FRONTEND=noninteractive \
@@ -16,6 +58,8 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
+# Base image is digest-pinned; apt package versions float within Ubuntu 24.04.
+# hadolint ignore=DL3008
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
       clang \
@@ -27,9 +71,9 @@ RUN apt-get update \
       graphviz \
       libc++-dev \
       libc++abi-dev \
+      llvm \
       ninja-build \
       python3 \
-      python3-pip \
       python3-venv \
       valgrind \
       ca-certificates \
@@ -37,30 +81,17 @@ RUN apt-get update \
       git \
  && rm -rf /var/lib/apt/lists/*
 
-RUN python3 -m venv /opt/venv \
- && /opt/venv/bin/pip install --no-cache-dir \
-      coverxygen \
-      cpplint \
-      gcovr \
-      lizard \
-      metrixpp \
-      pyyaml
-
-# Shared scanners (digest-pinned DHI / Hub donors; unused by cpp-* forwards —
-# scheduled for removal under CPPD-IMG-001)
-COPY --from=dhi.io/syft:1-debian13@sha256:3484ac184dd20f130a2f7b7ceb57b2e4f21a264338bb384295ea72bb825b2e3c \
-  /usr/bin/syft /usr/local/bin/syft
-COPY --from=dhi.io/grype:0-debian13@sha256:b5af85761b7c2cd5afbfc8e75ca3b23d6a706c14c3831966f2e25218ff2da23f \
-  /usr/bin/grype /usr/local/bin/grype
-COPY --from=dhi.io/trivy:0-debian13@sha256:f957a8173ddfc1e82cd4454fd760011e65cb03f42ffe67a91fe105a140ffade5 \
-  /usr/bin/trivy /usr/local/bin/trivy
-COPY --from=dhi.io/gitleaks:8-debian13@sha256:08b93b96ee818647ab1fb8e148bf8af4e1190b344e48b0e9bfa57eae98db8117 \
-  /usr/local/bin/gitleaks /usr/local/bin/gitleaks
-COPY --from=dhi.io/shellcheck:0-debian13@sha256:eb696ecbc0a6dbe57588d88c700c3da7cce3824f8c865795348f9b51c7524331 \
-  /usr/local/bin/shellcheck /usr/local/bin/shellcheck
-COPY --from=hadolint/hadolint:2.12.0-alpine /bin/hadolint /usr/local/bin/hadolint
-COPY --from=rhysd/actionlint:1.7.7 /usr/local/bin/actionlint /usr/local/bin/actionlint
+COPY --from=pybuild /opt/venv /opt/venv
 
 WORKDIR /workspace
+
+# Non-root default user (DOCKER-RUN-001). Ubuntu 24.04 already ships uid 1000.
+RUN if ! id -u 1000 >/dev/null 2>&1; then \
+      useradd --uid 1000 --create-home --shell /bin/bash ci; \
+    fi \
+ && mkdir -p /home/ci \
+ && chown -R 1000:1000 /workspace /opt/venv /home/ci
+USER 1000:1000
+
 ENTRYPOINT []
 CMD ["bash"]
