@@ -12,18 +12,6 @@ on:
         required: false
         type: boolean
         default: false
-      statement_coverage:
-        required: false
-        type: string
-        default: '95'
-      branch_coverage:
-        required: false
-        type: string
-        default: '95'
-      max_cyclomatic_complexity:
-        required: false
-        type: string
-        default: '10'
     secrets:
       checkout_token:
         required: false
@@ -62,20 +50,27 @@ jobs:
           path: _cppdevops
           sparse-checkout: |
             scripts
-            docs/guardrails/cpp
           sparse-checkout-cone-mode: false
 
       - name: clang-format
         continue-on-error: ${{ env.ADVISORY == 'true' }}
         run: |
-          find include src -name '*.cpp' -o -name '*.hpp' -o -name '*.h' 2>/dev/null | \
-            xargs -r clang-format --dry-run --Werror
+          dirs=()
+          [[ -d include ]] && dirs+=(include)
+          [[ -d src ]] && dirs+=(src)
+          if [[ ${#dirs[@]} -eq 0 ]]; then echo "No include/src"; exit 0; fi
+          find "${dirs[@]}" \( -name '*.cpp' -o -name '*.hpp' -o -name '*.h' \) -print0 | \
+            xargs -0 -r clang-format --dry-run --Werror
 
       - name: cpplint
         continue-on-error: ${{ env.ADVISORY == 'true' }}
         run: |
-          find include src \( -name '*.cpp' -o -name '*.hpp' \) 2>/dev/null | \
-            xargs -r cpplint --recursive --linelength=120
+          dirs=()
+          [[ -d include ]] && dirs+=(include)
+          [[ -d src ]] && dirs+=(src)
+          if [[ ${#dirs[@]} -eq 0 ]]; then echo "No include/src"; exit 0; fi
+          find "${dirs[@]}" \( -name '*.cpp' -o -name '*.hpp' \) -print0 | \
+            xargs -0 -r cpplint --recursive --linelength=120
 
       - name: Configure compile_commands
         continue-on-error: ${{ env.ADVISORY == 'true' }}
@@ -91,7 +86,11 @@ jobs:
             echo "compile_commands.json missing — skip clang-tidy"
             exit 0
           fi
-          mapfile -t SRC < <(find include src \( -name '*.cpp' -o -name '*.hpp' \) 2>/dev/null | head -400)
+          dirs=()
+          [[ -d include ]] && dirs+=(include)
+          [[ -d src ]] && dirs+=(src)
+          if [[ ${#dirs[@]} -eq 0 ]]; then echo "No include/src"; exit 0; fi
+          mapfile -t SRC < <(find "${dirs[@]}" \( -name '*.cpp' -o -name '*.hpp' \) | head -400)
           if [[ ${#SRC[@]} -eq 0 ]]; then
             echo "No sources"
             exit 0
@@ -101,17 +100,26 @@ jobs:
       - name: cppcheck
         continue-on-error: ${{ env.ADVISORY == 'true' }}
         run: |
+          dirs=()
+          [[ -d include ]] && dirs+=(include)
+          [[ -d src ]] && dirs+=(src)
+          if [[ ${#dirs[@]} -eq 0 ]]; then echo "No include/src"; exit 0; fi
           SUPP=cppcheck-suppressions.xml
           EXTRA=()
           [[ -f "$SUPP" ]] && EXTRA=(--suppressions-list="$SUPP")
           cppcheck --enable=warning,style,performance,portability \
             --error-exitcode=1 --inline-suppr \
-            --std=c++20 "${EXTRA[@]}" include src
+            --std=c++20 "${EXTRA[@]}" "${dirs[@]}"
 
       - name: lizard complexity
         continue-on-error: ${{ env.ADVISORY == 'true' }}
         run: |
-          lizard include src -l cpp -C ${{ inputs.max_cyclomatic_complexity }} -w
+          dirs=()
+          [[ -d include ]] && dirs+=(include)
+          [[ -d src ]] && dirs+=(src)
+          if [[ ${#dirs[@]} -eq 0 ]]; then echo "No include/src"; exit 0; fi
+          CCN="$(bash "${{ github.workspace }}/_cppdevops/scripts/read-thresholds.sh" max_cyclomatic_complexity)"
+          lizard "${dirs[@]}" -l cpp -C "$CCN" -w
 
       - name: Metrix++ maintainability
         continue-on-error: ${{ env.ADVISORY == 'true' }}

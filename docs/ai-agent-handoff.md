@@ -32,7 +32,7 @@ Contract reference: [`docs/workflows.md`](workflows.md).
 | `docs/guardrails` | `5a7ac83` (main tip after ci-base → ci-lint/ci-supply-chain; tag `1.1.0` is older) |
 | `.github/scaffold` | `f8a6ba1` (main tip) |
 | `ghcr.io/pirlruc/ci-cpp` | not published yet; workflows still use `:latest` (broken until CPPD-IMG-002) |
-| commondevops `uses:` | `74695e83…` (stale — bump to tag **4.0.0** / `e4e902e…` in CPPD-WF-002) |
+| commondevops `uses:` | tag **4.0.0** → `e4e902e62c35aa7e546536a0ba5a7782e377128e` |
 
 Open companion PRs (not merged): [guardrails #58](https://github.com/pirlruc/guardrails/pull/58),
 [github-scaffold #37](https://github.com/pirlruc/github-scaffold/pull/37),
@@ -73,8 +73,7 @@ python3 .github/scaffold/scripts/issues-sync.py \
 ## Known pitfalls
 
 - **`ghcr.io/pirlruc/ci-cpp` is unpublished** — every `container:` job fails at startup until CPPD-IMG-002.
-- Threshold sparse-checkout does not init the guardrails submodule — coverage/doc/Metrix gates fail (CPPD-WF-001).
-- Stale commondevops pin `74695e83…` in `cpp-infra.yml` / `cpp-security.yml` (CPPD-WF-002).
+- Thresholds are vendored at `scripts/cpp.profile.thresholds.yml` (drift-check via `scripts/check-threshold-drift.sh`).
 - Mobile matrix is echo-only — see `docs/guardrail-deviations.yml` and MOBILE-MECH-001.
 - Seven consumer libraries still pin `@main` (CPPD-ECO-001 / CI-018 on their side).
 - Private nested checkout needs a PAT when private.

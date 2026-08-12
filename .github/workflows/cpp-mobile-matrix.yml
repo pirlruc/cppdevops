@@ -34,6 +34,9 @@ jobs:
     timeout-minutes: 60
     permissions:
       contents: read
+    concurrency:
+      group: mobile-android-${{ inputs.library_path }}-${{ github.ref }}
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -50,6 +53,9 @@ jobs:
     timeout-minutes: 60
     permissions:
       contents: read
+    concurrency:
+      group: mobile-ios-${{ inputs.library_path }}-${{ github.ref }}
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

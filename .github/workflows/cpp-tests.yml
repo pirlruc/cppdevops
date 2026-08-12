@@ -14,14 +14,6 @@ on:
         required: false
         type: boolean
         default: false
-      statement_coverage:
-        required: false
-        type: string
-        default: '95'
-      branch_coverage:
-        required: false
-        type: string
-        default: '95'
     secrets:
       checkout_token:
         required: false
@@ -57,7 +49,6 @@ jobs:
           path: _cppdevops
           sparse-checkout: |
             scripts
-            docs/guardrails/cpp
           sparse-checkout-cone-mode: false
 
       - name: Configure and build
