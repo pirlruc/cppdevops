@@ -55,5 +55,7 @@ jobs:
 
       - name: Doc coverage gate (coverxygen)
         continue-on-error: ${{ env.ADVISORY == 'true' }}
+        env:
+          LIBRARY_PATH: ${{ inputs.library_path }}
         run: |
-          bash _cppdevops/scripts/check-doc-coverage.sh "${{ inputs.library_path }}"
+          bash _cppdevops/scripts/check-doc-coverage.sh "${LIBRARY_PATH}"

@@ -1,7 +1,7 @@
 name: C++ Mobile matrix (reusable)
 
-# Placeholder jobs only — real NDK/Xcode smoke builds tracked by MOBILE-MECH-001.
-# Deviations: CI-014, CPP-BUILD-010/011 in docs/guardrail-deviations.yml.
+# Cross-compile a header-including smoke TU on Android NDK and iOS Xcode
+# (MOBILE-MECH-001 / CI-014 / CPP-BUILD-010/011). Pins: CPP-BUILD-012.
 
 on:
   workflow_call:
@@ -12,15 +12,18 @@ on:
       min_ndk:
         required: false
         type: string
-        default: '26.1.10909125'
+        default: "26.1.10909125"
       min_xcode:
         required: false
         type: string
-        default: '15.4'
+        default: "15.4"
       blocking:
         required: false
         type: boolean
         default: false
+    secrets:
+      checkout_token:
+        required: false
 
 # CI-025
 permissions: {}
@@ -41,12 +44,55 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Android NDK build (placeholder)
+
+      - name: Checkout cppdevops smoke sources
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: pirlruc/cppdevops
+          token: ${{ secrets.checkout_token || github.token }}
+          persist-credentials: false
+          path: _cppdevops
+          sparse-checkout: |
+            scripts/mobile-smoke
+          sparse-checkout-cone-mode: false
+
+      - name: Setup Android NDK
+        uses: nttld/setup-ndk@ed92fe6cadad69be94a966a7ee3271275e62f779 # v1.6.0
+        id: setup-ndk
+        with:
+          ndk-version: ${{ inputs.min_ndk }}
+          link-to-sdk: false
+
+      - name: Android NDK smoke compile
         continue-on-error: ${{ env.ADVISORY == 'true' }}
+        env:
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+          LIBRARY_PATH: ${{ inputs.library_path }}
+          MIN_NDK: ${{ inputs.min_ndk }}
         run: |
-          echo "NDK pin: ${{ inputs.min_ndk }}"
-          echo "Configure Android build for ${{ inputs.library_path }} with clang + libc++"
-          echo "::notice::Placeholder — see MOBILE-MECH-001 / docs/guardrail-deviations.yml"
+          set -euo pipefail
+          echo "library_path=${LIBRARY_PATH}"
+          echo "NDK pin=${MIN_NDK}"
+          echo "NDK home=${ANDROID_NDK_HOME}"
+          # Prefer API 24 aarch64 clang++; fall back to any aarch64 android clang++.
+          mapfile -t CLANGS < <(
+            find "${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt" -type f \
+              \( -name 'aarch64-linux-android24-clang++' -o -name 'aarch64-linux-android*-clang++' \) \
+              | sort
+          )
+          if [[ ${#CLANGS[@]} -eq 0 ]]; then
+            echo "::error::No aarch64-linux-android*-clang++ under ${ANDROID_NDK_HOME}"
+            exit 1
+          fi
+          CXX="${CLANGS[0]}"
+          echo "Using ${CXX}"
+          OUT="${RUNNER_TEMP}/mobile-smoke-android"
+          mkdir -p "${OUT}"
+          "${CXX}" -stdlib=libc++ -std=c++20 -fPIC \
+            -o "${OUT}/smoke" \
+            _cppdevops/scripts/mobile-smoke/smoke.cpp
+          file "${OUT}/smoke"
+          echo "::notice::Android NDK smoke compile succeeded"
 
   ios:
     runs-on: macos-14
@@ -60,9 +106,37 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: iOS Xcode build (placeholder)
+
+      - name: Checkout cppdevops smoke sources
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: pirlruc/cppdevops
+          token: ${{ secrets.checkout_token || github.token }}
+          persist-credentials: false
+          path: _cppdevops
+          sparse-checkout: |
+            scripts/mobile-smoke
+          sparse-checkout-cone-mode: false
+
+      - uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
+        with:
+          xcode-version: ${{ inputs.min_xcode }}
+
+      - name: iOS Xcode smoke compile
         continue-on-error: ${{ env.ADVISORY == 'true' }}
+        env:
+          LIBRARY_PATH: ${{ inputs.library_path }}
+          MIN_XCODE: ${{ inputs.min_xcode }}
         run: |
-          echo "Xcode pin: ${{ inputs.min_xcode }}"
-          echo "Configure iOS build for ${{ inputs.library_path }} with clang + libc++"
-          echo "::notice::Placeholder — see MOBILE-MECH-001 / docs/guardrail-deviations.yml"
+          set -euo pipefail
+          echo "library_path=${LIBRARY_PATH}"
+          echo "Xcode pin=${MIN_XCODE}"
+          xcodebuild -version
+          OUT="${RUNNER_TEMP}/mobile-smoke-ios"
+          mkdir -p "${OUT}"
+          xcrun --sdk iphoneos clang++ -stdlib=libc++ -std=c++20 \
+            -arch arm64 -isysroot "$(xcrun --sdk iphoneos --show-sdk-path)" \
+            -o "${OUT}/smoke" \
+            _cppdevops/scripts/mobile-smoke/smoke.cpp
+          file "${OUT}/smoke"
+          echo "::notice::iOS Xcode smoke compile succeeded"

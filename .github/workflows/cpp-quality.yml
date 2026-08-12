@@ -113,16 +113,20 @@ jobs:
 
       - name: lizard complexity
         continue-on-error: ${{ env.ADVISORY == 'true' }}
+        env:
+          CPPDEVOPS_SCRIPTS: ${{ github.workspace }}/_cppdevops/scripts
         run: |
           dirs=()
           [[ -d include ]] && dirs+=(include)
           [[ -d src ]] && dirs+=(src)
           if [[ ${#dirs[@]} -eq 0 ]]; then echo "No include/src"; exit 0; fi
-          CCN="$(bash "${{ github.workspace }}/_cppdevops/scripts/read-thresholds.sh" max_cyclomatic_complexity)"
+          CCN="$(bash "${CPPDEVOPS_SCRIPTS}/read-thresholds.sh" max_cyclomatic_complexity)"
           lizard "${dirs[@]}" -l cpp -C "$CCN" -w
 
       - name: Metrix++ maintainability
         continue-on-error: ${{ env.ADVISORY == 'true' }}
         working-directory: ${{ github.workspace }}
+        env:
+          LIBRARY_PATH: ${{ inputs.library_path }}
         run: |
-          bash _cppdevops/scripts/run-metrixpp.sh "${{ inputs.library_path }}"
+          bash _cppdevops/scripts/run-metrixpp.sh "${LIBRARY_PATH}"

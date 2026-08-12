@@ -45,9 +45,21 @@ jobs:
     permissions:
       contents: read
     steps:
+      # Private guardrails/scaffold: do not use submodules:true with github.token
+      # (clone fails with "Repository not found"). Checkout only the guardrails
+      # gitlink SHA with a contents:read PAT (same secret used for commondevops).
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          submodules: true
+      - name: Resolve guardrails gitlink SHA
+        id: guardrails_pin
+        run: echo "sha=$(git rev-parse 'HEAD:docs/guardrails')" >> "${GITHUB_OUTPUT}"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: pirlruc/guardrails
+          ref: ${{ steps.guardrails_pin.outputs.sha }}
+          path: docs/guardrails
+          token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
+          persist-credentials: false
       - name: Drift-check vendored C++ thresholds
         run: bash scripts/check-threshold-drift.sh
