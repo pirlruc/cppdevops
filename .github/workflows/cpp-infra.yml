@@ -40,13 +40,13 @@ jobs:
   infra:
     # CI-024: Dependabot PRs cannot use Actions secrets for private reusables.
     if: github.actor != 'dependabot[bot]'
-    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@74695e83a7b79784ee81fd970d9051d8efd711e8
+    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@e4e902e62c35aa7e546536a0ba5a7782e377128e
     with:
       blocking: ${{ inputs.blocking }}
       working_directory: ${{ inputs.working_directory || '.' }}
       shell_scripts: ${{ inputs.shell_scripts || '' }}
       dockerfiles: ${{ inputs.dockerfiles || '' }}
       # Must match uses: @pin (CI-018).
-      scripts_ref: 74695e83a7b79784ee81fd970d9051d8efd711e8
+      scripts_ref: e4e902e62c35aa7e546536a0ba5a7782e377128e
     secrets:
       checkout_token: ${{ secrets.checkout_token }}

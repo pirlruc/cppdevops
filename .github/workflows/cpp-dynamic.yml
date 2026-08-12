@@ -34,6 +34,9 @@ jobs:
     timeout-minutes: 45
     permissions:
       contents: read
+    concurrency:
+      group: dynamic-asan-${{ inputs.library_path }}-${{ github.ref }}
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -64,6 +67,9 @@ jobs:
     timeout-minutes: 60
     permissions:
       contents: read
+    concurrency:
+      group: dynamic-valgrind-${{ inputs.library_path }}-${{ github.ref }}
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -85,7 +91,8 @@ jobs:
         working-directory: ${{ inputs.library_path }}
         run: |
           # Run ctest under valgrind via CTEST_MEMORYCHECK
+          mapfile -t BINS < <(find build-vg -type f -executable -name '*test*' | head -1)
           ctest --test-dir build-vg -T memcheck --output-on-failure || \
             valgrind --leak-check=full --error-exitcode=1 \
               --gen-suppressions=all \
-              $(find build-vg -type f -executable -name '*test*' | head -1)
+              "${BINS[0]}"

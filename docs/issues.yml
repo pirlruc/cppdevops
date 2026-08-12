@@ -581,7 +581,7 @@ milestones:
       - CI-027
 
   - id: CPPD-WF-001
-    status: open
+    status: done
     title: Vendor C++ thresholds and stop baking numeric gates
     overview:
       problem: >-
@@ -611,7 +611,7 @@ milestones:
     - CI-022
     tasks:
     - id: CPPD-WF-001-T1
-      status: open
+      status: done
       title: Vendor thresholds and wire scripts/workflows
       instructions:
         files:
@@ -625,7 +625,7 @@ milestones:
       - CI-022
 
   - id: CPPD-WF-002
-    status: open
+    status: done
     title: Fix gate correctness bugs in reusable workflows and scripts
     overview:
       problem: >-
@@ -656,7 +656,7 @@ milestones:
     - CI-023
     tasks:
     - id: CPPD-WF-002-T1
-      status: open
+      status: done
       title: Harden gate scripts and workflow contracts
       instructions:
         files:

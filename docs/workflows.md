@@ -31,9 +31,10 @@ clang-format, cpplint, clang-tidy, cppcheck, lizard, Metrix++.
 |-------|---------|-------|
 | `library_path` | required | |
 | `blocking` | `false` | |
-| `max_cyclomatic_complexity` | `'10'` | Prefer reading from thresholds (CPPD-WF-001) |
 
-Job runs in `container: ghcr.io/pirlruc/ci-cpp:latest` (until digest-pinned).
+Numeric gates (CCN, coverage) come from `scripts/cpp.profile.thresholds.yml`
+(CI-021/022). Job runs in `container: ghcr.io/pirlruc/ci-cpp:latest` (until
+digest-pinned).
 
 ---
 
@@ -51,7 +52,8 @@ CMake configure/build, CTest, coverage gate (`scripts/check-coverage.sh`).
 
 ## `cpp-docs.yml`
 
-Doxygen + coverxygen via `scripts/check-doc-coverage.sh`.
+Doxygen + coverxygen via `scripts/check-doc-coverage.sh` (reads `doc_coverage`
+from vendored thresholds; does not mutate the tracked Doxyfile).
 
 | Input | Default |
 |-------|---------|

@@ -10,10 +10,6 @@ on:
         required: false
         type: boolean
         default: false
-      doc_coverage:
-        required: false
-        type: string
-        default: '95'
     secrets:
       checkout_token:
         required: false
@@ -32,6 +28,9 @@ jobs:
     timeout-minutes: 20
     permissions:
       contents: read
+    concurrency:
+      group: docs-${{ inputs.library_path }}-${{ github.ref }}
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -46,7 +45,6 @@ jobs:
           path: _cppdevops
           sparse-checkout: |
             scripts
-            docs/guardrails/cpp
           sparse-checkout-cone-mode: false
 
       - name: Generate Doxygen
@@ -58,4 +56,4 @@ jobs:
       - name: Doc coverage gate (coverxygen)
         continue-on-error: ${{ env.ADVISORY == 'true' }}
         run: |
-          bash _cppdevops/scripts/check-doc-coverage.sh "${{ inputs.library_path }}" "${{ inputs.doc_coverage }}"
+          bash _cppdevops/scripts/check-doc-coverage.sh "${{ inputs.library_path }}"
