@@ -31,8 +31,9 @@ Contract reference: [`docs/workflows.md`](workflows.md).
 |----------------------|-----|
 | `docs/guardrails` | `5a7ac83` (main tip after ci-base → ci-lint/ci-supply-chain; tag `1.1.0` is older) |
 | `.github/scaffold` | `f8a6ba1` (main tip) |
-| `ghcr.io/pirlruc/ci-cpp` | not published yet; workflows still use `:latest` (broken until CPPD-IMG-002) |
+| `ghcr.io/pirlruc/ci-cpp` | local `:local` built (rootfs **1065 MB** via `du -sxm /`); publish via `ci-cpp-image.yml` on release |
 | commondevops `uses:` | tag **4.0.0** → `e4e902e62c35aa7e546536a0ba5a7782e377128e` |
+| containerdevops `uses:` | tag **2.4.0** → `ea908fd0feb87ab6615b71f5af1cce0637a6567b` |
 
 Open companion PRs (not merged): [guardrails #58](https://github.com/pirlruc/guardrails/pull/58),
 [github-scaffold #37](https://github.com/pirlruc/github-scaffold/pull/37),

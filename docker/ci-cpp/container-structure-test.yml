@@ -1,0 +1,73 @@
+schemaVersion: "2.0.0"
+metadataTest:
+  cmd: ["bash"]
+  user: "1000:1000"
+  envVars:
+    - key: PYTHONDONTWRITEBYTECODE
+      value: "1"
+    - key: PYTHONUNBUFFERED
+      value: "1"
+commandTests:
+  - name: clang
+    command: "clang++"
+    args: ["--version"]
+    exitCode: 0
+  - name: cmake
+    command: "cmake"
+    args: ["--version"]
+    exitCode: 0
+  - name: ninja
+    command: "ninja"
+    args: ["--version"]
+    exitCode: 0
+  - name: cppcheck
+    command: "cppcheck"
+    args: ["--version"]
+    exitCode: 0
+  - name: clang-tidy
+    command: "clang-tidy"
+    args: ["--version"]
+    exitCode: 0
+  - name: clang-format
+    command: "clang-format"
+    args: ["--version"]
+    exitCode: 0
+  - name: doxygen
+    command: "doxygen"
+    args: ["--version"]
+    exitCode: 0
+  - name: gcovr
+    command: "gcovr"
+    args: ["--version"]
+    exitCode: 0
+  - name: lizard
+    command: "lizard"
+    args: ["--version"]
+    exitCode: 0
+  - name: metrixpp
+    command: "metrix++"
+    args: ["--help"]
+    exitCode: 0
+  - name: coverxygen
+    command: "python3"
+    args: ["-m", "coverxygen", "--help"]
+    exitCode: 0
+  - name: cpplint
+    command: "cpplint"
+    args: ["--version"]
+    exitCode: 0
+  - name: valgrind
+    command: "valgrind"
+    args: ["--version"]
+    exitCode: 0
+  - name: llvm-cov
+    command: "llvm-cov"
+    args: ["--version"]
+    exitCode: 0
+fileExistenceTests:
+  - name: bash present
+    path: "/bin/bash"
+  - name: venv python
+    path: "/opt/venv/bin/python"
+  - name: metrix++ binary
+    path: "/opt/venv/bin/metrix++"
