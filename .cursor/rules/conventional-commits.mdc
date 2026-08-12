@@ -55,11 +55,14 @@ test(flow): cover typed graph cycle detection
 
 ## Scope guardrails
 
-- Only create commits when the user **explicitly** asks
-- Do not amend, force-push, or skip hooks unless the user requests it
-- Match the consuming repo's existing commit message style when in doubt
+Approval for commits, pushes, and OS installs lives in
+[agent-workflow.mdc](agent-workflow.mdc). Do not amend, force-push, or skip
+hooks unless the user requests it. Match the consuming repo's existing commit
+message style when in doubt.
 
 ## Related
 
-- Issue methodology: [github-issue-adr](https://github.com/pirlruc/methodologies/tree/main/github-issue-adr)
+- Approval gates and branch naming: [agent-workflow.mdc](agent-workflow.mdc)
+- Issue methodology: [github-issue-adr.mdc](github-issue-adr.mdc)
 - Handoff hygiene: [ai-agent-handoff.mdc](ai-agent-handoff.mdc)
+

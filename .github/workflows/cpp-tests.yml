@@ -14,14 +14,12 @@ on:
         required: false
         type: boolean
         default: false
-      statement_coverage:
+    secrets:
+      checkout_token:
         required: false
-        type: string
-        default: '95'
-      branch_coverage:
-        required: false
-        type: string
-        default: '95'
+
+# CI-025
+permissions: {}
 
 env:
   ADVISORY: ${{ inputs.blocking == false }}
@@ -29,28 +27,29 @@ env:
 jobs:
   tests:
     runs-on: ubuntu-24.04
+    # Prefer :local for host-built images until ghcr.io/pirlruc/ci-cpp is published.
+    container: ghcr.io/pirlruc/ci-cpp:latest
     timeout-minutes: 45
+    permissions:
+      contents: read
     concurrency:
       group: tests-${{ inputs.library_path }}-${{ github.ref }}
       cancel-in-progress: true
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364edf1e46 # v4.2.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Checkout cppdevops scripts
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364edf1e46 # v4.2.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: pirlruc/cppdevops
+          token: ${{ secrets.checkout_token || github.token }}
+          persist-credentials: false
           path: _cppdevops
           sparse-checkout: |
             scripts
-            docs/guardrails/cpp
           sparse-checkout-cone-mode: false
-
-      - name: Install build deps
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ninja-build clang libc++-dev libc++abi-dev python3-pip
-          pip3 install gcovr
 
       - name: Configure and build
         continue-on-error: ${{ env.ADVISORY == 'true' }}

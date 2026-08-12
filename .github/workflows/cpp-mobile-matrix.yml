@@ -1,5 +1,8 @@
 name: C++ Mobile matrix (reusable)
 
+# Placeholder jobs only — real NDK/Xcode smoke builds tracked by MOBILE-MECH-001.
+# Deviations: CI-014, CPP-BUILD-010/011 in docs/guardrail-deviations.yml.
+
 on:
   workflow_call:
     inputs:
@@ -19,6 +22,9 @@ on:
         type: boolean
         default: false
 
+# CI-025
+permissions: {}
+
 env:
   ADVISORY: ${{ inputs.blocking == false }}
 
@@ -26,21 +32,37 @@ jobs:
   android:
     runs-on: ubuntu-24.04
     timeout-minutes: 60
+    permissions:
+      contents: read
+    concurrency:
+      group: mobile-android-${{ inputs.library_path }}-${{ github.ref }}
+      cancel-in-progress: true
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364edf1e46 # v4.2.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Android NDK build (placeholder)
         continue-on-error: ${{ env.ADVISORY == 'true' }}
         run: |
           echo "NDK pin: ${{ inputs.min_ndk }}"
           echo "Configure Android build for ${{ inputs.library_path }} with clang + libc++"
+          echo "::notice::Placeholder — see MOBILE-MECH-001 / docs/guardrail-deviations.yml"
 
   ios:
     runs-on: macos-14
     timeout-minutes: 60
+    permissions:
+      contents: read
+    concurrency:
+      group: mobile-ios-${{ inputs.library_path }}-${{ github.ref }}
+      cancel-in-progress: true
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364edf1e46 # v4.2.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: iOS Xcode build (placeholder)
         continue-on-error: ${{ env.ADVISORY == 'true' }}
         run: |
           echo "Xcode pin: ${{ inputs.min_xcode }}"
           echo "Configure iOS build for ${{ inputs.library_path }} with clang + libc++"
+          echo "::notice::Placeholder — see MOBILE-MECH-001 / docs/guardrail-deviations.yml"

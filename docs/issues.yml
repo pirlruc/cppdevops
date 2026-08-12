@@ -52,7 +52,7 @@ milestones:
   status: open
   epics:
   - id: CI-001
-    status: open
+    status: done
     source_adr: ADR-0023
     title: Externalize cppdevops to pirlruc/cppdevops
     overview:
@@ -66,7 +66,7 @@ milestones:
     - All library repos use external workflow pin.
     tasks:
     - id: CI-001-T1
-      status: open
+      status: done
       title: Publish workflows and document pin update process
       instructions:
         files:
@@ -75,7 +75,7 @@ milestones:
       verification:
       - smoke test one library caller
   - id: GATE-MECH-001
-    status: open
+    status: done
     source_adr: ADR-0003
     title: Centralized blocking quality workflow
     overview:
@@ -93,7 +93,7 @@ milestones:
     - No unconditional || true on quality steps.
     tasks:
     - id: GATE-MECH-001-T1
-      status: open
+      status: done
       title: Harden cpp-quality.yml
       instructions:
         files:
@@ -109,7 +109,7 @@ milestones:
     - CPP-CPLX-001
     - CI-009
   - id: COV-MECH-001
-    status: open
+    status: done
     source_adr: ADR-0019
     title: Centralized coverage gate workflow
     overview:
@@ -124,7 +124,7 @@ milestones:
     - cpp-tests.yml invokes the gate after CTest.
     tasks:
     - id: COV-MECH-001-T1
-      status: open
+      status: done
       title: Wire check-coverage.sh in cpp-tests.yml
       instructions:
         files:
@@ -138,7 +138,7 @@ milestones:
     - CPP-TEST-003
     - CI-010
   - id: CI-TRIGGER-001
-    status: open
+    status: done
     title: Manual-first workflow triggers (Actions quota)
     overview:
       problem: Auto push/PR CI burns GitHub Actions minutes during refactor.
@@ -153,7 +153,7 @@ milestones:
     - README documents manual run and re-enable options (label-gated, push/PR).
     tasks:
     - id: CI-TRIGGER-001-T1
-      status: open
+      status: done
       title: Switch callers and sync script to workflow_dispatch
       instructions:
         files:
@@ -163,7 +163,7 @@ milestones:
       verification:
       - no push/pull_request triggers on library Quality workflows
   - id: TOOL-CFG-001
-    status: open
+    status: done
     title: Publish missing analysis configs in templates
     overview:
       problem: Guardrails name configs that were missing from templates/libs.
@@ -178,7 +178,7 @@ milestones:
     - pre-commit includes semgrep.
     tasks:
     - id: TOOL-CFG-001-T1
-      status: open
+      status: done
       title: Add configs to templates and sync script
       instructions:
         files:
@@ -187,7 +187,7 @@ milestones:
       verification:
       - Nordic libs contain .semgrep.yml and cppcheck-suppressions.xml
   - id: DOC-MECH-001
-    status: open
+    status: done
     title: coverxygen in cpp-docs.yml
     overview:
       problem: Doc coverage not enforced.
@@ -200,7 +200,7 @@ milestones:
     - check-doc-coverage.sh runs in cpp-docs.yml.
     tasks:
     - id: DOC-MECH-001-T1
-      status: open
+      status: done
       title: Implement coverxygen gate script and docs workflow step
       instructions:
         files:
@@ -214,7 +214,7 @@ milestones:
     - CPP-DOC-001
     - CPP-DOC-003
   - id: DYN-MECH-001
-    status: open
+    status: done
     title: valgrind and ASan/UBSan reusable jobs
     overview:
       problem: Dynamic analysis not available as shared workflows.
@@ -229,7 +229,7 @@ milestones:
     - CMakePresets template includes ci-asan.
     tasks:
     - id: DYN-MECH-001-T1
-      status: open
+      status: done
       title: Add cpp-dynamic.yml and ci-asan preset
       instructions:
         files:
@@ -243,7 +243,7 @@ milestones:
     - CPP-DYN-001
     - CPP-DYN-002
   - id: SEC-MECH-001
-    status: open
+    status: done
     title: Harden cpp-security.yml
     overview:
       problem: gitleaks skipped when missing; semgrep used --config auto; || true
@@ -258,7 +258,7 @@ milestones:
     - semgrep reads library .semgrep.yml.
     tasks:
     - id: SEC-MECH-001-T1
-      status: open
+      status: done
       title: Install gitleaks and wire semgrep config
       instructions:
         files:
@@ -272,7 +272,7 @@ milestones:
     - CPP-SEC-001
     - CPP-SEC-002
   - id: SEC-MECH-002
-    status: open
+    status: done
     title: Reusable CodeQL workflow
     overview:
       problem: CodeQL only on draupnir legacy workflow.
@@ -285,7 +285,7 @@ milestones:
     - Libraries can call cpp-codeql.yml from Quality workflow.
     tasks:
     - id: SEC-MECH-002-T1
-      status: open
+      status: done
       title: Add cpp-codeql.yml and template codeql-config
       instructions:
         files:
@@ -298,7 +298,7 @@ milestones:
     guardrail_refs:
     - CPP-SEC-002
   - id: SEC-MECH-003
-    status: open
+    status: done
     title: Syft Grype Trivy SBOM and vuln scan
     overview:
       problem: Dependency vuln/SBOM tools in profile but not in CI.
@@ -312,7 +312,7 @@ milestones:
     - Grype --fail-on high when not advisory.
     tasks:
     - id: SEC-MECH-003-T1
-      status: open
+      status: done
       title: Wire Syft Grype Trivy into cpp-security.yml
       instructions:
         files:
@@ -326,8 +326,43 @@ milestones:
       - CPP-SEC-003
     guardrail_refs:
     - CPP-SEC-003
+  - id: SEC-MECH-004
+    status: done
+    title: Least-privilege permissions on reusable cpp workflows
+    overview:
+      problem: >-
+        Several cppdevops reusable workflows and the ci-quality.yml caller
+        template omit permissions:, inheriting the default GITHUB_TOKEN scope.
+        Issue id CI-001 already exists in this repo — do not reuse that string
+        for this epic; cite Guardrail CI-001 for SHA pins separately.
+      goal: >-
+        Explicit least-privilege permissions: on reusable workflows and the
+        thin caller template; persist-credentials: false on checkout where
+        applicable.
+    architecture:
+      target: cppdevops/.github/workflows/
+      modules:
+      - cppdevops
+    acceptance_criteria:
+    - Every reusable workflow declares permissions
+    - templates/ci-quality.yml (or equivalent caller) declares permissions
+    - actionlint passes
+    tasks:
+    - id: SEC-MECH-004-T1
+      status: done
+      title: Add permissions blocks to reusable workflows and caller template
+      instructions:
+        files:
+        - cppdevops/.github/workflows/
+        - templates/ci-quality.yml
+      verification:
+      - actionlint on touched workflows
+      guardrail_refs:
+      - CI-001
+    guardrail_refs:
+    - CI-001
   - id: INFRA-MECH-001
-    status: open
+    status: done
     title: ShellCheck actionlint hadolint on cppdevops
     overview:
       problem: Scripts and workflows lack infra lint.
@@ -341,7 +376,7 @@ milestones:
     - .shellcheckrc and actionlint.yaml present.
     tasks:
     - id: INFRA-MECH-001-T1
-      status: open
+      status: done
       title: Add cpp-infra.yml and infra configs
       instructions:
         files:
@@ -383,3 +418,370 @@ milestones:
     guardrail_refs:
     - CI-014
     - CPP-BUILD-004
+
+- name: Continuous improvement
+  epics:
+  - id: DEP-MECH-001
+    status: open
+    title: Adopt and verify multi-ecosystem Dependabot (SC-DEP-*)
+    overview:
+      problem: >-
+        Dependency updates may still use per-ecosystem schedules, missing
+        ecosystems, or shapes that do not produce one monthly multi-ecosystem
+        PR. SC-DEP-001/002/003 require covering every package ecosystem, a
+        single grouped PR, and the org cadence/semver policy.
+      goal: >-
+        Align .github/dependabot.yml with the org multi-ecosystem monthly
+        shape (seed from github-scaffold templates/dependabot.example.yml when
+        needed); confirm Insights grouping after the config is on the default
+        branch; document any justified deviations.
+    architecture:
+      target: .github/dependabot.yml
+      modules:
+      - .github/dependabot.yml
+      - docs/ai-agent-handoff.md
+    acceptance_criteria:
+    - dependabot.yml uses a monthly multi-ecosystem group covering this repo's ecosystems
+    - open-pull-requests-limit and semver policy match SC-DEP-003 / supply-chain thresholds
+    - Insights confirmation recorded in handoff after merge to default branch (or GitHub limitation noted)
+    guardrail_refs:
+    - SC-DEP-001
+    - SC-DEP-002
+    - SC-DEP-003
+    tasks:
+    - id: DEP-MECH-001-T1
+      status: done
+      title: Rewrite or confirm Dependabot multi-ecosystem config
+      instructions:
+        files:
+        - .github/dependabot.yml
+      verification:
+      - rg -n "multi-ecosystem|schedule|package-ecosystem" .github/dependabot.yml
+      guardrail_refs:
+      - SC-DEP-001
+      - SC-DEP-002
+    - id: DEP-MECH-001-T2
+      status: open
+      title: Record Insights confirmation in handoff after default-branch land
+      instructions:
+        files:
+        - docs/ai-agent-handoff.md
+      verification:
+      - Handoff notes Insights one-PR grouping outcome or documents blocker
+      guardrail_refs:
+      - SC-DEP-003
+  - id: AIREV-MECH-001
+    status: done
+    title: Review for improvements, bugs, and design flaws
+    overview:
+      problem: >-
+        Backlog and automation can drift toward process or docs hygiene only.
+        The repo needs a deliberate review of the current implementation that
+        surfaces improvements, bugs, and design flaws — not only polish — and
+        records material follow-ups in docs/issues.yml.
+      goal: >-
+        Run an ai-reviewer (or equivalent) pass against this repository's
+        current code, workflows, scripts, and docs; append only material new
+        epics/tasks under Continuous improvement (or record a justified no-op).
+    architecture:
+      target: Repository review into docs/issues.yml
+      modules:
+      - docs/issues.yml
+      - docs/ai-agent-handoff.md
+    acceptance_criteria:
+    - Review explicitly covers improvements, bugs, and design flaws in shipped implementation
+    - Material findings appended to docs/issues.yml via PR (budget at most 2 epics / 6 tasks) or handoff records justified no-op
+    - Does not re-file work already covered by existing epic/task ids
+    tasks:
+    - id: AIREV-MECH-001-T1
+      status: done
+      title: Run review pass and append material issues.yml findings
+      instructions:
+        files:
+        - docs/issues.yml
+        - docs/ai-agent-handoff.md
+      verification:
+      - PR appends material findings within budget, or handoff records justified no-op
+
+  - id: CPPD-IMG-001
+    status: done
+    title: Redesign ci-cpp — drop ci-base scanner duplication
+    overview:
+      problem: >-
+        docker/ci-cpp still COPY --from seven scanner CLIs cloned from the
+        retired commondevops ci-base. cpp-security and cpp-infra already
+        forward to ci-lint / ci-supply-chain; the scanners are dead weight
+        and CVE surface. The image also lacks non-root UID and structure tests.
+      goal: >-
+        Multi-stage Ubuntu 24.04 final image with only the C++ toolchain;
+        non-root 1000:1000; OCI labels; container-structure-test; remove
+        unused scanner donors (CI-026, DOCKER-*).
+    architecture:
+      target: docker/ci-cpp/
+      modules:
+      - docker/ci-cpp/Dockerfile
+      - docker/ci-cpp/container-structure-test.yml
+    acceptance_criteria:
+    - No syft/grype/trivy/gitleaks/shellcheck/hadolint/actionlint in ci-cpp
+    - Final stage FROM ubuntu:24.04 digest-pinned; USER 1000:1000
+    - Structure test present and green locally
+    guardrail_refs:
+    - CI-026
+    - DOCKER-RUN-001
+    - DOCKER-DOC-001
+    tasks:
+    - id: CPPD-IMG-001-T1
+      status: done
+      title: Rewrite Dockerfile and add structure-test / trivyignore
+      instructions:
+        files:
+        - docker/ci-cpp/
+      verification:
+      - "! rg -n 'syft|grype|gitleaks|shellcheck|hadolint|actionlint' docker/ci-cpp/Dockerfile"
+      - rg -n 'USER 1000|org.opencontainers' docker/ci-cpp/Dockerfile
+      guardrail_refs:
+      - CI-026
+      - DOCKER-RUN-001
+
+  - id: CPPD-IMG-002
+    status: done
+    title: Publish ghcr.io/pirlruc/ci-cpp with monthly rebuild cadence
+    overview:
+      problem: >-
+        Five reusable workflows set container: ghcr.io/pirlruc/ci-cpp:latest
+        but the package does not exist (404). No publish workflow; CI-026/027
+        unmet.
+      goal: >-
+        Thin caller to containerdevops for lint/build/scan/publish; release +
+        monthly schedule + workflow_dispatch; publish to GHCR (+ Hub when
+        secrets set).
+    architecture:
+      target: .github/workflows/ci-cpp-image.yml
+      modules:
+      - .github/workflows/ci-cpp-image.yml
+      - docs/workflows.md
+    acceptance_criteria:
+    - ci-cpp-image.yml calls containerdevops at a pinned SHA/tag
+    - Triggers include release, schedule (<=30d), PR paths, workflow_dispatch
+    - First publish lands with annotated release
+    guardrail_refs:
+    - CI-026
+    - CI-027
+    tasks:
+    - id: CPPD-IMG-002-T1
+      status: done
+      title: Add ci-cpp-image.yml thin caller
+      instructions:
+        files:
+        - .github/workflows/ci-cpp-image.yml
+      verification:
+      - rg -n 'container-publish|ci-cpp|schedule' .github/workflows/ci-cpp-image.yml
+      guardrail_refs:
+      - CI-026
+      - CI-027
+
+  - id: CPPD-WF-001
+    status: done
+    title: Vendor C++ thresholds and stop baking numeric gates
+    overview:
+      problem: >-
+        Sparse checkout of scripts + docs/guardrails/cpp does not initialize
+        the guardrails submodule, so every threshold read fails in CI.
+        Metrix++ hardcodes CCN 10; dead workflow inputs declare coverage
+        thresholds the scripts ignore (CI-021/022).
+      goal: >-
+        Vendor scripts/cpp.profile.thresholds.yml (sibling pattern); drift
+        check vs submodule; scripts read CCN/coverage from the vendored file;
+        remove unused coverage inputs from workflow_call contracts.
+    architecture:
+      target: scripts/ + .github/workflows/
+      modules:
+      - scripts/cpp.profile.thresholds.yml
+      - scripts/read-thresholds.sh
+      - scripts/run-metrixpp.sh
+      - .github/workflows/cpp-quality.yml
+      - .github/workflows/cpp-tests.yml
+      - .github/workflows/cpp-docs.yml
+    acceptance_criteria:
+    - Thresholds available without submodule init in sparse checkout
+    - Metrix++ CCN comes from max_cyclomatic_complexity
+    - Dead statement_coverage/branch_coverage/doc_coverage inputs removed
+    guardrail_refs:
+    - CI-021
+    - CI-022
+    tasks:
+    - id: CPPD-WF-001-T1
+      status: done
+      title: Vendor thresholds and wire scripts/workflows
+      instructions:
+        files:
+        - scripts/
+        - .github/workflows/
+      verification:
+      - test -f scripts/cpp.profile.thresholds.yml
+      - "! rg -n 'cyclomatic:10' scripts/run-metrixpp.sh"
+      guardrail_refs:
+      - CI-021
+      - CI-022
+
+  - id: CPPD-WF-002
+    status: done
+    title: Fix gate correctness bugs in reusable workflows and scripts
+    overview:
+      problem: >-
+        Coverage gate exits 0 when coverage.json is missing; check-doc-coverage
+        mutates tracked Doxyfile; runtime pip install on PEP 668 hosts; find
+        include src fails when a dir is absent; missing concurrency on several
+        workflows; stale commondevops pin; shellcheck SC2250 / actionlint debt.
+      goal: >-
+        Fail closed on missing coverage when blocking; generate XML without
+        mutating Doxyfile; require tools from the image; guard find; add
+        concurrency (CI-002); pin commondevops @ 4.0.0; clear lint debt.
+    architecture:
+      target: scripts/ + .github/workflows/
+      modules:
+      - scripts/check-coverage.sh
+      - scripts/check-doc-coverage.sh
+      - scripts/run-metrixpp.sh
+      - .github/workflows/
+    acceptance_criteria:
+    - Missing coverage.json fails when expected
+    - Doxyfile on disk unchanged after doc gate
+    - No pip install in gate scripts
+    - commondevops uses:/scripts_ref at tag 4.0.0 SHA
+    - actionlint + shellcheck clean on workflows/scripts
+    guardrail_refs:
+    - CI-002
+    - CI-018
+    - CI-023
+    tasks:
+    - id: CPPD-WF-002-T1
+      status: done
+      title: Harden gate scripts and workflow contracts
+      instructions:
+        files:
+        - scripts/
+        - .github/workflows/
+      verification:
+      - actionlint .github/workflows/*.yml
+      - shellcheck -x scripts/*.sh
+      guardrail_refs:
+      - CI-002
+      - CI-023
+
+  - id: CPPD-CI-001
+    status: done
+    title: Self-CI and local parity scripts
+    overview:
+      problem: >-
+        cppdevops has no self-CI; only failed Dependabot runs ever executed.
+        No check-ci-local.sh / check-ci-docker.sh (CI-008).
+      goal: >-
+        Add cppdevops-ci.yml and cppdevops-security.yml; host-first local
+        parity scripts with Docker fallback to ci-lint for missing tools.
+    architecture:
+      target: .github/workflows/ + scripts/
+      modules:
+      - .github/workflows/cppdevops-ci.yml
+      - .github/workflows/cppdevops-security.yml
+      - scripts/check-ci-local.sh
+      - scripts/check-ci-docker.sh
+    acceptance_criteria:
+    - Push/PR self-CI runs infra lint
+    - check-ci-local.sh documents host→Docker resolution table
+    - Local path preferred to reduce Actions minutes
+    guardrail_refs:
+    - CI-008
+    - CI-023
+    tasks:
+    - id: CPPD-CI-001-T1
+      status: done
+      title: Add self-CI workflows and local check scripts
+      instructions:
+        files:
+        - .github/workflows/
+        - scripts/check-ci-local.sh
+        - scripts/check-ci-docker.sh
+      verification:
+      - test -x scripts/check-ci-local.sh
+      - rg -n 'workflow_call|common-infra-lint' .github/workflows/cppdevops-ci.yml
+      guardrail_refs:
+      - CI-008
+      - CI-023
+
+  - id: CPPD-REL-001
+    status: open
+    title: LICENSE, CHANGELOG, and annotated-tag release hygiene
+    overview:
+      problem: >-
+        Dockerfile claims MIT but LICENSE was missing; release pack requires
+        changelog and annotated-tag trigger (REL-*).
+      goal: >-
+        Keep MIT LICENSE; maintain CHANGELOG; cut 2.0.0 as annotated tag with
+        GitHub Release when the MAJOR surface lands.
+    architecture:
+      target: repo root release artifacts
+      modules:
+      - LICENSE
+      - CHANGELOG.md
+      - docs/ai-agent-handoff.md
+    acceptance_criteria:
+    - LICENSE present and matches OCI licenses label
+    - CHANGELOG has 2.0.0 section before tag
+    - Release from annotated tag (REL-PUB-001)
+    guardrail_refs:
+    - REL-VER-001
+    - REL-CHG-001
+    - REL-PUB-001
+    - REL-PUB-002
+    tasks:
+    - id: CPPD-REL-001-T1
+      status: open
+      title: Add LICENSE and prepare 2.0.0 CHANGELOG entry
+      instructions:
+        files:
+        - LICENSE
+        - CHANGELOG.md
+      verification:
+      - test -f LICENSE
+      - rg -n '## \\[2.0.0\\]' CHANGELOG.md
+      guardrail_refs:
+      - REL-CHG-001
+
+  - id: CPPD-ECO-001
+    status: open
+    title: Consumer pin and legacy-workflow follow-ups (other repos)
+    overview:
+      problem: >-
+        Seven Nordic libraries still pin cppdevops@main (CI-018 violation on
+        their side). draupnir-cpp still carries legacy CodeQL/Codacy/Ubuntu
+        workflows alongside the thin caller.
+      goal: >-
+        Track follow-up work owned by library repos: SHA/tag pins and retire
+        draupnir legacy workflows once all callers use cppdevops only.
+    architecture:
+      target: Nordic library repos (not this tree)
+      modules:
+      - bifrost-cpp
+      - draupnir-cpp
+      - edda-cpp
+      - heimdallcv
+      - mimir-cpp
+      - mjolnir-cpp
+      - nornir-cpp
+    acceptance_criteria:
+    - Epic names owning repos; no implementation in cppdevops
+    - Follow-up issues filed or linked in those repos after cppdevops 2.0.0
+    guardrail_refs:
+    - CI-018
+    tasks:
+    - id: CPPD-ECO-001-T1
+      status: open
+      title: Document consumer pin and draupnir retirement checklist
+      instructions:
+        files:
+        - docs/ai-agent-handoff.md
+      verification:
+      - rg -n 'CI-018|draupnir|@main' docs/ai-agent-handoff.md
+      guardrail_refs:
+      - CI-018
