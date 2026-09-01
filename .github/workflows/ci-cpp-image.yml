@@ -40,7 +40,7 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/containerdevops/.github/workflows/container-lint.yml@ea908fd0feb87ab6615b71f5af1cce0637a6567b
+    uses: pirlruc/containerdevops/.github/workflows/container-lint.yml@c4a0777db36d780b4109e3a0376a8c12a7b571ae
     with:
       dockerfile: docker/ci-cpp/Dockerfile
       working_directory: .
@@ -62,7 +62,7 @@ jobs:
     permissions:
       contents: read
       packages: read
-    uses: pirlruc/containerdevops/.github/workflows/container-build.yml@ea908fd0feb87ab6615b71f5af1cce0637a6567b
+    uses: pirlruc/containerdevops/.github/workflows/container-build.yml@c4a0777db36d780b4109e3a0376a8c12a7b571ae
     with:
       context: docker/ci-cpp
       dockerfile: docker/ci-cpp/Dockerfile
@@ -94,7 +94,7 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/containerdevops/.github/workflows/container-scan.yml@ea908fd0feb87ab6615b71f5af1cce0637a6567b
+    uses: pirlruc/containerdevops/.github/workflows/container-scan.yml@c4a0777db36d780b4109e3a0376a8c12a7b571ae
     with:
       image: ci-cpp:ci
       image_artifact: container-image-ci-cpp
@@ -118,7 +118,7 @@ jobs:
       contents: read
       packages: write
       id-token: write
-    uses: pirlruc/containerdevops/.github/workflows/container-publish.yml@ea908fd0feb87ab6615b71f5af1cce0637a6567b
+    uses: pirlruc/containerdevops/.github/workflows/container-publish.yml@c4a0777db36d780b4109e3a0376a8c12a7b571ae
     with:
       context: docker/ci-cpp
       dockerfile: docker/ci-cpp/Dockerfile
