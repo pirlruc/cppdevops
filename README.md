@@ -59,14 +59,20 @@ jobs:
       blocking: ${{ inputs.blocking }}
 ```
 
-Pin `@<sha>` or an annotated tag (`CI-018`). Advisory mode: `blocking: false`
-keeps `continue-on-error` so findings are visible without failing the workflow
-during refactor.
+Pin `@<sha>` or an annotated tag (`CI-018`). Do not pin `@main`. Consumer
+libraries still on `@main` (and draupnir-cpp legacy workflows) follow
+[`docs/consumer-checklist.md`](docs/consumer-checklist.md). Advisory mode:
+`blocking: false` keeps `continue-on-error` so findings are visible without
+failing the workflow during refactor.
 
 ## Thresholds
 
-Read from `docs/guardrails/cpp/profile.thresholds.yml` (pinned central profile).
-A vendored copy under `scripts/` is planned (CPPD-WF-001) for sparse-checkout CI.
+Numeric gates are read from `scripts/cpp.profile.thresholds.yml` (vendored from
+the pinned `docs/guardrails/cpp/profile.thresholds.yml` profile; CPPD-WF-001).
+CI drift-checks the copy against the submodule (`scripts/check-threshold-drift.sh`).
+
+Reusable `cpp-*` jobs run in
+`container: ghcr.io/pirlruc/ci-cpp@sha256:54ea6b2354709b742a3b1ae289b82c0cbb1ad9241d59ee06b94331ecf945d7f9`.
 
 ## Library bootstrap (templates + scripts)
 
@@ -101,6 +107,7 @@ Deviations: [`docs/guardrail-deviations.yml`](docs/guardrail-deviations.yml) onl
 
 - Agent handoff: [`docs/ai-agent-handoff.md`](docs/ai-agent-handoff.md)
 - Workflow contracts: [`docs/workflows.md`](docs/workflows.md)
+- Consumer pin / draupnir retirement: [`docs/consumer-checklist.md`](docs/consumer-checklist.md)
 - Authored backlog: [`docs/issues.yml`](docs/issues.yml)
 - Changelog: [`CHANGELOG.md`](CHANGELOG.md)
 

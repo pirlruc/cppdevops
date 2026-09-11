@@ -88,9 +88,21 @@ jobs:
         continue-on-error: ${{ env.ADVISORY == 'true' }}
         working-directory: ${{ inputs.library_path }}
         run: |
-          # Run ctest under valgrind via CTEST_MEMORYCHECK
-          mapfile -t BINS < <(find build-vg -type f -executable -name '*test*' | head -1)
-          ctest --test-dir build-vg -T memcheck --output-on-failure || \
-            valgrind --leak-check=full --error-exitcode=1 \
-              --gen-suppressions=all \
-              "${BINS[0]}"
+          # CPP-DYN-001 / CI-035: fail closed when memcheck cannot run.
+          # `ctest -T memcheck` without MEMORYCHECK_COMMAND is a documented
+          # no-op and must not pass green. Do not valgrind an empty ${BINS[0]}.
+          if ! command -v valgrind >/dev/null 2>&1; then
+            echo "::error::valgrind not on PATH; memcheck cannot run (CI-035)"
+            exit 1
+          fi
+          mapfile -t BINS < <(find build-vg -type f -executable -name '*test*' | sort)
+          if [[ ${#BINS[@]} -eq 0 || -z "${BINS[0]:-}" ]]; then
+            echo "::error::no test binaries under build-vg; memcheck cannot run (CI-035)"
+            exit 1
+          fi
+          rc=0
+          for bin in "${BINS[@]}"; do
+            echo "valgrind --leak-check=full ${bin}"
+            valgrind --leak-check=full --error-exitcode=1 "${bin}" || rc=1
+          done
+          exit "${rc}"

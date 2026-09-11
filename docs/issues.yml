@@ -749,7 +749,7 @@ milestones:
       - REL-CHG-001
 
   - id: CPPD-ECO-001
-    status: open
+    status: done
     title: Consumer pin and legacy-workflow follow-ups (other repos)
     overview:
       problem: >-
@@ -776,7 +776,7 @@ milestones:
     - CI-018
     tasks:
     - id: CPPD-ECO-001-T1
-      status: open
+      status: done
       title: Document consumer pin and draupnir retirement checklist
       instructions:
         files:
@@ -787,7 +787,7 @@ milestones:
       - CI-018
 
   - id: CPPD-WF-003
-    status: open
+    status: done
     title: Fix ci-cpp doc drift and valgrind memcheck gate correctness
     overview:
       problem: >-
@@ -826,7 +826,7 @@ milestones:
     - CPP-DYN-001
     tasks:
     - id: CPPD-WF-003-T1
-      status: open
+      status: done
       title: Fix ci-cpp container and thresholds doc drift
       instructions:
         files:
@@ -837,7 +837,7 @@ milestones:
       guardrail_refs:
       - CI-018
     - id: CPPD-WF-003-T2
-      status: open
+      status: done
       title: Make cpp-dynamic valgrind memcheck deterministic and fail-closed
       instructions:
         files:

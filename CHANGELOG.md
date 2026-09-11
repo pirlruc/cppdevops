@@ -3,6 +3,26 @@
 All notable changes to this repository are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased]
+
+### Changed
+
+- `docker/ci-cpp`: `COPY --from=pybuild --chown=1000:1000` so the venv is not a
+  separate `chown -R` layer (DOCKER-PERF-001 dive efficiency).
+- `cpp-dynamic.yml` memcheck runs valgrind on each discovered test binary and
+  **fails closed** when valgrind is missing or no binary exists (CI-035 /
+  CPP-DYN-001). `ctest -T memcheck` without `MEMORYCHECK_COMMAND` is no longer
+  treated as a gate.
+- `cppdevops-security.yml` published rescan pins
+  `ghcr.io/pirlruc/ci-cpp@sha256:54ea6b…` (same digest as reusable `container:`
+  pins), not `:latest`.
+
+### Added
+
+- [`docs/consumer-checklist.md`](docs/consumer-checklist.md) — CI-018 pin bump
+  (not `@main`), draupnir-cpp legacy workflow retirement, and the
+  github-scaffold `templates/ci-quality.yml` `@1.0.0` vs upcoming `2.1.0` gap.
+
 ## [2.0.0] - 2026-08-12
 
 MAJOR release: publishable `ci-cpp` image, self-CI aligned with

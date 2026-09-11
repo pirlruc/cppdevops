@@ -56,12 +56,14 @@ jobs:
       packages: read
     uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@3607bf0809c951d6d4b832d58f625a34eb3bb75b
     with:
-      image: ghcr.io/pirlruc/ci-cpp:latest
+      # Same digest as reusable cpp-* `container:` pins (CI-018). Do not float
+      # on :latest; weekly rescan of a digest still picks up new CVEs.
+      image: ghcr.io/pirlruc/ci-cpp@sha256:54ea6b2354709b742a3b1ae289b82c0cbb1ad9241d59ee06b94331ecf945d7f9
       scripts_ref: 3607bf0809c951d6d4b832d58f625a34eb3bb75b
       pkg_types: library
       ignorefile: docker/ci-cpp/.trivyignore.yaml
       results_artifact: published-ci-cpp-scan
-      sarif_category: trivy-ci-cpp-latest
+      sarif_category: trivy-ci-cpp
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
     secrets:
       scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}

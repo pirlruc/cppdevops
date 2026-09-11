@@ -17,9 +17,9 @@ Shared inputs:
 Consumers pin `pirlruc/cppdevops/.github/workflows/<name>.yml@<sha-or-tag>`
 (`CI-018`). Prefer `@<sha>` or an annotated release tag over `@main`.
 
-Thresholds for C++ gates are intended to come from
-`docs/guardrails/cpp/profile.thresholds.yml` (vendored copy under `scripts/`
-when the submodule is not available in sparse checkout — see CPPD-WF-001).
+Thresholds for C++ gates come from
+`docs/guardrails/cpp/profile.thresholds.yml`, vendored as
+`scripts/cpp.profile.thresholds.yml` for sparse-checkout CI (CPPD-WF-001).
 
 ---
 
@@ -33,8 +33,9 @@ clang-format, cpplint, clang-tidy, cppcheck, lizard, Metrix++.
 | `blocking` | `false` | |
 
 Numeric gates (CCN, coverage) come from `scripts/cpp.profile.thresholds.yml`
-(CI-021/022). Job runs in `container: ghcr.io/pirlruc/ci-cpp:latest` (until
-digest-pinned).
+(CI-021/022). Job runs in
+`container: ghcr.io/pirlruc/ci-cpp@sha256:54ea6b2354709b742a3b1ae289b82c0cbb1ad9241d59ee06b94331ecf945d7f9`
+(same digest on `cpp-tests`, `cpp-docs`, `cpp-dynamic`, `cpp-codeql`).
 
 ---
 
@@ -65,6 +66,9 @@ from vendored thresholds; does not mutate the tracked Doxyfile).
 ## `cpp-dynamic.yml`
 
 ASan/UBSan (`cmake --preset ci-asan`) and valgrind memcheck (`CPP-DYN-001`).
+The memcheck step runs valgrind on each discovered `*test*` binary and **fails
+closed** when valgrind is missing or no test binary exists (`CI-035`) — it
+must not pass green as a `ctest -T memcheck` no-op.
 
 | Input | Default |
 |-------|---------|
@@ -167,8 +171,8 @@ actor (CI-024).
 
 Weekly Wednesday 06:17 UTC (staggered vs commondevops Mon / containerdevops Tue)
 plus `workflow_dispatch`. Secrets/SAST + supply-chain via commondevops; published
-`ci-cpp:latest` rescan via containerdevops after a probe job confirms the package
-is pullable.
+`ci-cpp` rescan via containerdevops at the same digest as reusable workflow
+`container:` pins (`ghcr.io/pirlruc/ci-cpp@sha256:54ea6b…`, not `:latest`).
 
 ---
 
