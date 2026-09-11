@@ -40,21 +40,21 @@ jobs:
   secrets-sast:
     # CI-024
     if: github.actor != 'dependabot[bot]'
-    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@e4e902e62c35aa7e546536a0ba5a7782e377128e
+    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@75d0fafc90fbef7bb118025437502ca2cf42a11e
     with:
       blocking: ${{ inputs.blocking }}
       working_directory: ${{ inputs.library_path }}
-      scripts_ref: e4e902e62c35aa7e546536a0ba5a7782e377128e
+      scripts_ref: 75d0fafc90fbef7bb118025437502ca2cf42a11e
     secrets:
       checkout_token: ${{ secrets.checkout_token }}
 
   supply-chain:
     # CI-024; gated by run_sbom (default true for SC-SBOM-001).
     if: github.actor != 'dependabot[bot]' && inputs.run_sbom
-    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@e4e902e62c35aa7e546536a0ba5a7782e377128e
+    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@75d0fafc90fbef7bb118025437502ca2cf42a11e
     with:
       blocking: ${{ inputs.blocking }}
       working_directory: ${{ inputs.library_path }}
-      scripts_ref: e4e902e62c35aa7e546536a0ba5a7782e377128e
+      scripts_ref: 75d0fafc90fbef7bb118025437502ca2cf42a11e
     secrets:
       checkout_token: ${{ secrets.checkout_token }}

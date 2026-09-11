@@ -27,14 +27,14 @@ jobs:
     if: github.actor != 'dependabot[bot]'
     permissions:
       contents: read
-    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@e4e902e62c35aa7e546536a0ba5a7782e377128e
+    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@75d0fafc90fbef7bb118025437502ca2cf42a11e
     with:
       # Push/PR are blocking; workflow_dispatch honours the input.
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       working_directory: .
       shell_scripts: scripts/*.sh
       dockerfiles: docker/ci-cpp/Dockerfile
-      scripts_ref: e4e902e62c35aa7e546536a0ba5a7782e377128e
+      scripts_ref: 75d0fafc90fbef7bb118025437502ca2cf42a11e
     secrets:
       checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
 

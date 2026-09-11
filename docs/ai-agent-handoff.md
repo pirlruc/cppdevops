@@ -6,7 +6,7 @@
 |-------|-------|
 | **Folder** | `cpp/cppdevops/` |
 | **Remote** | https://github.com/pirlruc/cppdevops |
-| **Branch** | `main` |
+| **Branch** | `feature-published-rescan-3.0.2` (from `origin/main` after #52) |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
@@ -33,8 +33,8 @@ Contract reference: [`docs/workflows.md`](workflows.md).
 | `docs/guardrails` | `5a7ac83` (main tip after ci-base → ci-lint/ci-supply-chain; tag `1.1.0` is older) |
 | `.github/scaffold` | `f8a6ba1` (main tip) |
 | `ghcr.io/pirlruc/ci-cpp` | `@sha256:54ea6b2354709b742a3b1ae289b82c0cbb1ad9241d59ee06b94331ecf945d7f9` (tags `:latest` / `:20260812` / `:sha-3d09f6d`) |
-| commondevops `uses:` | tag **4.0.0** → `e4e902e62c35aa7e546536a0ba5a7782e377128e` |
-| containerdevops `uses:` | tag **3.0.1** → `9a46e8437d36935df5d6563eb38c4e45f0df68ae` |
+| commondevops `uses:` | **`75d0fafc90fbef7bb118025437502ca2cf42a11e`** (post-4.0.0 #62: zizmor `-c`, `packages: read`) |
+| containerdevops `uses:` | tag **3.0.2** → `3607bf0809c951d6d4b832d58f625a34eb3bb75b` |
 
 Open companion PRs (not merged): [guardrails #58](https://github.com/pirlruc/guardrails/pull/58),
 [github-scaffold #37](https://github.com/pirlruc/github-scaffold/pull/37),
@@ -78,14 +78,19 @@ python3 .github/scaffold/scripts/issues-sync.py \
 ## Known pitfalls
 
 - **Wave 3 GitHub status drift:** MOBILE-MECH-001, AIREV-MECH-001, and
-  DEP-MECH-001-T1 are already `done` in `docs/issues.yml`. GitHub issues
+  DEP-MECH-001 are `done` in `docs/issues.yml`. GitHub issues
   [#27](https://github.com/pirlruc/cppdevops/issues/27),
   [#28](https://github.com/pirlruc/cppdevops/issues/28),
   [#36](https://github.com/pirlruc/cppdevops/issues/36),
+  [#37](https://github.com/pirlruc/cppdevops/issues/37),
   [#38](https://github.com/pirlruc/cppdevops/issues/38), and
-  [#39](https://github.com/pirlruc/cppdevops/issues/39) are still open and
-  need `issues-sync.py --update` after approval. Do not run a live sync until
-  then.
+  [#39](https://github.com/pirlruc/cppdevops/issues/39) still need
+  `issues-sync.py --update` after approval (dry-run first).
+- **Dependabot Insights (DEP-MECH-001-T2):** no grouped `all-dependencies` PR
+  yet after the multi-ecosystem config landed (monthly cadence). Re-check next cycle.
+- **Dive efficiency:** ci-cpp image is 93.05% vs org floor 95% (pre-existing;
+  do not lower the gate). The 3.0.1 pin PR merged despite this advisory-looking
+  fail because checks are not required.
 - Reusable workflows pin `container: ghcr.io/pirlruc/ci-cpp@sha256:54ea6b…` (digest-pin after first publish).
 - Threshold drift CI checks out `pirlruc/guardrails` with `GUARDRAILS_READ_TOKEN`
   (preferred) or `COMMONDEVOPS_READ_TOKEN` when that PAT also covers guardrails.
@@ -96,15 +101,12 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Suggested next work
 
-1. After approval, `issues-sync.py --update` to close GitHub #27 #28 #36 #38 #39
+1. After approval, `issues-sync.py --update` to close GitHub #27 #28 #36 #37 #38 #39
    and create CPPD-WF-003 (dry-run first).
 2. Implement CPPD-WF-003 (docs drift + valgrind memcheck).
 3. Provision `GUARDRAILS_READ_TOKEN` (contents:read on `pirlruc/guardrails`) so threshold-drift CI stops soft-skipping.
-4. DEP-MECH-001-T2 Insights: still no grouped `all-dependencies` PR after the
-   multi-ecosystem config landed (monthly cadence). Re-check next cycle.
-5. Do not merge Dependabot #50 as-is (containerdevops `3.0.0` `uses:` with
-   stale `scripts_ref`; reusables unchanged). Cherry-pick xcode/codeql/semgrep if wanted.
-6. CPPD-ECO-001 — consumer pin bumps to `@2.0.0` (other repos; needs approval).
+4. CPPD-ECO-001 — consumer pin bumps to `@2.0.0` (other repos; needs approval).
+5. Investigate ci-cpp dive efficiency 93.05% vs 95% floor.
 
 ## See also
 
@@ -117,10 +119,12 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Recent history
 
+- 2026-09-11: Wave 4 — `cppdevops-security.yml` published rescan calls
+  `container-published-rescan.yml@3.0.2`; image CI stays on `container-scan.yml`
+  at the same SHA. commondevops pin → `75d0faf…` (single SHA). DEP-MECH-001-T2
+  Insights limitation recorded; epic marked done in yaml.
 - 2026-09-11: accepted copilot ai-reviewer finding filed as CPPD-WF-003 on
-  `feature-ai-reviewer-issues` (not committed; do not run live `issues-sync.py`
-  until approved). Wave 3 yaml already marks MOBILE-MECH-001, AIREV-MECH-001,
-  and DEP-MECH-001-T1 done; GitHub #27 #28 #36 #38 #39 still open pending
-  `--update`.
+  `feature-ai-reviewer-issues` (merged as #52). Wave 3 yaml marks MOBILE-MECH-001,
+  AIREV-MECH-001, and DEP-MECH-001 done; GitHub issues still open pending `--update`.
 
 *Last updated: 2026-09-11*
