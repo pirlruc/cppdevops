@@ -422,7 +422,7 @@ milestones:
 - name: Continuous improvement
   epics:
   - id: DEP-MECH-001
-    status: open
+    status: done
     title: Adopt and verify multi-ecosystem Dependabot (SC-DEP-*)
     overview:
       problem: >-
@@ -461,7 +461,7 @@ milestones:
       - SC-DEP-001
       - SC-DEP-002
     - id: DEP-MECH-001-T2
-      status: open
+      status: done
       title: Record Insights confirmation in handoff after default-branch land
       instructions:
         files:

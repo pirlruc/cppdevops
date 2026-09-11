@@ -27,11 +27,11 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@e4e902e62c35aa7e546536a0ba5a7782e377128e
+    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@75d0fafc90fbef7bb118025437502ca2cf42a11e
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       working_directory: .
-      scripts_ref: e4e902e62c35aa7e546536a0ba5a7782e377128e
+      scripts_ref: 75d0fafc90fbef7bb118025437502ca2cf42a11e
     secrets:
       checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
 
@@ -40,51 +40,28 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@e4e902e62c35aa7e546536a0ba5a7782e377128e
+    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@75d0fafc90fbef7bb118025437502ca2cf42a11e
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       working_directory: .
-      scripts_ref: e4e902e62c35aa7e546536a0ba5a7782e377128e
+      scripts_ref: 75d0fafc90fbef7bb118025437502ca2cf42a11e
     secrets:
       checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
 
-  published-ci-cpp-probe:
-    if: github.actor != 'dependabot[bot]'
-    runs-on: ubuntu-24.04
-    timeout-minutes: 10
-    permissions:
-      contents: read
-      packages: read
-    outputs:
-      present: ${{ steps.probe.outputs.present }}
-    steps:
-      - uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ github.token }}
-      - id: probe
-        run: |
-          if docker pull ghcr.io/pirlruc/ci-cpp:latest; then
-            echo "present=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "present=false" >> "$GITHUB_OUTPUT"
-            echo "ci-cpp:latest not pullable yet; rescan will skip"
-          fi
-
   published-ci-cpp-rescan:
-    needs: published-ci-cpp-probe
-    if: github.actor != 'dependabot[bot]' && needs.published-ci-cpp-probe.outputs.present == 'true'
+    if: github.actor != 'dependabot[bot]'
     permissions:
       contents: read
       security-events: write
       packages: read
-    uses: pirlruc/containerdevops/.github/workflows/container-scan.yml@9a46e8437d36935df5d6563eb38c4e45f0df68ae
+    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@3607bf0809c951d6d4b832d58f625a34eb3bb75b
     with:
       image: ghcr.io/pirlruc/ci-cpp:latest
-      scripts_ref: 9a46e8437d36935df5d6563eb38c4e45f0df68ae
+      scripts_ref: 3607bf0809c951d6d4b832d58f625a34eb3bb75b
       pkg_types: library
       ignorefile: docker/ci-cpp/.trivyignore.yaml
+      results_artifact: published-ci-cpp-scan
+      sarif_category: trivy-ci-cpp-latest
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
     secrets:
       scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
