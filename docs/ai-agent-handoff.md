@@ -52,6 +52,7 @@ Open companion PRs (not merged): [guardrails #58](https://github.com/pirlruc/gua
 | CPPD-IMG-001 / IMG-002 / WF-001 / WF-002 / CI-001 | Done on `main` |
 | CPPD-REL-001 | Done — CHANGELOG 2.0.0 + annotated tag + GitHub Release |
 | CPPD-ECO-001 | Open (other repos) |
+| CPPD-WF-003 | Open — ai-reviewer pass 2026-09-11 (doc drift + valgrind gate) |
 | Deviations remaining | DOCKER-PERF-001, SC-SIGN-001 |
 
 ## Mobile toolchain pins (`CPP-BUILD-012`)
@@ -99,4 +100,4 @@ python3 .github/scaffold/scripts/issues-sync.py \
 - [containerdevops](https://github.com/pirlruc/containerdevops)
 - [guardrails](https://github.com/pirlruc/guardrails)
 
-*Last updated: 2026-08-12*
+*Last updated: 2026-09-11*
