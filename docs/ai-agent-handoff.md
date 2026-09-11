@@ -100,8 +100,11 @@ python3 .github/scaffold/scripts/issues-sync.py \
    and create CPPD-WF-003 (dry-run first).
 2. Implement CPPD-WF-003 (docs drift + valgrind memcheck).
 3. Provision `GUARDRAILS_READ_TOKEN` (contents:read on `pirlruc/guardrails`) so threshold-drift CI stops soft-skipping.
-4. DEP-MECH-001-T2 Insights confirmation in handoff.
-5. CPPD-ECO-001 — consumer pin bumps to `@2.0.0` (other repos; needs approval).
+4. DEP-MECH-001-T2 Insights: still no grouped `all-dependencies` PR after the
+   multi-ecosystem config landed (monthly cadence). Re-check next cycle.
+5. Do not merge Dependabot #50 as-is (containerdevops `3.0.0` `uses:` with
+   stale `scripts_ref`; reusables unchanged). Cherry-pick xcode/codeql/semgrep if wanted.
+6. CPPD-ECO-001 — consumer pin bumps to `@2.0.0` (other repos; needs approval).
 
 ## See also
 
