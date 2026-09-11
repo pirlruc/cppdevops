@@ -87,8 +87,7 @@ RUN apt-get update \
  && mkdir -p /home/ci /workspace \
  && chown -R 1000:1000 /workspace /home/ci
 
-COPY --from=pybuild /opt/venv /opt/venv
-RUN chown -R 1000:1000 /opt/venv
+COPY --from=pybuild --chown=1000:1000 /opt/venv /opt/venv
 
 WORKDIR /workspace
 USER 1000:1000
