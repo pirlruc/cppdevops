@@ -40,11 +40,11 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/containerdevops/.github/workflows/container-lint.yml@ea908fd0feb87ab6615b71f5af1cce0637a6567b
+    uses: pirlruc/containerdevops/.github/workflows/container-lint.yml@9a46e8437d36935df5d6563eb38c4e45f0df68ae
     with:
       dockerfile: docker/ci-cpp/Dockerfile
       working_directory: .
-      scripts_ref: ea908fd0feb87ab6615b71f5af1cce0637a6567b
+      scripts_ref: 9a46e8437d36935df5d6563eb38c4e45f0df68ae
       runner_image: ""
       run_infra_lint: false
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
@@ -62,14 +62,14 @@ jobs:
     permissions:
       contents: read
       packages: read
-    uses: pirlruc/containerdevops/.github/workflows/container-build.yml@ea908fd0feb87ab6615b71f5af1cce0637a6567b
+    uses: pirlruc/containerdevops/.github/workflows/container-build.yml@9a46e8437d36935df5d6563eb38c4e45f0df68ae
     with:
       context: docker/ci-cpp
       dockerfile: docker/ci-cpp/Dockerfile
       image_name: ci-cpp:ci
       artifact_name: container-image-ci-cpp
       structure_test_config: docker/ci-cpp/container-structure-test.yml
-      scripts_ref: ea908fd0feb87ab6615b71f5af1cce0637a6567b
+      scripts_ref: 9a46e8437d36935df5d6563eb38c4e45f0df68ae
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
       # Measured via du -sxm / after local build; headroom for base churn.
       # Deviation DOCKER-PERF-001 recorded in docs/guardrail-deviations.yml.
@@ -94,13 +94,14 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/containerdevops/.github/workflows/container-scan.yml@ea908fd0feb87ab6615b71f5af1cce0637a6567b
+      packages: read
+    uses: pirlruc/containerdevops/.github/workflows/container-scan.yml@9a46e8437d36935df5d6563eb38c4e45f0df68ae
     with:
       image: ci-cpp:ci
       image_artifact: container-image-ci-cpp
       results_artifact: container-scan-results-ci-cpp
       sarif_category: trivy-image-ci-cpp
-      scripts_ref: ea908fd0feb87ab6615b71f5af1cce0637a6567b
+      scripts_ref: 9a46e8437d36935df5d6563eb38c4e45f0df68ae
       pkg_types: library
       ignorefile: docker/ci-cpp/.trivyignore.yaml
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
@@ -118,13 +119,13 @@ jobs:
       contents: read
       packages: write
       id-token: write
-    uses: pirlruc/containerdevops/.github/workflows/container-publish.yml@ea908fd0feb87ab6615b71f5af1cce0637a6567b
+    uses: pirlruc/containerdevops/.github/workflows/container-publish.yml@9a46e8437d36935df5d6563eb38c4e45f0df68ae
     with:
       context: docker/ci-cpp
       dockerfile: docker/ci-cpp/Dockerfile
       image_name: ci-cpp
       dockerhub_image: pirlruc/ci-cpp
-      scripts_ref: ea908fd0feb87ab6615b71f5af1cce0637a6567b
+      scripts_ref: 9a46e8437d36935df5d6563eb38c4e45f0df68ae
       platforms: linux/amd64
       image_title: ci-cpp
       image_description: >-

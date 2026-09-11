@@ -785,3 +785,64 @@ milestones:
       - rg -n 'CI-018|draupnir|@main' docs/ai-agent-handoff.md
       guardrail_refs:
       - CI-018
+
+  - id: CPPD-WF-003
+    status: open
+    title: Fix ci-cpp doc drift and valgrind memcheck gate correctness
+    overview:
+      problem: >-
+        docs/workflows.md still states the quality job runs in
+        `container: ghcr.io/pirlruc/ci-cpp:latest` "(until digest-pinned)"
+        even though all five container workflows are already digest-pinned to
+        `@sha256:54ea6b…`; README "Thresholds" still says a vendored copy
+        under `scripts/` is "planned (CPPD-WF-001)" though that epic is done
+        and `scripts/cpp.profile.thresholds.yml` ships. Separately, the
+        cpp-dynamic.yml valgrind memcheck step is fragile: `ctest -T memcheck`
+        needs `MEMORYCHECK_COMMAND`/Dart configuration that the plain
+        `cmake -B build-vg` configure never sets, so the primary path almost
+        always falls through; the fallback picks the first `*test*` executable
+        and, when none exists, runs valgrind with an empty `${BINS[0]}`, and
+        `--gen-suppressions=all` on one arbitrary binary is not a real
+        memcheck gate.
+      goal: >-
+        Correct the docs to describe the digest-pinned container and the
+        shipped vendored thresholds. Make the valgrind leg fail closed and
+        deterministic: either configure CTest memorychecking properly
+        (include(CTest)/MEMORYCHECK_COMMAND) or drop the ctest fallback and
+        run valgrind over each discovered test binary with a clear error when
+        none is found.
+    architecture:
+      target: .github/workflows/ + docs/
+      modules:
+      - .github/workflows/cpp-dynamic.yml
+      - docs/workflows.md
+      - README.md
+    acceptance_criteria:
+    - docs/workflows.md and README describe the digest-pinned ci-cpp container and existing vendored thresholds
+    - valgrind leg errors clearly when no test binary is found (no empty-arg run)
+    - memcheck gate runs deterministically via CTest memorycheck or explicit valgrind loop
+    guardrail_refs:
+    - CI-018
+    - CPP-DYN-001
+    tasks:
+    - id: CPPD-WF-003-T1
+      status: open
+      title: Fix ci-cpp container and thresholds doc drift
+      instructions:
+        files:
+        - docs/workflows.md
+        - README.md
+      verification:
+      - "! rg -n 'ci-cpp:latest \\(until|is planned' docs/workflows.md README.md"
+      guardrail_refs:
+      - CI-018
+    - id: CPPD-WF-003-T2
+      status: open
+      title: Make cpp-dynamic valgrind memcheck deterministic and fail-closed
+      instructions:
+        files:
+        - .github/workflows/cpp-dynamic.yml
+      verification:
+      - actionlint .github/workflows/cpp-dynamic.yml
+      guardrail_refs:
+      - CPP-DYN-001
