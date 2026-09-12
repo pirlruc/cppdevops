@@ -5,6 +5,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-09-11
+
 ### Changed
 
 - `docker/ci-cpp`: `COPY --from=pybuild --chown=1000:1000` so the venv is not a
@@ -21,7 +23,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 - [`docs/consumer-checklist.md`](docs/consumer-checklist.md) — CI-018 pin bump
   (not `@main`), draupnir-cpp legacy workflow retirement, and the
-  github-scaffold `templates/ci-quality.yml` `@1.0.0` vs upcoming `2.1.0` gap.
+  github-scaffold `templates/ci-quality.yml` `@1.0.0` vs `2.1.0` gap.
 
 ## [2.0.0] - 2026-08-12
 
