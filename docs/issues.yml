@@ -846,3 +846,39 @@ milestones:
       - actionlint .github/workflows/cpp-dynamic.yml
       guardrail_refs:
       - CPP-DYN-001
+
+  - id: CPPD-PIN-001
+    status: open
+    title: Bump docs/guardrails from a non-tag 1.1.0-4 SHA to tag 1.6.0
+    overview:
+      problem: >-
+        docs/guardrails is pinned at 5a7ac83 (describe 1.1.0-4-g5a7ac83), which
+        is not an annotated tag. Guardrails is at 1.6.0. SC-DEP-004 requires a
+        tag or full SHA consumers can assert. CI-035 is cited from 1.6.0 but is
+        not in this pin.
+      goal: >-
+        Re-pin docs/guardrails to annotated tag 1.6.0 and remediate or record
+        deviations for newly failing gates. Out of scope for the 2.1.0 dive and
+        memcheck wave.
+    architecture:
+      target: docs/guardrails gitlink
+      modules:
+      - docs/guardrails
+    acceptance_criteria:
+    - git submodule status docs/guardrails resolves to annotated tag 1.6.0
+    - Newly failing gates are remediated or recorded in docs/guardrail-deviations.yml
+    out_of_scope:
+    - Implementing the pin bump in the 2.1.0 dive/memcheck change
+    guardrail_refs:
+    - SC-DEP-004
+    tasks:
+    - id: CPPD-PIN-001-T1
+      status: open
+      title: Re-pin docs/guardrails at guardrails 1.6.0 and remediate gates
+      instructions:
+        files:
+        - docs/guardrails
+      verification:
+      - git -C docs/guardrails describe --tags --exact-match
+      guardrail_refs:
+      - SC-DEP-004

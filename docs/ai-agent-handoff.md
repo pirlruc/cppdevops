@@ -6,7 +6,7 @@
 |-------|-------|
 | **Folder** | `cpp/cppdevops/` |
 | **Remote** | https://github.com/pirlruc/cppdevops |
-| **Branch** | `feature-dive-chown` (from `origin/main` after #53) |
+| **Branch** | `main` (tag **2.1.0**) |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
@@ -22,9 +22,8 @@ Owns reusable workflows under `.github/workflows/`:
 
 Also owns `templates/`, `scripts/sync-library-*.sh`, and `docker/ci-cpp/`.
 
-Standalone library callers should pin `pirlruc/cppdevops@2.0.0` or `@<sha>` (`CI-018`)
-until **2.1.0** is tagged; then bump. Never `@main`. Checklist:
-[`docs/consumer-checklist.md`](consumer-checklist.md).
+Standalone library callers should pin `pirlruc/cppdevops@2.1.0` or `@<sha>` (`CI-018`).
+Never `@main`. Checklist: [`docs/consumer-checklist.md`](consumer-checklist.md).
 
 Contract reference: [`docs/workflows.md`](workflows.md).
 
@@ -54,7 +53,8 @@ Open companion PRs (not merged): [guardrails #58](https://github.com/pirlruc/gua
 | CPPD-IMG-001 / IMG-002 / WF-001 / WF-002 / CI-001 | Done on `main` |
 | CPPD-REL-001 | Done — CHANGELOG 2.0.0 + annotated tag + GitHub Release |
 | CPPD-ECO-001 | Done in yaml (checklist shipped; library pin bumps are still those repos) |
-| CPPD-WF-003 | Done — digest docs, fail-closed memcheck (CI-035), security digest pin |
+| CPPD-WF-003 | Done — digest docs, fail-closed memcheck (CI-035), security digest pin (`2.1.0`) |
+| CPPD-PIN-001 | Open (filed; do not bump this wave) |
 | Deviations remaining | DOCKER-PERF-001, SC-SIGN-001 |
 
 ## Mobile toolchain pins (`CPP-BUILD-012`)
@@ -113,14 +113,11 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Suggested next work
 
-1. After approval, `issues-sync.py --update` to close GitHub #27 #28 #36 #37 #38 #39
-   and sync CPPD-WF-003 / CPPD-ECO-001 (dry-run first). Do not run write sync
-   without approval.
-2. After this PR merges, tag **2.1.0** (human; not this wave). Then bump the
-   seven `@main` consumers and draupnir-cpp legacy retirement
-   ([checklist](consumer-checklist.md)).
+1. `issues-sync.py` write to close GitHub CPPD-WF-003 / CPPD-ECO-001 and create CPPD-PIN-001 (dry-run first).
+2. Bump the seven `@main` consumers and draupnir-cpp legacy retirement
+   ([checklist](consumer-checklist.md)). Callers pin **2.1.0**.
 3. Provision `GUARDRAILS_READ_TOKEN` (contents:read on `pirlruc/guardrails`) so threshold-drift CI stops soft-skipping.
-4. File-only `docs/guardrails` pin bump (CI-035 lives upstream; do not edit submodule content).
+4. CPPD-PIN-001 — re-pin `docs/guardrails` to annotated tag `1.6.0` and remediate gates.
 
 ## See also
 
@@ -134,6 +131,8 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Recent history
 
+- 2026-09-11: Tagged **2.1.0**. Filed CPPD-PIN-001 (stale non-tag guardrails pin vs 1.6.0).
+  CHANGELOG `[2.1.0]` closed over the dive/memcheck/checklist body.
 - 2026-09-11: Wave E — `COPY --from=pybuild --chown=1000:1000` (local dive
   **97.11%** vs 95% floor); `cpp-dynamic.yml` memcheck fail-closed (CI-035);
   docs digest-pin and vendored thresholds; published rescan digest-pinned;
