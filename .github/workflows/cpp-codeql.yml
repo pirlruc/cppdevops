@@ -41,25 +41,53 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Checkout cppdevops scripts
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: pirlruc/cppdevops
+          persist-credentials: false
+          path: _cppdevops
+          sparse-checkout: |
+            scripts
+          sparse-checkout-cone-mode: false
+
       - name: Initialize CodeQL
-        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        id: init
+        continue-on-error: true
         uses: github/codeql-action/init@5595ccaf912efad79be6eef63a5619ff05969be3 # v4.37.6
         with:
           languages: cpp
           config-file: ${{ inputs.library_path }}/.github/codeql/codeql-config.yml
 
       - name: Build
-        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        id: build
+        continue-on-error: true
         working-directory: ${{ inputs.library_path }}
         env:
           CMAKE_PRESET: ${{ inputs.cmake_preset }}
         run: |
+          set -euo pipefail
           cmake --preset "${CMAKE_PRESET}" -DPIRLRUC_WITH_TESTS=OFF || \
             cmake -B build -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_CXX_FLAGS='-stdlib=libc++'
           cmake --build build -j
 
       - name: Perform CodeQL Analysis
-        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        id: analyze
+        continue-on-error: true
         uses: github/codeql-action/analyze@5595ccaf912efad79be6eef63a5619ff05969be3 # v4.37.6
         with:
           category: "/language:cpp"
+
+      - name: Gate — CodeQL
+        if: always()
+        env:
+          ADVISORY: ${{ env.ADVISORY }}
+          INIT: ${{ steps.init.outcome }}
+          BUILD: ${{ steps.build.outcome }}
+          ANALYZE: ${{ steps.analyze.outcome }}
+        run: |
+          set -euo pipefail
+          bash _cppdevops/scripts/gate-aggregate.sh \
+            init="${INIT}" \
+            build="${BUILD}" \
+            analyze="${ANALYZE}"

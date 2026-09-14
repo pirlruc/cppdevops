@@ -19,8 +19,14 @@ TARGET="$(bash "${CPPDEVOPS_ROOT}/scripts/read-thresholds.sh" doc_coverage "${TH
 
 cd "${ROOT}"
 if [[ ! -f Doxyfile ]]; then
-  echo "No Doxyfile — skip doc coverage"
-  exit 0
+  if [[ -x "${CPPDEVOPS_ROOT}/scripts/generate-doxyfile.sh" ]]; then
+    echo "No Doxyfile — generating via generate-doxyfile.sh"
+    bash "${CPPDEVOPS_ROOT}/scripts/generate-doxyfile.sh" "${ROOT}"
+  fi
+fi
+if [[ ! -f Doxyfile ]]; then
+  echo "error: no Doxyfile and generate-doxyfile.sh did not create one (CI-035)" >&2
+  exit 1
 fi
 
 if ! command -v doxygen >/dev/null 2>&1; then

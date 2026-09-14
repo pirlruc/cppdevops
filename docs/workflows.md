@@ -11,7 +11,7 @@ Shared inputs:
 | Input | Type | Default | Notes |
 |-------|------|---------|-------|
 | `library_path` | string | (required on most) | Library root relative to the caller checkout |
-| `blocking` | bool | `false` | `false` → `continue-on-error` (advisory) |
+| `blocking` | bool | `false` | `false` → collect-then-fail stays advisory (`ADVISORY=true`); missing tools/thresholds always fail |
 | `checkout_token` (secret) | string | — | PAT with `contents:read` on `pirlruc/cppdevops` (and nested `commondevops` when forwarded) for private cross-repo callers |
 
 Consumers pin `pirlruc/cppdevops/.github/workflows/<name>.yml@<sha-or-tag>`
@@ -158,7 +158,7 @@ Triggers (same shape as commondevops `ci-lint-image.yml`):
 | `workflow_dispatch` | Optional `blocking` / `publish` |
 
 Secrets: `CONTAINERDEVOPS_READ_TOKEN`, `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`.
-Size gate `image_max_size_mb: "2000"` (measured rootfs 1065 MB; DOCKER-PERF-001 deviation).
+Size gate `size_class: ci_toolchain` (DOCKER-PERF-002, `ci_image_max_size_mb` 2000).
 Private repo: `sign` is false (SC-SIGN-001 deviation).
 
 ## `cppdevops-ci.yml` (self)

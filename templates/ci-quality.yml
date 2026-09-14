@@ -1,0 +1,71 @@
+# CI quality caller template — copy to {library}/.github/workflows/ci-quality.yml
+# Reusable workflows live in pirlruc/cppdevops. Pin at a tag or full SHA (CI-018);
+# bump deliberately with changelog review (CI-019). Dependabot github-actions can
+# update this file once it lands in a consumer's .github/workflows/.
+#
+# Quota mode: workflow_dispatch only (re-enable push/PR or label-gated CI later).
+
+name: Quality
+
+on:
+  workflow_dispatch:
+    inputs:
+      blocking:
+        description: Pass blocking=true when ready to enforce
+        type: boolean
+        default: false
+  # Re-enable when Actions quota allows:
+  # push:
+  #   branches: [main]
+  # pull_request:
+
+# CI-025 / CI-031 — caller grants the max scopes callees may request.
+permissions: {}
+
+jobs:
+  quality:
+    permissions:
+      contents: read
+    uses: pirlruc/cppdevops/.github/workflows/cpp-quality.yml@2.1.0
+    with:
+      library_path: .
+      blocking: ${{ inputs.blocking }}
+  tests:
+    permissions:
+      contents: read
+    uses: pirlruc/cppdevops/.github/workflows/cpp-tests.yml@2.1.0
+    with:
+      library_path: .
+      blocking: ${{ inputs.blocking }}
+  docs:
+    permissions:
+      contents: read
+    uses: pirlruc/cppdevops/.github/workflows/cpp-docs.yml@2.1.0
+    with:
+      library_path: .
+      blocking: ${{ inputs.blocking }}
+  security:
+    permissions:
+      contents: read
+      security-events: write
+    uses: pirlruc/cppdevops/.github/workflows/cpp-security.yml@2.1.0
+    with:
+      library_path: .
+      blocking: ${{ inputs.blocking }}
+    secrets:
+      checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
+  codeql:
+    permissions:
+      contents: read
+      security-events: write
+    uses: pirlruc/cppdevops/.github/workflows/cpp-codeql.yml@2.1.0
+    with:
+      library_path: .
+      blocking: ${{ inputs.blocking }}
+  dynamic:
+    permissions:
+      contents: read
+    uses: pirlruc/cppdevops/.github/workflows/cpp-dynamic.yml@2.1.0
+    with:
+      library_path: .
+      blocking: ${{ inputs.blocking }}

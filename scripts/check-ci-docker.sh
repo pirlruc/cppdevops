@@ -1,78 +1,52 @@
-#!/usr/bin/env bash
-# Run CI steps missing on the host inside ghcr.io/pirlruc/ci-lint:latest.
+#!/bin/sh
+# Thin env wrapper around the vendored commondevops POSIX runner (CMN-WF-004).
+# Refresh scripts/ci-steps.sh when bumping the commondevops pin.
 #
 # Env:
-#   CPPDEVOPS_CI_IMAGE — image ref (default ghcr.io/pirlruc/ci-lint:latest)
+#   CPPDEVOPS_CI_IMAGE     — ci-lint image (default digest-pinned 4.0.0 Alpine)
 #   CPPDEVOPS_DOCKER_STEPS — space-separated step names (required)
-#   CPPDEVOPS_BUILD_LOCAL — unused for ci-lint (pull-only); reserved
-set -euo pipefail
+set -eu
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-IMAGE="${CPPDEVOPS_CI_IMAGE:-}"
-if [[ -z "${IMAGE}" ]]; then
-  if docker image inspect ci-lint:local >/dev/null 2>&1; then
-    IMAGE="ci-lint:local"
-  elif docker image inspect ci-lint:alpine-local >/dev/null 2>&1; then
-    IMAGE="ci-lint:alpine-local"
-  else
-    IMAGE="ghcr.io/pirlruc/ci-lint:latest"
-  fi
-fi
+SCRIPT_DIR="$(dirname "$0")"
+SCRIPT_DIR="$(cd "${SCRIPT_DIR}" && pwd)"
+ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
-if [[ -z "${CPPDEVOPS_DOCKER_STEPS:-}" ]]; then
-  echo "CPPDEVOPS_DOCKER_STEPS is required (e.g. actionlint shellcheck hadolint zizmor yamllint)" >&2
-  exit 1
-fi
+COMMONDEVOPS_CI_IMAGE="${CPPDEVOPS_CI_IMAGE:-ghcr.io/pirlruc/ci-lint:4.0.0@sha256:0a4691ba3f505d6f4998016997adac9adcc016676b8daf572cdf2fa446d61872}"
+COMMONDEVOPS_DOCKER_STEPS="${CPPDEVOPS_DOCKER_STEPS:?CPPDEVOPS_DOCKER_STEPS is required}"
+COMMONDEVOPS_BUILD_LOCAL="${CPPDEVOPS_BUILD_LOCAL:-0}"
+export COMMONDEVOPS_CI_IMAGE COMMONDEVOPS_DOCKER_STEPS COMMONDEVOPS_BUILD_LOCAL
 
+# Vendor copy of commondevops check-ci-docker.sh expects scripts/ci-steps.sh
+# in the repo root. Invoke the image with those steps.
+IMAGE="${COMMONDEVOPS_CI_IMAGE}"
 if ! command -v docker >/dev/null 2>&1; then
   echo "docker is required for host-unavailable CI checks" >&2
   exit 1
 fi
-
 if ! docker info >/dev/null 2>&1; then
   echo "Docker engine is not running" >&2
   exit 1
 fi
-
 if ! docker image inspect "${IMAGE}" >/dev/null 2>&1; then
   echo "==> Pulling ${IMAGE}"
   if ! docker pull "${IMAGE}"; then
-    echo "error: cannot pull ${IMAGE}; set CPPDEVOPS_CI_IMAGE to a local tag (e.g. ci-lint:local)" >&2
+    echo "error: cannot pull digest-pinned ${IMAGE}" >&2
+    echo "Set CPPDEVOPS_CI_IMAGE to a local tag (e.g. ci-lint:alpine-local)" >&2
     exit 1
   fi
 fi
 
-run_step() {
-  local step="$1"
-  case "${step}" in
-    actionlint)
-      docker run --rm -v "${ROOT}:/workspace" -w /workspace "${IMAGE}" \
-        sh -c 'actionlint $(find .github/workflows -name "*.yml" -o -name "*.yaml" | head -40)'
-      ;;
-    shellcheck)
-      docker run --rm -v "${ROOT}:/workspace" -w /workspace "${IMAGE}" \
-        sh -c 'shellcheck $(find scripts -name "*.sh")'
-      ;;
-    hadolint)
-      docker run --rm -v "${ROOT}:/workspace" -w /workspace "${IMAGE}" \
-        sh -c 'hadolint $(find docker -name "Dockerfile*")'
-      ;;
-    zizmor)
-      docker run --rm -v "${ROOT}:/workspace" -w /workspace "${IMAGE}" \
-        zizmor .github/workflows
-      ;;
-    yamllint)
-      docker run --rm -v "${ROOT}:/workspace" -w /workspace "${IMAGE}" \
-        yamllint -d relaxed .github/workflows docs
-      ;;
-    *)
-      echo "unknown Docker step: ${step}" >&2
-      exit 1
-      ;;
-  esac
-}
-
-for step in ${CPPDEVOPS_DOCKER_STEPS}; do
-  echo "==> ${step} (docker ${IMAGE})"
-  run_step "${step}"
-done
+echo "==> Running in Docker (${IMAGE}): ${COMMONDEVOPS_DOCKER_STEPS}"
+docker run --rm \
+  -v "${ROOT}:/workspace:ro" \
+  -w /workspace \
+  -e "COMMONDEVOPS_DOCKER_STEPS=${COMMONDEVOPS_DOCKER_STEPS}" \
+  "${IMAGE}" \
+  sh -c '
+    set -eu
+    . ./scripts/ci-steps.sh
+    for step in ${COMMONDEVOPS_DOCKER_STEPS}; do
+      echo "==> ${step}"
+      dispatch_ci_step "${step}"
+    done
+  '

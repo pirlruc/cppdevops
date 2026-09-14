@@ -44,17 +44,42 @@ jobs:
           path: _cppdevops
           sparse-checkout: |
             scripts
+            templates/cpp/Doxyfile.in
           sparse-checkout-cone-mode: false
 
       - name: Generate Doxygen
-        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        id: doxygen
+        continue-on-error: true
         working-directory: ${{ inputs.library_path }}
         run: |
-          if [ -f Doxyfile ]; then doxygen Doxyfile; else echo "No Doxyfile — advisory skip"; exit 0; fi
+          set -euo pipefail
+          if [[ ! -f Doxyfile ]]; then
+            bash "${GITHUB_WORKSPACE}/_cppdevops/scripts/generate-doxyfile.sh" "${PWD}"
+          fi
+          if [[ ! -f Doxyfile ]]; then
+            echo "error: no Doxyfile (CI-035)" >&2
+            exit 1
+          fi
+          doxygen Doxyfile
 
       - name: Doc coverage gate (coverxygen)
-        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        id: coverage
+        continue-on-error: true
         env:
           LIBRARY_PATH: ${{ inputs.library_path }}
         run: |
+          set -euo pipefail
           bash _cppdevops/scripts/check-doc-coverage.sh "${LIBRARY_PATH}"
+
+      - name: Gate — docs
+        if: always()
+        working-directory: ${{ github.workspace }}
+        env:
+          ADVISORY: ${{ env.ADVISORY }}
+          DOXYGEN: ${{ steps.doxygen.outcome }}
+          COVERAGE: ${{ steps.coverage.outcome }}
+        run: |
+          set -euo pipefail
+          bash _cppdevops/scripts/gate-aggregate.sh \
+            doxygen="${DOXYGEN}" \
+            coverage="${COVERAGE}"

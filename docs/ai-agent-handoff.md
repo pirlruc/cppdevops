@@ -6,7 +6,7 @@
 |-------|-------|
 | **Folder** | `cpp/cppdevops/` |
 | **Remote** | https://github.com/pirlruc/cppdevops |
-| **Branch** | `main` (tag **2.1.0**) |
+| **Branch** | `feature-guardrails-16` (from `main` tag **2.1.0**) |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
@@ -22,7 +22,7 @@ Owns reusable workflows under `.github/workflows/`:
 
 Also owns `templates/`, `scripts/sync-library-*.sh`, and `docker/ci-cpp/`.
 
-Standalone library callers should pin `pirlruc/cppdevops@2.1.0` or `@<sha>` (`CI-018`).
+Standalone library callers should pin `pirlruc/cppdevops@3.0.0` or `@<sha>` (`CI-018`) after this tag. Until then this branch still templates `@2.1.0`.
 Never `@main`. Checklist: [`docs/consumer-checklist.md`](consumer-checklist.md).
 
 Contract reference: [`docs/workflows.md`](workflows.md).
@@ -31,11 +31,11 @@ Contract reference: [`docs/workflows.md`](workflows.md).
 
 | Submodule / artifact | Pin |
 |----------------------|-----|
-| `docs/guardrails` | `5a7ac83` (main tip after ci-base → ci-lint/ci-supply-chain; tag `1.1.0` is older). File-only bump later — do not move the gitlink in this wave. |
-| `.github/scaffold` | `f8a6ba1` (main tip) |
+| `docs/guardrails` | tag **1.6.0** → `77cf16eb…` |
+| `.github/scaffold` | tag **1.5.0** → `9e04ed53…` |
 | `ghcr.io/pirlruc/ci-cpp` | `@sha256:54ea6b2354709b742a3b1ae289b82c0cbb1ad9241d59ee06b94331ecf945d7f9` (tags `:latest` / `:20260812` / `:sha-3d09f6d`). Reusable `container:` and `cppdevops-security.yml` published rescan share this digest. |
-| commondevops `uses:` | **`75d0fafc90fbef7bb118025437502ca2cf42a11e`** (post-4.0.0 #62: zizmor `-c`, `packages: read`) |
-| containerdevops `uses:` | tag **3.0.2** → `3607bf0809c951d6d4b832d58f625a34eb3bb75b` |
+| commondevops `uses:` | tag **5.0.0** → `bcddb5db4ba5d291aa7f434d447e43175f14136c` |
+| containerdevops `uses:` | tag **4.0.0** → `a29ebe54d321e25e639ff34b704da1a0ddd45655` |
 
 Open companion PRs (not merged): [guardrails #58](https://github.com/pirlruc/guardrails/pull/58),
 [github-scaffold #37](https://github.com/pirlruc/github-scaffold/pull/37),
@@ -54,8 +54,8 @@ Open companion PRs (not merged): [guardrails #58](https://github.com/pirlruc/gua
 | CPPD-REL-001 | Done — CHANGELOG 2.0.0 + annotated tag + GitHub Release |
 | CPPD-ECO-001 | Done in yaml (checklist shipped; library pin bumps are still those repos) |
 | CPPD-WF-003 | Done — digest docs, fail-closed memcheck (CI-035), security digest pin (`2.1.0`) |
-| CPPD-PIN-001 | Open (filed; do not bump this wave) |
-| Deviations remaining | DOCKER-PERF-001, SC-SIGN-001 |
+| CPPD-PIN-001 | Done (this wave) |
+| Deviations remaining | SC-SIGN-001 (Free-plan private-repo pattern) |
 
 ## Mobile toolchain pins (`CPP-BUILD-012`)
 
@@ -96,28 +96,28 @@ python3 .github/scaffold/scripts/issues-sync.py \
   used `wagoodman/dive:v0.13.1`. Do not lower the gate.
 - Reusable workflows and published rescan pin
   `container: ghcr.io/pirlruc/ci-cpp@sha256:54ea6b…` (CI-018). Do not float `:latest`.
-- Threshold drift CI checks out `pirlruc/guardrails` with `GUARDRAILS_READ_TOKEN`
-  (preferred) or `COMMONDEVOPS_READ_TOKEN` when that PAT also covers guardrails.
-  Without either, the job soft-skips; run `scripts/check-threshold-drift.sh` locally.
-  Do not use `submodules: true` with `github.token` (private clone 403/404).
+- Threshold drift CI checks out `pirlruc/guardrails` only when
+  `GUARDRAILS_READ_TOKEN` is set (contents:read on that private repo). Do not
+  fall back to `COMMONDEVOPS_READ_TOKEN` — it 403s. Without the guardrails PAT
+  the job skips explicitly; `scripts/check-threshold-drift.sh` remains the local
+  check. Missing files/keys fail closed. Do not use `submodules: true` with
+  `github.token` (private clone 403/404).
 - **Consumer pins (CI-018):** seven libraries still pin `@main`. See
-  [`docs/consumer-checklist.md`](consumer-checklist.md). github-scaffold
-  [`templates/ci-quality.yml`](https://github.com/pirlruc/github-scaffold/blob/main/templates/ci-quality.yml)
-  still pins `cppdevops@1.0.0` while this repo is heading to **2.1.0** — consumers
-  must bump; the scaffold seed is create-once. draupnir-cpp still has legacy
-  CodeQL/Codacy/Ubuntu workflows to retire after the pin.
-- The `docs/guardrails` pin (`5a7ac83`) does not yet include **CI-035**;
-  `cpp-dynamic.yml` cites it anyway. File-only gitlink bump later — do not
-  move the submodule in this wave.
+  [`docs/consumer-checklist.md`](consumer-checklist.md). After this tag, callers
+  pin **3.0.0**. github-scaffold seed `templates/ci-quality.yml` still historically
+  pinned `cppdevops@1.0.0`; this repo now vendors a 3.0.0-ready copy with
+  `permissions:`. draupnir-cpp still has legacy CodeQL/Codacy/Ubuntu workflows.
+- Missing Doxyfile: `check-doc-coverage.sh` generates via `generate-doxyfile.sh`
+  or fails closed (CI-035).
 - Private nested checkout needs a PAT when private.
 
 ## Suggested next work
 
-1. `issues-sync.py` write to close GitHub CPPD-WF-003 / CPPD-ECO-001 and create CPPD-PIN-001 (dry-run first).
-2. Bump the seven `@main` consumers and draupnir-cpp legacy retirement
-   ([checklist](consumer-checklist.md)). Callers pin **2.1.0**.
-3. Provision `GUARDRAILS_READ_TOKEN` (contents:read on `pirlruc/guardrails`) so threshold-drift CI stops soft-skipping.
-4. CPPD-PIN-001 — re-pin `docs/guardrails` to annotated tag `1.6.0` and remediate gates.
+1. After tag **3.0.0**, bump consumer `uses:` and `templates/ci-quality.yml` from `@2.1.0` to `@3.0.0`.
+2. `issues-sync.py` write to close GitHub CPPD-PIN-001 (yaml already `done`; dry-run first).
+3. Bump the seven `@main` consumers and draupnir-cpp legacy retirement
+   ([checklist](consumer-checklist.md)). Callers pin **3.0.0**.
+4. Provision `GUARDRAILS_READ_TOKEN` (contents:read on `pirlruc/guardrails`) so threshold-drift CI can run.
 
 ## See also
 
@@ -131,6 +131,10 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Recent history
 
+- 2026-09-14: Guardrails **1.6.0** / scaffold **1.5.0**, commondevops **5.0.0**,
+  containerdevops **4.0.0**. Fail-closed threshold reader, Doxyfile generate-or-fail,
+  collect-then-fail, `size_class: ci_toolchain`, SC-DEP-004, POSIX CI wrapper.
+  Retired DOCKER-PERF-001; kept SC-SIGN-001. Branch `feature-guardrails-16`.
 - 2026-09-11: Tagged **2.1.0**. Filed CPPD-PIN-001 (stale non-tag guardrails pin vs 1.6.0).
   CHANGELOG `[2.1.0]` closed over the dive/memcheck/checklist body.
 - 2026-09-11: Wave E — `COPY --from=pybuild --chown=1000:1000` (local dive
@@ -146,4 +150,4 @@ python3 .github/scaffold/scripts/issues-sync.py \
   `feature-ai-reviewer-issues` (merged as #52). Wave 3 yaml marks MOBILE-MECH-001,
   AIREV-MECH-001, and DEP-MECH-001 done; GitHub issues still open pending `--update`.
 
-*Last updated: 2026-09-11*
+*Last updated: 2026-09-14*

@@ -41,22 +41,49 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Checkout cppdevops scripts
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: pirlruc/cppdevops
+          persist-credentials: false
+          path: _cppdevops
+          sparse-checkout: |
+            scripts
+          sparse-checkout-cone-mode: false
+
       - name: Configure ASan/UBSan (ci-asan preset)
-        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        id: configure
+        continue-on-error: true
         working-directory: ${{ inputs.library_path }}
         run: |
+          set -euo pipefail
           # Org expectation CPP-DYN-001: use library CMakePresets.json `ci-asan`
           cmake --preset ci-asan
           # Build full tree (build preset may target only the library)
           cmake --build build-asan -j
 
       - name: Test under ASan/UBSan
-        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        id: asan_test
+        continue-on-error: true
         working-directory: ${{ inputs.library_path }}
         env:
           ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
           UBSAN_OPTIONS: halt_on_error=1
-        run: ctest --test-dir build-asan --output-on-failure
+        run: |
+          set -euo pipefail
+          ctest --test-dir build-asan --output-on-failure
+
+      - name: Gate — ASan
+        if: always()
+        env:
+          ADVISORY: ${{ env.ADVISORY }}
+          CONFIGURE: ${{ steps.configure.outcome }}
+          ASAN_TEST: ${{ steps.asan_test.outcome }}
+        run: |
+          set -euo pipefail
+          bash _cppdevops/scripts/gate-aggregate.sh \
+            configure="${CONFIGURE}" \
+            asan_test="${ASAN_TEST}"
 
   valgrind:
     if: inputs.run_valgrind
@@ -73,10 +100,22 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Checkout cppdevops scripts
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: pirlruc/cppdevops
+          persist-credentials: false
+          path: _cppdevops
+          sparse-checkout: |
+            scripts
+          sparse-checkout-cone-mode: false
+
       - name: Configure
-        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        id: configure
+        continue-on-error: true
         working-directory: ${{ inputs.library_path }}
         run: |
+          set -euo pipefail
           cmake -B build-vg -G Ninja \
             -DCMAKE_CXX_COMPILER=clang++ \
             -DCMAKE_BUILD_TYPE=Debug \
@@ -85,7 +124,8 @@ jobs:
           cmake --build build-vg -j
 
       - name: Memcheck
-        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        id: memcheck
+        continue-on-error: true
         working-directory: ${{ inputs.library_path }}
         run: |
           # CPP-DYN-001 / CI-035: fail closed when memcheck cannot run.
@@ -106,3 +146,15 @@ jobs:
             valgrind --leak-check=full --error-exitcode=1 "${bin}" || rc=1
           done
           exit "${rc}"
+
+      - name: Gate — valgrind
+        if: always()
+        env:
+          ADVISORY: ${{ env.ADVISORY }}
+          CONFIGURE: ${{ steps.configure.outcome }}
+          MEMCHECK: ${{ steps.memcheck.outcome }}
+        run: |
+          set -euo pipefail
+          bash _cppdevops/scripts/gate-aggregate.sh \
+            configure="${CONFIGURE}" \
+            memcheck="${MEMCHECK}"
