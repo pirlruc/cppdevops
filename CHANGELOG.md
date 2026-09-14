@@ -5,6 +5,32 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [3.0.0] - 2026-09-14
+
+MAJOR: guardrails 1.6.0, fail-closed thresholds/docs, and `size_class`.
+
+### Breaking
+
+- Missing Doxyfile fails the doc gate (generate via `generate-doxyfile.sh` or fail).
+- Missing guardrails checkout / threshold keys fail closed (CI-022 / CI-035).
+- Threshold-drift job skips only when no `GUARDRAILS_READ_TOKEN` /
+  `COMMONDEVOPS_READ_TOKEN`; a present token must clone successfully.
+- CI toolchain images pass `size_class: ci_toolchain` (containerdevops 4.0.0).
+- Callers re-pin commondevops **5.0.0** (`bcddb5db…`) with matching `scripts_ref`.
+
+### Added
+
+- Collect-then-fail aggregates on quality/tests/docs.
+- SC-DEP-004 pin assert, markdown/YAML lint, POSIX `check-ci-docker.sh` wrapper.
+- Host vs Docker tool-availability layer and CI parity summary.
+- `templates/ci-quality.yml` with `permissions:` (CI-025 / CI-031).
+
+### Changed
+
+- `docs/guardrails` tag **1.6.0**; `.github/scaffold` tag **1.5.0**.
+- Retired DOCKER-PERF-001 size deviation (DOCKER-PERF-002 class).
+- SC-SIGN-001 kept as the documented Free-plan private-repo pattern.
+
 ## [2.1.0] - 2026-09-11
 
 ### Changed

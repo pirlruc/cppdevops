@@ -52,7 +52,8 @@ jobs:
           sparse-checkout-cone-mode: false
 
       - name: clang-format
-        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        id: clang_format
+        continue-on-error: true
         run: |
           dirs=()
           [[ -d include ]] && dirs+=(include)
@@ -62,7 +63,8 @@ jobs:
             xargs -0 -r clang-format --dry-run --Werror
 
       - name: cpplint
-        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        id: cpplint
+        continue-on-error: true
         run: |
           dirs=()
           [[ -d include ]] && dirs+=(include)
@@ -72,18 +74,20 @@ jobs:
             xargs -0 -r cpplint --recursive --linelength=120
 
       - name: Configure compile_commands
-        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        id: cmake
+        continue-on-error: true
         run: |
           cmake --preset ci-linux -DPIRLRUC_WITH_TESTS=OFF -DCMAKE_EXPORT_COMPILE_COMMANDS=ON || \
             cmake -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_CXX_FLAGS='-stdlib=libc++'
           cmake --build build -j
 
       - name: clang-tidy
-        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        id: clang_tidy
+        continue-on-error: true
         run: |
           if [[ ! -f build/compile_commands.json ]]; then
-            echo "compile_commands.json missing — skip clang-tidy"
-            exit 0
+            echo "error: compile_commands.json missing (CI-035)" >&2
+            exit 1
           fi
           dirs=()
           [[ -d include ]] && dirs+=(include)
@@ -97,7 +101,8 @@ jobs:
           clang-tidy -p build "${SRC[@]}"
 
       - name: cppcheck
-        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        id: cppcheck
+        continue-on-error: true
         run: |
           dirs=()
           [[ -d include ]] && dirs+=(include)
@@ -111,10 +116,12 @@ jobs:
             --std=c++20 "${EXTRA[@]}" "${dirs[@]}"
 
       - name: lizard complexity
-        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        id: lizard
+        continue-on-error: true
         env:
           CPPDEVOPS_SCRIPTS: ${{ github.workspace }}/_cppdevops/scripts
         run: |
+          set -euo pipefail
           dirs=()
           [[ -d include ]] && dirs+=(include)
           [[ -d src ]] && dirs+=(src)
@@ -123,9 +130,33 @@ jobs:
           lizard "${dirs[@]}" -l cpp -C "$CCN" -w
 
       - name: Metrix++ maintainability
-        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        id: metrix
+        continue-on-error: true
         working-directory: ${{ github.workspace }}
         env:
           LIBRARY_PATH: ${{ inputs.library_path }}
         run: |
           bash _cppdevops/scripts/run-metrixpp.sh "${LIBRARY_PATH}"
+
+      - name: Gate — quality
+        if: always()
+        working-directory: ${{ github.workspace }}
+        env:
+          ADVISORY: ${{ env.ADVISORY }}
+          FMT: ${{ steps.clang_format.outcome }}
+          LINT: ${{ steps.cpplint.outcome }}
+          CMAKE: ${{ steps.cmake.outcome }}
+          TIDY: ${{ steps.clang_tidy.outcome }}
+          CPPCHECK: ${{ steps.cppcheck.outcome }}
+          LIZARD: ${{ steps.lizard.outcome }}
+          METRIX: ${{ steps.metrix.outcome }}
+        run: |
+          set -euo pipefail
+          bash _cppdevops/scripts/gate-aggregate.sh \
+            clang_format="${FMT}" \
+            cpplint="${LINT}" \
+            cmake="${CMAKE}" \
+            clang_tidy="${TIDY}" \
+            cppcheck="${CPPCHECK}" \
+            lizard="${LIZARD}" \
+            metrix="${METRIX}"

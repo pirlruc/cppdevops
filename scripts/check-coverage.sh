@@ -18,7 +18,14 @@ fi
 STMT_MIN="$(bash "${CPPDEVOPS_ROOT}/scripts/read-thresholds.sh" statement_coverage "${THRESH_FILE}")"
 BRANCH_MIN="$(bash "${CPPDEVOPS_ROOT}/scripts/read-thresholds.sh" branch_coverage "${THRESH_FILE}")"
 
-BUILD_DIR="${ROOT}/build"
+BUILD_DIR="${CPPDEVOPS_BUILD_DIR:-}"
+if [[ -z "${BUILD_DIR}" ]]; then
+  if [[ -d "${ROOT}/build-host" ]]; then
+    BUILD_DIR="${ROOT}/build-host"
+  else
+    BUILD_DIR="${ROOT}/build"
+  fi
+fi
 cd "${ROOT}"
 
 if [[ ! -d "${BUILD_DIR}" ]]; then

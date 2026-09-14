@@ -9,8 +9,8 @@ if [[ ! -f "${VENDED}" ]]; then
   exit 1
 fi
 if [[ ! -f "${UPSTREAM}" ]]; then
-  echo "warn: guardrails submodule missing at ${UPSTREAM}; skip drift check"
-  exit 0
+  echo "error: guardrails submodule missing at ${UPSTREAM} (CI-022 / CI-035)" >&2
+  exit 1
 fi
 # Compare keys/values only (ignore comment-only header differences)
 extract() {

@@ -27,11 +27,11 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@75d0fafc90fbef7bb118025437502ca2cf42a11e
+    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@bcddb5db4ba5d291aa7f434d447e43175f14136c
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       working_directory: .
-      scripts_ref: 75d0fafc90fbef7bb118025437502ca2cf42a11e
+      scripts_ref: bcddb5db4ba5d291aa7f434d447e43175f14136c
     secrets:
       checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
 
@@ -40,11 +40,11 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@75d0fafc90fbef7bb118025437502ca2cf42a11e
+    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@bcddb5db4ba5d291aa7f434d447e43175f14136c
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       working_directory: .
-      scripts_ref: 75d0fafc90fbef7bb118025437502ca2cf42a11e
+      scripts_ref: bcddb5db4ba5d291aa7f434d447e43175f14136c
     secrets:
       checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
 
@@ -54,12 +54,12 @@ jobs:
       contents: read
       security-events: write
       packages: read
-    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@3607bf0809c951d6d4b832d58f625a34eb3bb75b
+    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@a29ebe54d321e25e639ff34b704da1a0ddd45655
     with:
       # Same digest as reusable cpp-* `container:` pins (CI-018). Do not float
       # on :latest; weekly rescan of a digest still picks up new CVEs.
       image: ghcr.io/pirlruc/ci-cpp@sha256:54ea6b2354709b742a3b1ae289b82c0cbb1ad9241d59ee06b94331ecf945d7f9
-      scripts_ref: 3607bf0809c951d6d4b832d58f625a34eb3bb75b
+      scripts_ref: a29ebe54d321e25e639ff34b704da1a0ddd45655
       pkg_types: library
       ignorefile: docker/ci-cpp/.trivyignore.yaml
       results_artifact: published-ci-cpp-scan

@@ -54,6 +54,7 @@ jobs:
           path: _cppdevops
           sparse-checkout: |
             scripts/mobile-smoke
+            scripts/gate-aggregate.sh
           sparse-checkout-cone-mode: false
 
       - name: Setup Android NDK
@@ -64,7 +65,8 @@ jobs:
           link-to-sdk: false
 
       - name: Android NDK smoke compile
-        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        id: android_smoke
+        continue-on-error: true
         env:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
           LIBRARY_PATH: ${{ inputs.library_path }}
@@ -94,6 +96,15 @@ jobs:
           file "${OUT}/smoke"
           echo "::notice::Android NDK smoke compile succeeded"
 
+      - name: Gate — Android
+        if: always()
+        env:
+          ADVISORY: ${{ env.ADVISORY }}
+          SMOKE: ${{ steps.android_smoke.outcome }}
+        run: |
+          set -euo pipefail
+          bash _cppdevops/scripts/gate-aggregate.sh android_smoke="${SMOKE}"
+
   ios:
     runs-on: macos-14
     timeout-minutes: 60
@@ -116,6 +127,7 @@ jobs:
           path: _cppdevops
           sparse-checkout: |
             scripts/mobile-smoke
+            scripts/gate-aggregate.sh
           sparse-checkout-cone-mode: false
 
       - uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
@@ -123,7 +135,8 @@ jobs:
           xcode-version: ${{ inputs.min_xcode }}
 
       - name: iOS Xcode smoke compile
-        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        id: ios_smoke
+        continue-on-error: true
         env:
           LIBRARY_PATH: ${{ inputs.library_path }}
           MIN_XCODE: ${{ inputs.min_xcode }}
@@ -140,3 +153,12 @@ jobs:
             _cppdevops/scripts/mobile-smoke/smoke.cpp
           file "${OUT}/smoke"
           echo "::notice::iOS Xcode smoke compile succeeded"
+
+      - name: Gate — iOS
+        if: always()
+        env:
+          ADVISORY: ${{ env.ADVISORY }}
+          SMOKE: ${{ steps.ios_smoke.outcome }}
+        run: |
+          set -euo pipefail
+          bash _cppdevops/scripts/gate-aggregate.sh ios_smoke="${SMOKE}"

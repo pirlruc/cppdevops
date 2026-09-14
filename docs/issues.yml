@@ -848,7 +848,7 @@ milestones:
       - CPP-DYN-001
 
   - id: CPPD-PIN-001
-    status: open
+    status: done
     title: Bump docs/guardrails from a non-tag 1.1.0-4 SHA to tag 1.6.0
     overview:
       problem: >-
@@ -873,7 +873,7 @@ milestones:
     - SC-DEP-004
     tasks:
     - id: CPPD-PIN-001-T1
-      status: open
+      status: done
       title: Re-pin docs/guardrails at guardrails 1.6.0 and remediate gates
       instructions:
         files:

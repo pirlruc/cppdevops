@@ -51,7 +51,8 @@ jobs:
           sparse-checkout-cone-mode: false
 
       - name: Configure and build
-        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        id: build
+        continue-on-error: true
         working-directory: ${{ inputs.library_path }}
         env:
           CMAKE_PRESET: ${{ inputs.cmake_preset }}
@@ -70,13 +71,31 @@ jobs:
           cmake --build build -j
 
       - name: Run tests
-        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        id: ctest
+        continue-on-error: true
         working-directory: ${{ inputs.library_path }}
         run: ctest --test-dir build --output-on-failure
 
       - name: Coverage gate
-        continue-on-error: ${{ env.ADVISORY == 'true' }}
+        id: coverage
+        continue-on-error: true
         env:
           LIBRARY_PATH: ${{ inputs.library_path }}
         run: |
+          set -euo pipefail
           bash _cppdevops/scripts/check-coverage.sh "${LIBRARY_PATH}"
+
+      - name: Gate — tests
+        if: always()
+        working-directory: ${{ github.workspace }}
+        env:
+          ADVISORY: ${{ env.ADVISORY }}
+          BUILD: ${{ steps.build.outcome }}
+          CTEST: ${{ steps.ctest.outcome }}
+          COVERAGE: ${{ steps.coverage.outcome }}
+        run: |
+          set -euo pipefail
+          bash _cppdevops/scripts/gate-aggregate.sh \
+            build="${BUILD}" \
+            ctest="${CTEST}" \
+            coverage="${COVERAGE}"

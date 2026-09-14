@@ -19,22 +19,51 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-# CI-025
+# CI-025 / CI-031
 permissions: {}
 
 jobs:
+  pins:
+    if: github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: SC-DEP-004 submodule pin assert
+        run: sh scripts/check-submodule-pins.sh
+
+  docs:
+    if: github.actor != 'dependabot[bot]'
+    permissions:
+      contents: read
+    uses: pirlruc/commondevops/.github/workflows/common-doc-verify.yml@bcddb5db4ba5d291aa7f434d447e43175f14136c
+    with:
+      blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
+      shell_scripts: scripts/*.sh
+      ruff_paths: scripts/lint-doc-links.py scripts/validate-yaml.py
+      yaml_files: docs/issues.yml docs/guardrail-deviations.yml
+      yaml_globs: .github/workflows/*.yml
+      run_link_lint: true
+      scripts_ref: bcddb5db4ba5d291aa7f434d447e43175f14136c
+    secrets:
+      checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
+
   infra-lint:
     if: github.actor != 'dependabot[bot]'
     permissions:
       contents: read
-    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@75d0fafc90fbef7bb118025437502ca2cf42a11e
+    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@bcddb5db4ba5d291aa7f434d447e43175f14136c
     with:
       # Push/PR are blocking; workflow_dispatch honours the input.
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       working_directory: .
       shell_scripts: scripts/*.sh
       dockerfiles: docker/ci-cpp/Dockerfile
-      scripts_ref: 75d0fafc90fbef7bb118025437502ca2cf42a11e
+      scripts_ref: bcddb5db4ba5d291aa7f434d447e43175f14136c
     secrets:
       checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
 
@@ -44,20 +73,27 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: read
+    env:
+      GUARDRAILS_TOKEN: ${{ secrets.GUARDRAILS_READ_TOKEN || secrets.COMMONDEVOPS_READ_TOKEN }}
     steps:
-      # Private guardrails/scaffold: do not use submodules:true with github.token.
-      # Prefer GUARDRAILS_READ_TOKEN (contents:read on pirlruc/guardrails); fall back
-      # to COMMONDEVOPS_READ_TOKEN when that PAT also covers guardrails. If neither
-      # can clone, the drift script soft-skips (local checks still enforce).
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      - name: Detect guardrails checkout token
+        id: token
+        run: |
+          if [ -z "${GUARDRAILS_TOKEN}" ]; then
+            echo "No GUARDRAILS_READ_TOKEN / COMMONDEVOPS_READ_TOKEN — skipping drift"
+            echo "available=false" >> "${GITHUB_OUTPUT}"
+          else
+            echo "available=true" >> "${GITHUB_OUTPUT}"
+          fi
       - name: Resolve guardrails gitlink SHA
+        if: steps.token.outputs.available == 'true'
         id: guardrails_pin
         run: echo "sha=$(git rev-parse 'HEAD:docs/guardrails')" >> "${GITHUB_OUTPUT}"
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        id: guardrails_checkout
-        continue-on-error: true
+        if: steps.token.outputs.available == 'true'
         with:
           repository: pirlruc/guardrails
           ref: ${{ steps.guardrails_pin.outputs.sha }}
@@ -65,4 +101,5 @@ jobs:
           token: ${{ secrets.GUARDRAILS_READ_TOKEN || secrets.COMMONDEVOPS_READ_TOKEN }}
           persist-credentials: false
       - name: Drift-check vendored C++ thresholds
+        if: steps.token.outputs.available == 'true'
         run: bash scripts/check-threshold-drift.sh
