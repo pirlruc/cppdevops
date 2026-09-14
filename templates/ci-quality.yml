@@ -26,21 +26,21 @@ jobs:
   quality:
     permissions:
       contents: read
-    uses: pirlruc/cppdevops/.github/workflows/cpp-quality.yml@2.1.0
+    uses: pirlruc/cppdevops/.github/workflows/cpp-quality.yml@3.0.0
     with:
       library_path: .
       blocking: ${{ inputs.blocking }}
   tests:
     permissions:
       contents: read
-    uses: pirlruc/cppdevops/.github/workflows/cpp-tests.yml@2.1.0
+    uses: pirlruc/cppdevops/.github/workflows/cpp-tests.yml@3.0.0
     with:
       library_path: .
       blocking: ${{ inputs.blocking }}
   docs:
     permissions:
       contents: read
-    uses: pirlruc/cppdevops/.github/workflows/cpp-docs.yml@2.1.0
+    uses: pirlruc/cppdevops/.github/workflows/cpp-docs.yml@3.0.0
     with:
       library_path: .
       blocking: ${{ inputs.blocking }}
@@ -48,7 +48,7 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/cppdevops/.github/workflows/cpp-security.yml@2.1.0
+    uses: pirlruc/cppdevops/.github/workflows/cpp-security.yml@3.0.0
     with:
       library_path: .
       blocking: ${{ inputs.blocking }}
@@ -58,14 +58,14 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/cppdevops/.github/workflows/cpp-codeql.yml@2.1.0
+    uses: pirlruc/cppdevops/.github/workflows/cpp-codeql.yml@3.0.0
     with:
       library_path: .
       blocking: ${{ inputs.blocking }}
   dynamic:
     permissions:
       contents: read
-    uses: pirlruc/cppdevops/.github/workflows/cpp-dynamic.yml@2.1.0
+    uses: pirlruc/cppdevops/.github/workflows/cpp-dynamic.yml@3.0.0
     with:
       library_path: .
       blocking: ${{ inputs.blocking }}
