@@ -13,8 +13,9 @@ MAJOR: guardrails 1.6.0, fail-closed thresholds/docs, and `size_class`.
 
 - Missing Doxyfile fails the doc gate (generate via `generate-doxyfile.sh` or fail).
 - Missing guardrails checkout / threshold keys fail closed (CI-022 / CI-035).
-- Threshold-drift job skips only when no `GUARDRAILS_READ_TOKEN` /
-  `COMMONDEVOPS_READ_TOKEN`; a present token must clone successfully.
+- Threshold-drift job skips only when `GUARDRAILS_READ_TOKEN` is unset.
+  Do not fall back to `COMMONDEVOPS_READ_TOKEN` (it lacks contents:read on
+  private `pirlruc/guardrails`).
 - CI toolchain images pass `size_class: ci_toolchain` (containerdevops 4.0.0).
 - Callers re-pin commondevops **5.0.0** (`bcddb5db…`) with matching `scripts_ref`.
 

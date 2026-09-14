@@ -6,7 +6,7 @@
 |-------|-------|
 | **Folder** | `cpp/cppdevops/` |
 | **Remote** | https://github.com/pirlruc/cppdevops |
-| **Branch** | `feature-guardrails-16` (from `main` tag **2.1.0**) |
+| **Branch** | `main` tag **3.0.0** |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
@@ -22,7 +22,8 @@ Owns reusable workflows under `.github/workflows/`:
 
 Also owns `templates/`, `scripts/sync-library-*.sh`, and `docker/ci-cpp/`.
 
-Standalone library callers should pin `pirlruc/cppdevops@3.0.0` or `@<sha>` (`CI-018`) after this tag. Until then this branch still templates `@2.1.0`.
+Standalone library callers should pin `pirlruc/cppdevops@3.0.0` or `@<sha>` (`CI-018`).
+`templates/ci-quality.yml` now pins `@3.0.0`.
 Never `@main`. Checklist: [`docs/consumer-checklist.md`](consumer-checklist.md).
 
 Contract reference: [`docs/workflows.md`](workflows.md).
@@ -113,11 +114,10 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Suggested next work
 
-1. After tag **3.0.0**, bump consumer `uses:` and `templates/ci-quality.yml` from `@2.1.0` to `@3.0.0`.
-2. `issues-sync.py` write to close GitHub CPPD-PIN-001 (yaml already `done`; dry-run first).
-3. Bump the seven `@main` consumers and draupnir-cpp legacy retirement
+1. `issues-sync.py` write to close GitHub CPPD-PIN-001 (yaml already `done`; dry-run first).
+2. Bump the seven `@main` consumers and draupnir-cpp legacy retirement
    ([checklist](consumer-checklist.md)). Callers pin **3.0.0**.
-4. Provision `GUARDRAILS_READ_TOKEN` (contents:read on `pirlruc/guardrails`) so threshold-drift CI can run.
+3. Provision `GUARDRAILS_READ_TOKEN` (contents:read on `pirlruc/guardrails`) so threshold-drift CI can run.
 
 ## See also
 
@@ -131,6 +131,8 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Recent history
 
+- 2026-09-14: Tagged **3.0.0** + GitHub Release (`cbb1aeb…`, #75). Seed
+  `templates/ci-quality.yml` pins `@3.0.0`.
 - 2026-09-14: Guardrails **1.6.0** / scaffold **1.5.0**, commondevops **5.0.0**,
   containerdevops **4.0.0**. Fail-closed threshold reader, Doxyfile generate-or-fail,
   collect-then-fail, `size_class: ci_toolchain`, SC-DEP-004, POSIX CI wrapper.
