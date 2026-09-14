@@ -96,10 +96,12 @@ python3 .github/scaffold/scripts/issues-sync.py \
   used `wagoodman/dive:v0.13.1`. Do not lower the gate.
 - Reusable workflows and published rescan pin
   `container: ghcr.io/pirlruc/ci-cpp@sha256:54ea6b…` (CI-018). Do not float `:latest`.
-- Threshold drift CI checks out `pirlruc/guardrails` with `GUARDRAILS_READ_TOKEN`
-  (preferred) or `COMMONDEVOPS_READ_TOKEN` when that PAT also covers guardrails.
-  Without either, the job **skips** via `if:` (CI-035). Missing files/keys fail
-  closed. Do not use `submodules: true` with `github.token` (private clone 403/404).
+- Threshold drift CI checks out `pirlruc/guardrails` only when
+  `GUARDRAILS_READ_TOKEN` is set (contents:read on that private repo). Do not
+  fall back to `COMMONDEVOPS_READ_TOKEN` — it 403s. Without the guardrails PAT
+  the job skips explicitly; `scripts/check-threshold-drift.sh` remains the local
+  check. Missing files/keys fail closed. Do not use `submodules: true` with
+  `github.token` (private clone 403/404).
 - **Consumer pins (CI-018):** seven libraries still pin `@main`. See
   [`docs/consumer-checklist.md`](consumer-checklist.md). After this tag, callers
   pin **3.0.0**. github-scaffold seed `templates/ci-quality.yml` still historically

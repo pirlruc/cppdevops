@@ -74,16 +74,18 @@ jobs:
     permissions:
       contents: read
     env:
-      GUARDRAILS_TOKEN: ${{ secrets.GUARDRAILS_READ_TOKEN || secrets.COMMONDEVOPS_READ_TOKEN }}
+      # COMMONDEVOPS_READ_TOKEN is not a fallback: it may lack contents:read on
+      # pirlruc/guardrails and then 403s (CI-035). Skip unless GUARDRAILS_READ_TOKEN.
+      GUARDRAILS_TOKEN: ${{ secrets.GUARDRAILS_READ_TOKEN }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Detect guardrails checkout token
+      - name: Detect GUARDRAILS_READ_TOKEN
         id: token
         run: |
           if [ -z "${GUARDRAILS_TOKEN}" ]; then
-            echo "No GUARDRAILS_READ_TOKEN / COMMONDEVOPS_READ_TOKEN — skipping drift"
+            echo "No GUARDRAILS_READ_TOKEN — skipping drift (SC-DEP-004 pin job still runs)"
             echo "available=false" >> "${GITHUB_OUTPUT}"
           else
             echo "available=true" >> "${GITHUB_OUTPUT}"
@@ -98,7 +100,7 @@ jobs:
           repository: pirlruc/guardrails
           ref: ${{ steps.guardrails_pin.outputs.sha }}
           path: docs/guardrails
-          token: ${{ secrets.GUARDRAILS_READ_TOKEN || secrets.COMMONDEVOPS_READ_TOKEN }}
+          token: ${{ secrets.GUARDRAILS_READ_TOKEN }}
           persist-credentials: false
       - name: Drift-check vendored C++ thresholds
         if: steps.token.outputs.available == 'true'
