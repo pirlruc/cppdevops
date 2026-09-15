@@ -37,7 +37,7 @@ If the package is private, authenticate with a PAT that has `read:packages`:
 echo "$CR_PAT" | docker login ghcr.io -u USERNAME --password-stdin
 docker pull ghcr.io/pirlruc/ci-cpp:3.1.0
 # or
-docker pull ghcr.io/pirlruc/ci-cpp@sha256:<digest>
+docker pull ghcr.io/pirlruc/ci-cpp@sha256:f42b11bc342c0dd6faef6454f4a37cf4230b9c2c87357623cad5ed0102608656
 ```
 
 ## Use as a GitHub Actions job container
@@ -46,7 +46,7 @@ docker pull ghcr.io/pirlruc/ci-cpp@sha256:<digest>
 jobs:
   quality:
     runs-on: ubuntu-24.04
-    container: ghcr.io/pirlruc/ci-cpp@sha256:<digest>
+    container: ghcr.io/pirlruc/ci-cpp@sha256:f42b11bc342c0dd6faef6454f4a37cf4230b9c2c87357623cad5ed0102608656
 ```
 
 Digest-pin the container (CI-026). Do not float on `:latest`.

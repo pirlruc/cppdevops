@@ -28,7 +28,7 @@ Prefer a digest (or a version tag) in production. `latest` is never the only tag
 ```bash
 docker pull pirlruc/ci-cpp:3.1.0
 # or
-docker pull pirlruc/ci-cpp@sha256:<digest>
+docker pull pirlruc/ci-cpp@sha256:f42b11bc342c0dd6faef6454f4a37cf4230b9c2c87357623cad5ed0102608656
 ```
 
 ## Quick start
@@ -68,7 +68,7 @@ Not a product runtime — no `HEALTHCHECK`.
 ## Verify a publish
 
 ```bash
-docker pull pirlruc/ci-cpp@sha256:<digest>
+docker pull pirlruc/ci-cpp@sha256:f42b11bc342c0dd6faef6454f4a37cf4230b9c2c87357623cad5ed0102608656
 ```
 
 Signing is skipped on this private Free-plan repo (`SC-SIGN-001` / `SC-PROV-001`).

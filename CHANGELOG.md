@@ -5,6 +5,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [3.1.1] - 2026-09-15
+
+### Changed
+
+- Reusable `container:` pins and `cppdevops-security.yml` published rescan use
+  the 3.1.0 `ci-cpp` digest
+  `sha256:f42b11bc342c0dd6faef6454f4a37cf4230b9c2c87357623cad5ed0102608656`
+  (from the 3.1.0 GitHub Release image publish). Do not float `:latest`.
+- Seed `templates/ci-quality.yml` pins `@3.1.1`.
+
 ## [3.1.0] - 2026-09-15
 
 ### Added
