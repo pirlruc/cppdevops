@@ -32,12 +32,14 @@ ENV UV_PYTHON=/usr/bin/python3 \
     PYTHONUNBUFFERED=1
 RUN python3 -m venv /opt/venv \
  && /usr/local/bin/uv pip install --python /opt/venv/bin/python --no-cache \
-      coverxygen \
-      cpplint \
-      gcovr \
-      lizard \
-      metrixpp \
-      pyyaml \
+      'pip==26.2.1' \
+      'msgpack==1.2.1' \
+      'coverxygen==1.8.2' \
+      'cpplint==2.0.2' \
+      'gcovr==8.6' \
+      'lizard==1.17.10' \
+      'metrixpp==1.8.1' \
+      'pyyaml==6.0.3' \
  && find /opt/venv -type d -name '__pycache__' -exec rm -rf {} + 2>/dev/null || true \
  && find /opt/venv -type f -name '*.pyc' -delete
 

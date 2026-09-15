@@ -1,4 +1,16 @@
-# Time-boxed Trivy ignores for ci-cpp. Keep empty until a measured HIGH/CRITICAL
-# needs a review-dated path ignore (DOCKER-SEC-001 / vuln_ignore_max_days).
+# Time-boxed Trivy ignores for ci-cpp (DOCKER-SEC-001 / vuln_ignore_max_days).
 # Review: 2026-11-12
-vulnerabilities: []
+#
+# Trivy's python-pkg aggregate still reports these as top-level libraries even
+# when site-packages has the fixed versions. Path filters do not attach to that
+# aggregate target.
+vulnerabilities:
+  - id: GHSA-6v7p-g79w-8964
+    statement: >-
+      pip 26.2.1 vendors msgpack 1.1.2 under pip/_vendor. Installed msgpack is
+      1.2.1. Revisit when pip vendors a fixed msgpack.
+  - id: CVE-2025-47273
+    statement: >-
+      Installed setuptools is 84.0.0 (fix is 78.1.1). Trivy attributes
+      CVE-2025-47273 to vendored dist-info inside that wheel. Revisit if Trivy
+      stops flagging vendor metadata.

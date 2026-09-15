@@ -6,6 +6,6 @@ Checks: >
   cppcoreguidelines-*,
   -modernize-use-trailing-return-type
 
-HeaderFilterRegex: 'include/(runa|traits|patterns|core|logging|json|io|flow|heimdallcv|drawer)/.*'
+HeaderFilterRegex: 'include/.*'
 
 WarningsAsErrors: '*'

@@ -24,7 +24,7 @@ permissions: {}
 
 jobs:
   pins:
-    if: github.actor != 'dependabot[bot]'
+    # Token-free (CI-024): Dependabot PRs still get a submodule pin signal.
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
@@ -75,7 +75,7 @@ jobs:
       contents: read
     env:
       # COMMONDEVOPS_READ_TOKEN is not a fallback: it may lack contents:read on
-      # pirlruc/guardrails and then 403s (CI-035). Skip unless GUARDRAILS_READ_TOKEN.
+      # pirlruc/guardrails and then 403s. Cross-repo checkout needs this PAT.
       GUARDRAILS_TOKEN: ${{ secrets.GUARDRAILS_READ_TOKEN }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -84,24 +84,33 @@ jobs:
       - name: Detect GUARDRAILS_READ_TOKEN
         id: token
         run: |
+          set -euo pipefail
+          echo "sha=$(git rev-parse HEAD:docs/guardrails)" >> "$GITHUB_OUTPUT"
           if [ -z "${GUARDRAILS_TOKEN}" ]; then
-            echo "No GUARDRAILS_READ_TOKEN — skipping drift (SC-DEP-004 pin job still runs)"
-            echo "available=false" >> "${GITHUB_OUTPUT}"
+            echo "No GUARDRAILS_READ_TOKEN — skipping content drift (SC-DEP-004 pin job still runs)"
+            echo "available=false" >> "$GITHUB_OUTPUT"
           else
-            echo "available=true" >> "${GITHUB_OUTPUT}"
+            echo "available=true" >> "$GITHUB_OUTPUT"
           fi
-      - name: Resolve guardrails gitlink SHA
+      - name: Clear gitlink placeholder
         if: steps.token.outputs.available == 'true'
-        id: guardrails_pin
-        run: echo "sha=$(git rev-parse 'HEAD:docs/guardrails')" >> "${GITHUB_OUTPUT}"
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        run: rm -rf docs/guardrails
+      - name: Checkout pinned guardrails gitlink
         if: steps.token.outputs.available == 'true'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: pirlruc/guardrails
-          ref: ${{ steps.guardrails_pin.outputs.sha }}
-          path: docs/guardrails
+          ref: ${{ steps.token.outputs.sha }}
           token: ${{ secrets.GUARDRAILS_READ_TOKEN }}
           persist-credentials: false
+          path: docs/guardrails
+          sparse-checkout: |
+            cpp/profile.thresholds.yml
+          sparse-checkout-cone-mode: false
       - name: Drift-check vendored C++ thresholds
         if: steps.token.outputs.available == 'true'
         run: bash scripts/check-threshold-drift.sh
+      - name: Note skipped content drift
+        if: steps.token.outputs.available != 'true'
+        run: |
+          echo "::notice::GUARDRAILS_READ_TOKEN unset; skipped threshold content drift. Run scripts/check-threshold-drift.sh locally with docs/guardrails initialized. Do not use submodules: true on this job."

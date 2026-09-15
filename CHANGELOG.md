@@ -5,6 +5,36 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [3.1.0] - 2026-09-15
+
+### Added
+
+- `docs/docker-hub.md` and `docs/github-packages.md` for `pirlruc/ci-cpp`.
+- Mobile smoke compiles a generated TU that `#include`s a public header from
+  `library_path` when `include/` exists.
+- Optional `checkout_token` on `cpp-dynamic.yml` and `cpp-codeql.yml`.
+- Token-free `pins` job (CI-024). Artifact sweep for leftover `container-image*`.
+
+### Changed
+
+- Image caller pins [containerdevops 5.0.2](https://github.com/pirlruc/containerdevops)
+  (`32384866…`): `packages: write` on build, compose scan/publish from
+  `handoff_package` + `digest` (do not pass `image_ref` — secret-masked).
+- ci-cpp venv pins `pip==26.2.1`, `msgpack==1.2.1`, and exact
+  coverxygen/gcovr/lizard/cpplint. Trivy library ignores document pip-vendored
+  msgpack and setuptools vendor-metadata false positives (review 2026-11-12).
+- `.clang-tidy` `HeaderFilterRegex` is `include/.*` (no hardcoded library names).
+- `sync-library-tooling.sh` requires `CPPDEVOPS_WORKFLOW_REF` (never `main`).
+- Doxyfile generation fails closed. Coverage fails if branch % is missing.
+- clang-tidy fails when more than 400 TUs would be truncated.
+- Threshold-drift always compares vendored C++ floors to the pinned
+  `docs/guardrails` gitlink when `GUARDRAILS_READ_TOKEN` is set (do not use
+  `submodules: true`, which also clones private `github-scaffold` with
+  `github.token` and 404s). When the token is unset the job notices and
+  skips the content diff; SC-DEP-004 `pins` still asserts the gitlink.
+- CodeQL 4.37.9, setup-xcode 1.7.0, semgrep 1.176.0. clang-format pre-commit
+  stays on v22.1.8 (ci-cpp ships clang-format 18; do not take v23).
+
 ## [3.0.0] - 2026-09-14
 
 MAJOR: guardrails 1.6.0, fail-closed thresholds/docs, and `size_class`.

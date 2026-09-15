@@ -107,7 +107,14 @@ if stmt is None:
     sys.exit(1)
 
 stmt = float(stmt)
-branch_v = float(branch) if branch is not None else stmt
+if branch is None:
+    print(
+        f"error: could not parse branch coverage from {path} "
+        "(will not substitute statement %)",
+        file=sys.stderr,
+    )
+    sys.exit(1)
+branch_v = float(branch)
 print(f"coverage statement={stmt}% (min {stmt_min}) branch={branch_v}% (min {branch_min})")
 ok = True
 if stmt < stmt_min:

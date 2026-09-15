@@ -62,6 +62,8 @@ jobs:
     with:
       library_path: .
       blocking: ${{ inputs.blocking }}
+    secrets:
+      checkout_token: ${{ secrets.CPPDEVOPS_READ_TOKEN }}
   dynamic:
     permissions:
       contents: read
@@ -69,3 +71,23 @@ jobs:
     with:
       library_path: .
       blocking: ${{ inputs.blocking }}
+    secrets:
+      checkout_token: ${{ secrets.CPPDEVOPS_READ_TOKEN }}
+  mobile:
+    permissions:
+      contents: read
+    uses: pirlruc/cppdevops/.github/workflows/cpp-mobile-matrix.yml@3.0.0
+    with:
+      library_path: .
+      blocking: ${{ inputs.blocking }}
+    secrets:
+      checkout_token: ${{ secrets.CPPDEVOPS_READ_TOKEN }}
+  infra:
+    permissions:
+      contents: read
+    uses: pirlruc/cppdevops/.github/workflows/cpp-infra.yml@3.0.0
+    with:
+      blocking: ${{ inputs.blocking }}
+      working_directory: .
+    secrets:
+      checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
