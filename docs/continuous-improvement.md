@@ -38,7 +38,7 @@ Do **not** trust any baked-in file tree. From the checkout:
 2. List what actually exists under the surfaces below (workflow names, scripts, templates).
 3. List open GitHub issues (especially titles containing epic/task codes) and every epic/task
    `id` already in `docs/issues.yml`.
-4. Note submodule pins and `uses:` SHAs (including any `PLACEHOLDER_*`) as they appear.
+4. Note submodule pins and `uses:` SHAs as they appear.
 
 ### 2. Idempotency gate
 
@@ -128,6 +128,7 @@ Task ids: `<EPIC-ID>-T1`, …
 | `scripts/` | Coverage, Metrix++, sync-library tooling |
 | `templates/` | Library bootstrap configs |
 | `docker/ci-cpp/` | C++ CI toolchain image |
+| `docs/docker-hub.md` / `docs/github-packages.md` | Registry pages for `pirlruc/ci-cpp` |
 | `docs/` | Handoff, this prompt, authored `issues.yml`, deviations |
 | `.github/dependabot.yml` | Multi-ecosystem dependency updates |
 

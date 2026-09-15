@@ -3,7 +3,7 @@
 # Refresh scripts/ci-steps.sh when bumping the commondevops pin.
 #
 # Env:
-#   CPPDEVOPS_CI_IMAGE     — ci-lint image (default digest-pinned 4.0.0 Alpine)
+#   CPPDEVOPS_CI_IMAGE     — ci-lint image (default digest-pinned 5.1.1 Alpine)
 #   CPPDEVOPS_DOCKER_STEPS — space-separated step names (required)
 set -eu
 
@@ -11,7 +11,7 @@ SCRIPT_DIR="$(dirname "$0")"
 SCRIPT_DIR="$(cd "${SCRIPT_DIR}" && pwd)"
 ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
-COMMONDEVOPS_CI_IMAGE="${CPPDEVOPS_CI_IMAGE:-ghcr.io/pirlruc/ci-lint:4.0.0@sha256:0a4691ba3f505d6f4998016997adac9adcc016676b8daf572cdf2fa446d61872}"
+COMMONDEVOPS_CI_IMAGE="${CPPDEVOPS_CI_IMAGE:-ghcr.io/pirlruc/ci-lint:5.1.1@sha256:35a82a43839e0969dc7c44d63c36b5c97cdefb20c6d3112255f52c09444042a1}"
 COMMONDEVOPS_DOCKER_STEPS="${CPPDEVOPS_DOCKER_STEPS:?CPPDEVOPS_DOCKER_STEPS is required}"
 COMMONDEVOPS_BUILD_LOCAL="${CPPDEVOPS_BUILD_LOCAL:-0}"
 export COMMONDEVOPS_CI_IMAGE COMMONDEVOPS_DOCKER_STEPS COMMONDEVOPS_BUILD_LOCAL

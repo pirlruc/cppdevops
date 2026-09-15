@@ -40,7 +40,7 @@ jobs:
     if: github.actor != 'dependabot[bot]'
     permissions:
       contents: read
-    uses: pirlruc/commondevops/.github/workflows/common-doc-verify.yml@bcddb5db4ba5d291aa7f434d447e43175f14136c
+    uses: pirlruc/commondevops/.github/workflows/common-doc-verify.yml@b3c462bed0de4f6475e6be7875c4ababd831acc6
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       shell_scripts: scripts/*.sh
@@ -48,7 +48,7 @@ jobs:
       yaml_files: docs/issues.yml docs/guardrail-deviations.yml
       yaml_globs: .github/workflows/*.yml
       run_link_lint: true
-      scripts_ref: bcddb5db4ba5d291aa7f434d447e43175f14136c
+      scripts_ref: b3c462bed0de4f6475e6be7875c4ababd831acc6
     secrets:
       checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
 
@@ -56,14 +56,14 @@ jobs:
     if: github.actor != 'dependabot[bot]'
     permissions:
       contents: read
-    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@bcddb5db4ba5d291aa7f434d447e43175f14136c
+    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@b3c462bed0de4f6475e6be7875c4ababd831acc6
     with:
       # Push/PR are blocking; workflow_dispatch honours the input.
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       working_directory: .
       shell_scripts: scripts/*.sh
       dockerfiles: docker/ci-cpp/Dockerfile
-      scripts_ref: bcddb5db4ba5d291aa7f434d447e43175f14136c
+      scripts_ref: b3c462bed0de4f6475e6be7875c4ababd831acc6
     secrets:
       checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
 

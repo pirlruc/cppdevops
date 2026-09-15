@@ -5,6 +5,18 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [3.1.2] - 2026-09-15
+
+### Changed
+
+- Nested [commondevops](https://github.com/pirlruc/commondevops) pin is **5.1.2**
+  (`b3c462bed0de4f6475e6be7875c4ababd831acc6`) with lockstep `scripts_ref`.
+- `scripts/check-ci-docker.sh` default is ci-lint **5.1.1** Alpine
+  `sha256:35a82a43…`.
+- Seed `templates/ci-quality.yml` pins `@3.1.2`. Hub/Packages stay **3.1.0**
+  (`sha256:f42b11bc…`); this tag has no GitHub Release and does not republish
+  `ci-cpp`.
+
 ## [3.1.1] - 2026-09-15
 
 ### Changed
