@@ -33,6 +33,7 @@ ENV UV_PYTHON=/usr/bin/python3 \
 RUN python3 -m venv /opt/venv \
  && /usr/local/bin/uv pip install --python /opt/venv/bin/python --no-cache \
       'pip==26.2.1' \
+      'msgpack==1.2.1' \
       'coverxygen==1.8.2' \
       'cpplint==2.0.2' \
       'gcovr==8.6' \

@@ -20,7 +20,9 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 - Image caller pins [containerdevops 5.0.2](https://github.com/pirlruc/containerdevops)
   (`32384866…`): `packages: write` on build, compose scan/publish from
   `handoff_package` + `digest` (do not pass `image_ref` — secret-masked).
-- ci-cpp venv pins `pip==26.2.1` and exact coverxygen/gcovr/lizard/cpplint.
+- ci-cpp venv pins `pip==26.2.1`, `msgpack==1.2.1`, and exact
+  coverxygen/gcovr/lizard/cpplint. Trivy library ignores document pip-vendored
+  msgpack and setuptools vendor-metadata false positives (review 2026-11-12).
 - `.clang-tidy` `HeaderFilterRegex` is `include/.*` (no hardcoded library names).
 - `sync-library-tooling.sh` requires `CPPDEVOPS_WORKFLOW_REF` (never `main`).
 - Doxyfile generation fails closed. Coverage fails if branch % is missing.
