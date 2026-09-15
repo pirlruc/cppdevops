@@ -18,6 +18,9 @@ on:
         required: false
         type: boolean
         default: true
+    secrets:
+      checkout_token:
+        required: false
 
 # CI-025
 permissions: {}
@@ -45,6 +48,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: pirlruc/cppdevops
+          token: ${{ secrets.checkout_token || github.token }}
           persist-credentials: false
           path: _cppdevops
           sparse-checkout: |
@@ -104,6 +108,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: pirlruc/cppdevops
+          token: ${{ secrets.checkout_token || github.token }}
           persist-credentials: false
           path: _cppdevops
           sparse-checkout: |

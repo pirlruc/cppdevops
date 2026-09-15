@@ -93,12 +93,16 @@ jobs:
           [[ -d include ]] && dirs+=(include)
           [[ -d src ]] && dirs+=(src)
           if [[ ${#dirs[@]} -eq 0 ]]; then echo "No include/src"; exit 0; fi
-          mapfile -t SRC < <(find "${dirs[@]}" \( -name '*.cpp' -o -name '*.hpp' \) | head -400)
-          if [[ ${#SRC[@]} -eq 0 ]]; then
+          mapfile -t ALL < <(find "${dirs[@]}" \( -name '*.cpp' -o -name '*.hpp' \) | sort)
+          if [[ ${#ALL[@]} -eq 0 ]]; then
             echo "No sources"
             exit 0
           fi
-          clang-tidy -p build "${SRC[@]}"
+          if [[ ${#ALL[@]} -gt 400 ]]; then
+            echo "error: clang-tidy would truncate ${#ALL[@]} TUs to 400 (CI-035)" >&2
+            exit 1
+          fi
+          clang-tidy -p build "${ALL[@]}"
 
       - name: cppcheck
         id: cppcheck

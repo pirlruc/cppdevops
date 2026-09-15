@@ -107,6 +107,8 @@ Deviations: [`docs/guardrail-deviations.yml`](docs/guardrail-deviations.yml) onl
 
 - Agent handoff: [`docs/ai-agent-handoff.md`](docs/ai-agent-handoff.md)
 - Workflow contracts: [`docs/workflows.md`](docs/workflows.md)
+- Docker Hub: [`docs/docker-hub.md`](docs/docker-hub.md)
+- GitHub Packages: [`docs/github-packages.md`](docs/github-packages.md)
 - Consumer pin / draupnir retirement: [`docs/consumer-checklist.md`](docs/consumer-checklist.md)
 - Authored backlog: [`docs/issues.yml`](docs/issues.yml)
 - Changelog: [`CHANGELOG.md`](CHANGELOG.md)

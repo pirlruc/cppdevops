@@ -54,11 +54,18 @@ Re-filing completed or open work is a failure of this run.
 Judge every finding against least friction: a library can pin a SHA and call the Quality
 caller correctly in ~10 minutes.
 
+**Evidence rule (non-negotiable):** before claiming a nested reusable, companion repo,
+or downstream workflow "declares", "requires", or "fails with" a specific permission,
+input, or behaviour, **read the referenced file in this checkout** (or fetch the pinned
+`uses:` SHA via `gh`/raw URL). Do **not** infer companion contents from naming or
+comments. Findings that guess at another workflow's `permissions:` or SARIF steps are
+invalid and must not be filed.
+
 **Also look for defects in what the tree actually ships:**
 
 | Class | Examples |
 |-------|----------|
-| Improvement | ci-cpp unused where justified; thin caller secrets docs; mobile placeholder clarity |
+| Improvement | ci-cpp unused where justified; thin caller secrets docs; Hub/Packages docs |
 | Bug | Broken sparse-checkout; wrong `run_sbom` default vs SC-SBOM-001; Metrix path drift |
 | Design flaw | Baking threshold numbers into workflows; dual security paths vs commondevops |
 
@@ -138,7 +145,7 @@ Do not recommend removing these without **requires user decision**:
 3. CI-024 Dependabot skip on jobs needing Actions secrets / private reusable pins
 4. `docs/issues.yml` is the authored backlog
 5. Guardrails stay canonical in `pirlruc/guardrails` — record deviations here only
-6. Mobile matrix remains advisory/placeholder until MOBILE-MECH-001 (deviation recorded)
+6. Mobile matrix compiles a header-including smoke TU (MOBILE-MECH-001)
 
 ## Automation configuration
 

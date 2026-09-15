@@ -76,7 +76,6 @@ jobs:
           echo "library_path=${LIBRARY_PATH}"
           echo "NDK pin=${MIN_NDK}"
           echo "NDK home=${ANDROID_NDK_HOME}"
-          # Prefer API 24 aarch64 clang++; fall back to any aarch64 android clang++.
           mapfile -t CLANGS < <(
             find "${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt" -type f \
               \( -name 'aarch64-linux-android24-clang++' -o -name 'aarch64-linux-android*-clang++' \) \
@@ -88,12 +87,8 @@ jobs:
           fi
           CXX="${CLANGS[0]}"
           echo "Using ${CXX}"
-          OUT="${RUNNER_TEMP}/mobile-smoke-android"
-          mkdir -p "${OUT}"
-          "${CXX}" -stdlib=libc++ -std=c++20 -fPIC \
-            -o "${OUT}/smoke" \
-            _cppdevops/scripts/mobile-smoke/smoke.cpp
-          file "${OUT}/smoke"
+          OUT="${RUNNER_TEMP}/mobile-smoke-android/smoke"
+          bash _cppdevops/scripts/mobile-smoke/compile.sh "${CXX}" "${OUT}" -fPIC
           echo "::notice::Android NDK smoke compile succeeded"
 
       - name: Gate — Android
@@ -130,7 +125,7 @@ jobs:
             scripts/gate-aggregate.sh
           sparse-checkout-cone-mode: false
 
-      - uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
+      - uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
         with:
           xcode-version: ${{ inputs.min_xcode }}
 
@@ -145,13 +140,12 @@ jobs:
           echo "library_path=${LIBRARY_PATH}"
           echo "Xcode pin=${MIN_XCODE}"
           xcodebuild -version
-          OUT="${RUNNER_TEMP}/mobile-smoke-ios"
-          mkdir -p "${OUT}"
-          xcrun --sdk iphoneos clang++ -stdlib=libc++ -std=c++20 \
-            -arch arm64 -isysroot "$(xcrun --sdk iphoneos --show-sdk-path)" \
-            -o "${OUT}/smoke" \
-            _cppdevops/scripts/mobile-smoke/smoke.cpp
-          file "${OUT}/smoke"
+          OUT="${RUNNER_TEMP}/mobile-smoke-ios/smoke"
+          bash _cppdevops/scripts/mobile-smoke/compile.sh \
+            "$(xcrun --sdk iphoneos --find clang++)" \
+            "${OUT}" \
+            -arch arm64 \
+            -isysroot "$(xcrun --sdk iphoneos --show-sdk-path)"
           echo "::notice::iOS Xcode smoke compile succeeded"
 
       - name: Gate — iOS

@@ -1,6 +1,6 @@
 ---
 # Thin caller — publishes ghcr.io/pirlruc/ci-cpp (+ Docker Hub when secrets set).
-# Ubuntu 24.04 only (CPP-BUILD-004 / CPP-BUILD-009). containerdevops pin: tag 4.0.0.
+# Ubuntu 24.04 only (CPP-BUILD-004 / CPP-BUILD-009). containerdevops pin: tag 5.0.2.
 name: CI C++ Image
 
 on:
@@ -40,16 +40,16 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/containerdevops/.github/workflows/container-lint.yml@a29ebe54d321e25e639ff34b704da1a0ddd45655
+    uses: pirlruc/containerdevops/.github/workflows/container-lint.yml@32384866e5669dbde8bdecde153a6ae6ead728ed
     with:
       dockerfile: docker/ci-cpp/Dockerfile
       working_directory: .
-      scripts_ref: a29ebe54d321e25e639ff34b704da1a0ddd45655
+      scripts_ref: 32384866e5669dbde8bdecde153a6ae6ead728ed
       runner_image: ""
       run_infra_lint: false
+      run_secrets_scan: true
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
     secrets:
-      # Private commondevops: github.token cannot clone it for secrets-sast.
       checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
       scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
 
@@ -61,15 +61,16 @@ jobs:
        github.event.pull_request.head.repo.full_name == github.repository)
     permissions:
       contents: read
-      packages: read
-    uses: pirlruc/containerdevops/.github/workflows/container-build.yml@a29ebe54d321e25e639ff34b704da1a0ddd45655
+      packages: write
+    uses: pirlruc/containerdevops/.github/workflows/container-build.yml@32384866e5669dbde8bdecde153a6ae6ead728ed
     with:
       context: docker/ci-cpp
       dockerfile: docker/ci-cpp/Dockerfile
       image_name: ci-cpp:ci
       artifact_name: container-image-ci-cpp
+      handoff_package: ci-cpp
       structure_test_config: docker/ci-cpp/container-structure-test.yml
-      scripts_ref: a29ebe54d321e25e639ff34b704da1a0ddd45655
+      scripts_ref: 32384866e5669dbde8bdecde153a6ae6ead728ed
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
       size_class: ci_toolchain
       image_title: ci-cpp
@@ -93,13 +94,12 @@ jobs:
       contents: read
       security-events: write
       packages: read
-    uses: pirlruc/containerdevops/.github/workflows/container-scan.yml@a29ebe54d321e25e639ff34b704da1a0ddd45655
+    uses: pirlruc/containerdevops/.github/workflows/container-scan.yml@32384866e5669dbde8bdecde153a6ae6ead728ed
     with:
-      image: ci-cpp:ci
-      image_artifact: container-image-ci-cpp
+      image: ${{ format('ghcr.io/{0}/{1}@{2}', github.repository_owner, needs.build.outputs.handoff_package, needs.build.outputs.digest) }}
       results_artifact: container-scan-results-ci-cpp
       sarif_category: trivy-image-ci-cpp
-      scripts_ref: a29ebe54d321e25e639ff34b704da1a0ddd45655
+      scripts_ref: 32384866e5669dbde8bdecde153a6ae6ead728ed
       pkg_types: library
       ignorefile: docker/ci-cpp/.trivyignore.yaml
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
@@ -117,22 +117,23 @@ jobs:
       contents: read
       packages: write
       id-token: write
-    uses: pirlruc/containerdevops/.github/workflows/container-publish.yml@a29ebe54d321e25e639ff34b704da1a0ddd45655
+    uses: pirlruc/containerdevops/.github/workflows/container-publish.yml@32384866e5669dbde8bdecde153a6ae6ead728ed
     with:
       context: docker/ci-cpp
       dockerfile: docker/ci-cpp/Dockerfile
       image_name: ci-cpp
       dockerhub_image: pirlruc/ci-cpp
-      scripts_ref: a29ebe54d321e25e639ff34b704da1a0ddd45655
+      scripts_ref: 32384866e5669dbde8bdecde153a6ae6ead728ed
       platforms: linux/amd64
       image_title: ci-cpp
       image_description: >-
         Short-lived C++ CI toolchain: Clang/libc++, CMake, Ninja, cppcheck,
         clang-tidy/format, Doxygen, gcovr, lizard, Metrix++, coverxygen, valgrind.
         Ubuntu 24.04. Non-root 1000:1000, linux/amd64.
-      image_documentation: https://github.com/pirlruc/cppdevops/blob/main/docs/workflows.md
-      image_url: https://github.com/pirlruc/cppdevops/pkgs/container/ci-cpp
+      image_documentation: https://hub.docker.com/r/pirlruc/ci-cpp
+      image_url: https://hub.docker.com/r/pirlruc/ci-cpp
       image_vendor: pirlruc
+      dockerhub_readme: docs/docker-hub.md
       dockerhub_short_description: >-
         C++ CI toolchain: Clang/libc++, CMake, Ninja, quality and coverage tools
       sign: ${{ github.event.repository.visibility == 'public' }}
@@ -140,7 +141,18 @@ jobs:
       dhi_login: true
       tag_latest: ${{ github.event_name != 'release' || github.event.release.prerelease == false }}
       verify_command: /bin/true
+      source_image: ${{ format('ghcr.io/{0}/{1}@{2}', github.repository_owner, needs.build.outputs.handoff_package, needs.build.outputs.digest) }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
+
+  cleanup:
+    needs: [build, scan]
+    if: always() && github.event_name == 'pull_request' && needs.build.outputs.handoff_tag != ''
+    permissions:
+      packages: write
+    uses: pirlruc/containerdevops/.github/workflows/container-handoff-cleanup.yml@32384866e5669dbde8bdecde153a6ae6ead728ed
+    with:
+      package: ${{ needs.build.outputs.handoff_package }}
+      tag: ${{ needs.build.outputs.handoff_tag }}

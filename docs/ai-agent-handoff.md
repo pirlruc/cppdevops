@@ -6,7 +6,7 @@
 |-------|-------|
 | **Folder** | `cpp/cppdevops/` |
 | **Remote** | https://github.com/pirlruc/cppdevops |
-| **Branch** | `main` tag **3.0.0** |
+| **Branch** | `feature-align-3.1.0` → tag **3.1.0** |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
@@ -22,8 +22,10 @@ Owns reusable workflows under `.github/workflows/`:
 
 Also owns `templates/`, `scripts/sync-library-*.sh`, and `docker/ci-cpp/`.
 
-Standalone library callers should pin `pirlruc/cppdevops@3.0.0` or `@<sha>` (`CI-018`).
-`templates/ci-quality.yml` now pins `@3.0.0`.
+Standalone library callers should pin `pirlruc/cppdevops@3.1.0` or `@<sha>` (`CI-018`).
+`templates/ci-quality.yml` now pins `@3.0.0` until this tag lands (bump in the next
+consumer sync). Hub/Packages: [`docs/docker-hub.md`](docker-hub.md),
+[`docs/github-packages.md`](github-packages.md).
 Never `@main`. Checklist: [`docs/consumer-checklist.md`](consumer-checklist.md).
 
 Contract reference: [`docs/workflows.md`](workflows.md).
@@ -36,7 +38,7 @@ Contract reference: [`docs/workflows.md`](workflows.md).
 | `.github/scaffold` | tag **1.5.0** → `9e04ed53…` |
 | `ghcr.io/pirlruc/ci-cpp` | `@sha256:54ea6b2354709b742a3b1ae289b82c0cbb1ad9241d59ee06b94331ecf945d7f9` (tags `:latest` / `:20260812` / `:sha-3d09f6d`). Reusable `container:` and `cppdevops-security.yml` published rescan share this digest. |
 | commondevops `uses:` | tag **5.0.0** → `bcddb5db4ba5d291aa7f434d447e43175f14136c` |
-| containerdevops `uses:` | tag **4.0.0** → `a29ebe54d321e25e639ff34b704da1a0ddd45655` |
+| containerdevops `uses:` | tag **5.0.2** → `32384866e5669dbde8bdecde153a6ae6ead728ed` |
 
 Open companion PRs (not merged): [guardrails #58](https://github.com/pirlruc/guardrails/pull/58),
 [github-scaffold #37](https://github.com/pirlruc/github-scaffold/pull/37),
@@ -97,12 +99,15 @@ python3 .github/scaffold/scripts/issues-sync.py \
   used `wagoodman/dive:v0.13.1`. Do not lower the gate.
 - Reusable workflows and published rescan pin
   `container: ghcr.io/pirlruc/ci-cpp@sha256:54ea6b…` (CI-018). Do not float `:latest`.
-- Threshold drift CI checks out `pirlruc/guardrails` only when
-  `GUARDRAILS_READ_TOKEN` is set (contents:read on that private repo). Do not
-  fall back to `COMMONDEVOPS_READ_TOKEN` — it 403s. Without the guardrails PAT
-  the job skips explicitly; `scripts/check-threshold-drift.sh` remains the local
-  check. Missing files/keys fail closed. Do not use `submodules: true` with
-  `github.token` (private clone 403/404).
+- Threshold drift CI checks out the in-tree `docs/guardrails` submodule
+  (`submodules: true`) and always runs `scripts/check-threshold-drift.sh`.
+  Do not skip when `GUARDRAILS_READ_TOKEN` is unset.
+- Compose GHCR scan/publish refs from `handoff_package` + `digest`. Do not
+  pass `needs.build.outputs.image_ref` (Actions secret-masks the owner).
+- `sync-library-tooling.sh` requires `CPPDEVOPS_WORKFLOW_REF`; it never
+  defaults to `main`.
+- clang-format pre-commit stays on **v22.1.8** (ci-cpp is clang-format 18).
+  Do not take Dependabot's v23 bump unless the image formatter matches.
 - **Consumer pins (CI-018):** seven libraries still pin `@main`. See
   [`docs/consumer-checklist.md`](consumer-checklist.md). After this tag, callers
   pin **3.0.0**. github-scaffold seed `templates/ci-quality.yml` still historically
@@ -114,10 +119,10 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Suggested next work
 
-1. `issues-sync.py` write to close GitHub CPPD-PIN-001 (yaml already `done`; dry-run first).
-2. Bump the seven `@main` consumers and draupnir-cpp legacy retirement
-   ([checklist](consumer-checklist.md)). Callers pin **3.0.0**.
-3. Provision `GUARDRAILS_READ_TOKEN` (contents:read on `pirlruc/guardrails`) so threshold-drift CI can run.
+1. After the 3.1.0 GitHub Release, write the new ci-cpp digest into reusable
+   `container:` pins and `cppdevops-security.yml`.
+2. Bump the seven `@main` consumers ([checklist](consumer-checklist.md)) to **3.1.0**.
+3. Close Dependabot #76 as superseded (clang-format v23 was not taken).
 
 ## See also
 
@@ -131,6 +136,9 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Recent history
 
+- 2026-09-15: **3.1.0** — containerdevops 5.0.1 GHCR handoff, Hub/Packages docs,
+  mobile header TU, pip 26.2.1 pins, checkout_token on dynamic/codeql, token-free
+  pins, in-tree threshold-drift, no clang-format v23.
 - 2026-09-14: Tagged **3.0.0** + GitHub Release (`cbb1aeb…`, #75). Seed
   `templates/ci-quality.yml` pins `@3.0.0`.
 - 2026-09-14: Guardrails **1.6.0** / scaffold **1.5.0**, commondevops **5.0.0**,
@@ -152,4 +160,4 @@ python3 .github/scaffold/scripts/issues-sync.py \
   `feature-ai-reviewer-issues` (merged as #52). Wave 3 yaml marks MOBILE-MECH-001,
   AIREV-MECH-001, and DEP-MECH-001 done; GitHub issues still open pending `--update`.
 
-*Last updated: 2026-09-14*
+*Last updated: 2026-09-15*

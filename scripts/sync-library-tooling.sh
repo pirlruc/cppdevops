@@ -69,7 +69,11 @@ if [[ -f "${TEMPLATE}/codeql/codeql-config.yml" ]]; then
 fi
 
 mkdir -p "${LIB}/.github/workflows"
-CPPDEVOPS_REF="${CPPDEVOPS_WORKFLOW_REF:-$(git -C "${CPPDEVOPS_ROOT}" rev-parse HEAD 2>/dev/null || echo main)}"
+if [[ -z "${CPPDEVOPS_WORKFLOW_REF:-}" ]]; then
+  echo "error: CPPDEVOPS_WORKFLOW_REF is required (CI-018); refusing to default to main" >&2
+  exit 1
+fi
+CPPDEVOPS_REF="${CPPDEVOPS_WORKFLOW_REF}"
 if [[ "${STANDALONE}" == "1" ]]; then
   # Create-once: libraries customize callers (mobile, run_sbom, SHA pins).
   # Overwriting would strip those customizations (CI-018 / CPP-SEC-003).
@@ -121,16 +125,29 @@ jobs:
     with:
       library_path: .
       blocking: \${{ inputs.blocking }}
+    secrets:
+      checkout_token: \${{ secrets.CPPDEVOPS_READ_TOKEN }}
   dynamic:
     uses: pirlruc/cppdevops/.github/workflows/cpp-dynamic.yml@${CPPDEVOPS_REF}
     with:
       library_path: .
       blocking: \${{ inputs.blocking }}
+    secrets:
+      checkout_token: \${{ secrets.CPPDEVOPS_READ_TOKEN }}
   mobile:
     uses: pirlruc/cppdevops/.github/workflows/cpp-mobile-matrix.yml@${CPPDEVOPS_REF}
     with:
       library_path: .
       blocking: \${{ inputs.blocking }}
+    secrets:
+      checkout_token: \${{ secrets.CPPDEVOPS_READ_TOKEN }}
+  infra:
+    uses: pirlruc/cppdevops/.github/workflows/cpp-infra.yml@${CPPDEVOPS_REF}
+    with:
+      blocking: \${{ inputs.blocking }}
+      working_directory: .
+    secrets:
+      checkout_token: \${{ secrets.COMMONDEVOPS_READ_TOKEN }}
 EOF
   else
     echo "keep existing ${LIB}/.github/workflows/ci-quality.yml (create-once)"
@@ -150,7 +167,7 @@ fi
 
 # Ensure Doxyfile exists when template generator is available
 if [[ ! -f "${LIB}/Doxyfile" ]] && [[ -x "${CPPDEVOPS_ROOT}/scripts/generate-doxyfile.sh" ]]; then
-  bash "${CPPDEVOPS_ROOT}/scripts/generate-doxyfile.sh" "${LIB}" || true
+  bash "${CPPDEVOPS_ROOT}/scripts/generate-doxyfile.sh" "${LIB}"
 fi
 
 echo "Synced tooling to ${LIB} (target: ${CMAKE_TARGET}, standalone: ${STANDALONE})"
