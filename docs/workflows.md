@@ -34,7 +34,7 @@ clang-format, cpplint, clang-tidy, cppcheck, lizard, Metrix++.
 
 Numeric gates (CCN, coverage) come from `scripts/cpp.profile.thresholds.yml`
 (CI-021/022). Job runs in
-`container: ghcr.io/pirlruc/ci-cpp@sha256:54ea6b2354709b742a3b1ae289b82c0cbb1ad9241d59ee06b94331ecf945d7f9`
+`container: ghcr.io/pirlruc/ci-cpp@sha256:f42b11bc342c0dd6faef6454f4a37cf4230b9c2c87357623cad5ed0102608656`
 (same digest on `cpp-tests`, `cpp-docs`, `cpp-dynamic`, `cpp-codeql`).
 
 ---
@@ -172,7 +172,7 @@ actor (CI-024).
 Weekly Wednesday 06:17 UTC (staggered vs commondevops Mon / containerdevops Tue)
 plus `workflow_dispatch`. Secrets/SAST + supply-chain via commondevops; published
 `ci-cpp` rescan via containerdevops at the same digest as reusable workflow
-`container:` pins (`ghcr.io/pirlruc/ci-cpp@sha256:54ea6b…`, not `:latest`).
+`container:` pins (`ghcr.io/pirlruc/ci-cpp@sha256:f42b11bc…`, not `:latest`).
 
 ---
 

@@ -26,21 +26,21 @@ jobs:
   quality:
     permissions:
       contents: read
-    uses: pirlruc/cppdevops/.github/workflows/cpp-quality.yml@3.0.0
+    uses: pirlruc/cppdevops/.github/workflows/cpp-quality.yml@3.1.1
     with:
       library_path: .
       blocking: ${{ inputs.blocking }}
   tests:
     permissions:
       contents: read
-    uses: pirlruc/cppdevops/.github/workflows/cpp-tests.yml@3.0.0
+    uses: pirlruc/cppdevops/.github/workflows/cpp-tests.yml@3.1.1
     with:
       library_path: .
       blocking: ${{ inputs.blocking }}
   docs:
     permissions:
       contents: read
-    uses: pirlruc/cppdevops/.github/workflows/cpp-docs.yml@3.0.0
+    uses: pirlruc/cppdevops/.github/workflows/cpp-docs.yml@3.1.1
     with:
       library_path: .
       blocking: ${{ inputs.blocking }}
@@ -48,7 +48,7 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/cppdevops/.github/workflows/cpp-security.yml@3.0.0
+    uses: pirlruc/cppdevops/.github/workflows/cpp-security.yml@3.1.1
     with:
       library_path: .
       blocking: ${{ inputs.blocking }}
@@ -58,7 +58,7 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/cppdevops/.github/workflows/cpp-codeql.yml@3.0.0
+    uses: pirlruc/cppdevops/.github/workflows/cpp-codeql.yml@3.1.1
     with:
       library_path: .
       blocking: ${{ inputs.blocking }}
@@ -67,7 +67,7 @@ jobs:
   dynamic:
     permissions:
       contents: read
-    uses: pirlruc/cppdevops/.github/workflows/cpp-dynamic.yml@3.0.0
+    uses: pirlruc/cppdevops/.github/workflows/cpp-dynamic.yml@3.1.1
     with:
       library_path: .
       blocking: ${{ inputs.blocking }}
@@ -76,7 +76,7 @@ jobs:
   mobile:
     permissions:
       contents: read
-    uses: pirlruc/cppdevops/.github/workflows/cpp-mobile-matrix.yml@3.0.0
+    uses: pirlruc/cppdevops/.github/workflows/cpp-mobile-matrix.yml@3.1.1
     with:
       library_path: .
       blocking: ${{ inputs.blocking }}
@@ -85,7 +85,7 @@ jobs:
   infra:
     permissions:
       contents: read
-    uses: pirlruc/cppdevops/.github/workflows/cpp-infra.yml@3.0.0
+    uses: pirlruc/cppdevops/.github/workflows/cpp-infra.yml@3.1.1
     with:
       blocking: ${{ inputs.blocking }}
       working_directory: .

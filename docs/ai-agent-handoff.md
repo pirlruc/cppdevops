@@ -6,7 +6,7 @@
 |-------|-------|
 | **Folder** | `cpp/cppdevops/` |
 | **Remote** | https://github.com/pirlruc/cppdevops |
-| **Branch** | `feature-align-3.1.0` → tag **3.1.0** |
+| **Branch** | `feature-ci-cpp-digest` → tag **3.1.1** |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
@@ -22,21 +22,20 @@ Owns reusable workflows under `.github/workflows/`:
 
 Also owns `templates/`, `scripts/sync-library-*.sh`, and `docker/ci-cpp/`.
 
-Standalone library callers should pin `pirlruc/cppdevops@3.1.0` or `@<sha>` (`CI-018`).
-`templates/ci-quality.yml` now pins `@3.0.0` until this tag lands (bump in the next
-consumer sync). Hub/Packages: [`docs/docker-hub.md`](docker-hub.md),
+Standalone library callers should pin `pirlruc/cppdevops@3.1.1` or `@<sha>` (`CI-018`).
+`templates/ci-quality.yml` pins `@3.1.1`. Hub/Packages: [`docs/docker-hub.md`](docker-hub.md),
 [`docs/github-packages.md`](github-packages.md).
 Never `@main`. Checklist: [`docs/consumer-checklist.md`](consumer-checklist.md).
 
 Contract reference: [`docs/workflows.md`](workflows.md).
 
-## Pins (2026-08-12)
+## Pins (2026-09-15)
 
 | Submodule / artifact | Pin |
 |----------------------|-----|
 | `docs/guardrails` | tag **1.6.0** → `77cf16eb…` |
 | `.github/scaffold` | tag **1.5.0** → `9e04ed53…` |
-| `ghcr.io/pirlruc/ci-cpp` | `@sha256:54ea6b2354709b742a3b1ae289b82c0cbb1ad9241d59ee06b94331ecf945d7f9` (tags `:latest` / `:20260812` / `:sha-3d09f6d`). Reusable `container:` and `cppdevops-security.yml` published rescan share this digest. |
+| `ghcr.io/pirlruc/ci-cpp` | `@sha256:f42b11bc342c0dd6faef6454f4a37cf4230b9c2c87357623cad5ed0102608656` (Hub/GHCR tags `:3.1.0` / `:latest` from the 3.1.0 Release publish). Reusable `container:` and `cppdevops-security.yml` published rescan share this digest. |
 | commondevops `uses:` | tag **5.0.0** → `bcddb5db4ba5d291aa7f434d447e43175f14136c` |
 | containerdevops `uses:` | tag **5.0.2** → `32384866e5669dbde8bdecde153a6ae6ead728ed` |
 
@@ -98,7 +97,10 @@ python3 .github/scaffold/scripts/issues-sync.py \
   (`efficiencyScore` 0.971077…) vs org floor 95%. Host `dive` was missing;
   used `wagoodman/dive:v0.13.1`. Do not lower the gate.
 - Reusable workflows and published rescan pin
-  `container: ghcr.io/pirlruc/ci-cpp@sha256:54ea6b…` (CI-018). Do not float `:latest`.
+  `container: ghcr.io/pirlruc/ci-cpp@sha256:f42b11bc…` (CI-018). Do not float `:latest`.
+- Leftover `container-image-ci-cpp` Actions artifacts were deleted after the
+  3.1.0 image publish. Do **not** delete published GHCR/Hub tags. Image builds
+  inherit containerdevops BuildKit `cache-to: type=gha,mode=min`.
 - Threshold drift CI checks out **only** the `docs/guardrails` gitlink SHA
   with `GUARDRAILS_READ_TOKEN` (contents:read on private `pirlruc/guardrails`).
   Do not use `submodules: true` — that also clones private `github-scaffold`
@@ -113,20 +115,19 @@ python3 .github/scaffold/scripts/issues-sync.py \
 - clang-format pre-commit stays on **v22.1.8** (ci-cpp is clang-format 18).
   Do not take Dependabot's v23 bump unless the image formatter matches.
 - **Consumer pins (CI-018):** seven libraries still pin `@main`. See
-  [`docs/consumer-checklist.md`](consumer-checklist.md). After this tag, callers
-  pin **3.0.0**. github-scaffold seed `templates/ci-quality.yml` still historically
-  pinned `cppdevops@1.0.0`; this repo now vendors a 3.0.0-ready copy with
-  `permissions:`. draupnir-cpp still has legacy CodeQL/Codacy/Ubuntu workflows.
+  [`docs/consumer-checklist.md`](consumer-checklist.md). Callers pin **3.1.1**.
+  github-scaffold seed `templates/ci-quality.yml` still historically pinned
+  `cppdevops@1.0.0`; this repo vendors a 3.1.1 copy with `permissions:`.
+  draupnir-cpp still has legacy CodeQL/Codacy/Ubuntu workflows.
 - Missing Doxyfile: `check-doc-coverage.sh` generates via `generate-doxyfile.sh`
   or fails closed (CI-035).
 - Private nested checkout needs a PAT when private.
 
 ## Suggested next work
 
-1. After the 3.1.0 GitHub Release, write the new ci-cpp digest into reusable
-   `container:` pins and `cppdevops-security.yml`.
-2. Bump the seven `@main` consumers ([checklist](consumer-checklist.md)) to **3.1.0**.
-3. Close Dependabot #76 as superseded (clang-format v23 was not taken).
+1. Bump the seven `@main` consumers ([checklist](consumer-checklist.md)) to **3.1.1**.
+2. Dependabot #76 is closed as superseded (clang-format v23 was not taken).
+   Review open Dependabot #79 separately.
 
 ## See also
 
@@ -140,6 +141,11 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Recent history
 
+- 2026-09-15: **3.1.1** — pin reusable `container:` and published rescan to
+  ci-cpp digest `sha256:f42b11bc…` from the 3.1.0 image publish. Annotated tag
+  only (no GitHub Release) so CI C++ Image does not rebuild. Quota: leftover
+  `container-image-*` artifacts deleted; GHA cache stays `mode=min` via
+  containerdevops.
 - 2026-09-15: **3.1.0** — containerdevops 5.0.2 GHCR handoff, Hub/Packages docs,
   mobile header TU, pip 26.2.1 pins, checkout_token on dynamic/codeql, token-free
   pins, threshold-drift via `GUARDRAILS_READ_TOKEN` gitlink checkout (not
