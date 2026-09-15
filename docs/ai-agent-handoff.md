@@ -99,9 +99,11 @@ python3 .github/scaffold/scripts/issues-sync.py \
   used `wagoodman/dive:v0.13.1`. Do not lower the gate.
 - Reusable workflows and published rescan pin
   `container: ghcr.io/pirlruc/ci-cpp@sha256:54ea6b…` (CI-018). Do not float `:latest`.
-- Threshold drift CI checks out the in-tree `docs/guardrails` submodule
-  (`submodules: true`) and always runs `scripts/check-threshold-drift.sh`.
-  Do not skip when `GUARDRAILS_READ_TOKEN` is unset.
+- Threshold drift CI checks out **only** the `docs/guardrails` gitlink SHA
+  with `GUARDRAILS_READ_TOKEN` (contents:read on private `pirlruc/guardrails`).
+  Do not use `submodules: true` — that also clones private `github-scaffold`
+  with `github.token` and fails 404. Do not skip the job; fail closed if the
+  token is unset. Do not fall back to `COMMONDEVOPS_READ_TOKEN`.
 - Compose GHCR scan/publish refs from `handoff_package` + `digest`. Do not
   pass `needs.build.outputs.image_ref` (Actions secret-masks the owner).
 - `sync-library-tooling.sh` requires `CPPDEVOPS_WORKFLOW_REF`; it never
@@ -136,9 +138,10 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Recent history
 
-- 2026-09-15: **3.1.0** — containerdevops 5.0.1 GHCR handoff, Hub/Packages docs,
+- 2026-09-15: **3.1.0** — containerdevops 5.0.2 GHCR handoff, Hub/Packages docs,
   mobile header TU, pip 26.2.1 pins, checkout_token on dynamic/codeql, token-free
-  pins, in-tree threshold-drift, no clang-format v23.
+  pins, threshold-drift via `GUARDRAILS_READ_TOKEN` gitlink checkout (not
+  `submodules: true`), no clang-format v23.
 - 2026-09-14: Tagged **3.0.0** + GitHub Release (`cbb1aeb…`, #75). Seed
   `templates/ci-quality.yml` pins `@3.0.0`.
 - 2026-09-14: Guardrails **1.6.0** / scaffold **1.5.0**, commondevops **5.0.0**,

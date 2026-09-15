@@ -77,6 +77,21 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          submodules: true
+      - name: Resolve docs/guardrails gitlink SHA
+        id: gitlink
+        run: echo "sha=$(git rev-parse HEAD:docs/guardrails)" >> "$GITHUB_OUTPUT"
+      - name: Clear gitlink placeholder
+        run: rm -rf docs/guardrails
+      - name: Checkout pinned guardrails gitlink
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: pirlruc/guardrails
+          ref: ${{ steps.gitlink.outputs.sha }}
+          token: ${{ secrets.GUARDRAILS_READ_TOKEN }}
+          persist-credentials: false
+          path: docs/guardrails
+          sparse-checkout: |
+            cpp/profile.thresholds.yml
+          sparse-checkout-cone-mode: false
       - name: Drift-check vendored C++ thresholds
         run: bash scripts/check-threshold-drift.sh

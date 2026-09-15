@@ -25,7 +25,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 - `sync-library-tooling.sh` requires `CPPDEVOPS_WORKFLOW_REF` (never `main`).
 - Doxyfile generation fails closed. Coverage fails if branch % is missing.
 - clang-tidy fails when more than 400 TUs would be truncated.
-- Threshold-drift always uses the in-tree `docs/guardrails` submodule.
+- Threshold-drift always compares vendored C++ floors to the pinned
+  `docs/guardrails` gitlink (fetched with `GUARDRAILS_READ_TOKEN`; do not use
+  `submodules: true`, which also clones private `github-scaffold` with
+  `github.token` and 404s). The job fails closed when the token is missing.
 - CodeQL 4.37.9, setup-xcode 1.7.0, semgrep 1.176.0. clang-format pre-commit
   stays on v22.1.8 (ci-cpp ships clang-format 18; do not take v23).
 
