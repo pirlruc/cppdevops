@@ -26,14 +26,15 @@ Seven Nordic libraries still call `pirlruc/cppdevops/.github/workflows/*.yml@mai
    and GitHub Releases for the target tag or SHA (`CI-019`).
 2. Replace every `uses: pirlruc/cppdevops/.github/workflows/*.yml@main` (or an
    older tag) with `@<annotated-tag>` or `@<full-sha>`. Do **not** leave `@main`.
-3. After [cppdevops 3.1.1](https://github.com/pirlruc/cppdevops/releases/tag/3.1.1)
-   is tagged, bump to `@3.1.1`. Do not stay on `@3.0.0` / `@main`.
+3. After [cppdevops 3.1.2](https://github.com/pirlruc/cppdevops/releases/tag/3.1.2)
+   is tagged, bump to `@3.1.2`. Do not stay on `@3.0.0` / `@main`.
+   Tag **3.1.2** has no GitHub Release (does not republish `ci-cpp`).
 
 ### github-scaffold seed is still `1.0.0`
 
 [github-scaffold `templates/ci-quality.yml`](https://github.com/pirlruc/github-scaffold/blob/main/templates/ci-quality.yml)
 still pins `pirlruc/cppdevops@1.0.0` until [GS-CI-004](https://github.com/pirlruc/github-scaffold)
-lands. This repo's vendored `templates/ci-quality.yml` pins `@3.1.1`. Consumers
+lands. This repo's vendored `templates/ci-quality.yml` pins `@3.1.2`. Consumers
 that were seeded from the old scaffold (or that still float `@main`) must bump
 the `uses:` lines themselves. Do not wait for a scaffold template bump.
 
