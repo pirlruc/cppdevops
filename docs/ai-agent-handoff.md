@@ -147,8 +147,11 @@ python3 .github/scaffold/scripts/issues-sync.py \
   links cite **1.6.0** (no methodologies submodule). `ci-cpp` pins apt
   versions, installs cloc, drops hadolint DL3006/DL3008 ignores, and upgrades
   the fixable Scout packages (`linux-libc-dev` 6.8.0-142.142, setuptools
-  84.0.0, msgpack 1.2.3, pygments 2.21.0; pip removed). `SC-PROV-001` recorded.
-  Unfixed kernel advisories still attach to `linux-libc-dev`.
+  84.0.0, msgpack 1.2.3, pygments 2.21.0; pip removed). Base digest is
+  `ubuntu:24.04@sha256:49675449…` (created 2026-09-11), repeated on both
+  stages. `SC-PROV-001` recorded. Unfixed kernel advisories still attach to
+  `linux-libc-dev`. Image CI scans language packages only; OS confirmation is
+  CPPD-SCAN-001. Refresh this digest before 2026-10-11.
 - 2026-09-15: **3.1.2** — re-pin commondevops 5.1.2; check-ci-docker default
   ci-lint 5.1.1 alpine digest; seed `@3.1.2`. Annotated tag only (no GitHub
   Release). Threshold-drift still skips without `GUARDRAILS_READ_TOKEN` (private

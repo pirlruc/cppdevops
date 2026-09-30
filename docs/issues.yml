@@ -882,3 +882,28 @@ milestones:
       - git -C docs/guardrails describe --tags --exact-match
       guardrail_refs:
       - SC-DEP-004
+  tasks:
+  - id: CPPD-SCAN-001
+    status: open
+    title: Confirm ci-cpp OS fixes and refresh the Ubuntu digest before it ages out
+    instructions:
+      files:
+      - docker/ci-cpp/Dockerfile
+    verification:
+      - >-
+        Do not cut an ops release only to scan. On the next published ci-cpp,
+        or on a CI image build that is not published, run Docker Scout or
+        Trivy with OS package types. Confirm the fixable highs from
+        ci-cpp:3.1.0 are gone: CVE-2025-10263, CVE-2026-53186, CVE-2026-64091
+        (linux-libc-dev), CVE-2026-57585 and GHSA-6v7p-g79w-8964 (msgpack),
+        CVE-2025-47273 (setuptools). Record that CVE-2026-64564 and the other
+        unfixed linux-libc-dev highs remain. Image CI only scans language
+        packages (pkg-types library), so this OS check is not covered there.
+      - >-
+        ubuntu:24.04@sha256:49675449… was created 2026-09-11. base_image_max_age_days
+        is 30, so the pin fails DOCKER-BUILD-006 on 2026-10-11, before the
+        monthly rebuild on the 20th. Bump both Dockerfile FROM digests together
+        when a newer noble image exists.
+    guardrail_refs:
+    - DOCKER-SEC-001
+    - DOCKER-BUILD-006

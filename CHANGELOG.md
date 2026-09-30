@@ -13,7 +13,9 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
   in this repo).
 - Record `SC-PROV-001` next to `SC-SIGN-001` (guardrails 1.8.0 Free-plan pattern).
 - `ci-cpp` apt packages are version-pinned (hadolint DL3008 ignores removed).
-  The base digest is a named stage, so DL3006 ignores are gone too.
+  Both stages repeat `ubuntu:24.04@sha256:49675449…` (config created 2026-09-11).
+  The previous digest was 60 days old, and a stage alias fails the base-image
+  age gate.
 - `ci-cpp` installs `cloc` 1.98. Python tools pin `setuptools==84.0.0`,
   `msgpack==1.2.3`, and `pygments==2.21.0`. `pip` is not left in the image
   (it vendors msgpack 1.1.2). `linux-libc-dev` is pinned at `6.8.0-142.142`.

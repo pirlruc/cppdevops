@@ -12,16 +12,18 @@
 # Publish target: ghcr.io/pirlruc/ci-cpp
 #
 # Base tag in a comment for DOCKER-BUILD-003: ubuntu:24.04
-# Named stage `os` so both stages share one digest pin (hadolint DL3006).
+# Both stages repeat this digest. check-base-image-age.sh pulls every FROM
+# that is not scratch or ${ARG}, so a stage name such as `os` fails closed.
+# Config created 2026-09-11. Refresh before 2026-10-11 so the monthly rebuild
+# still satisfies base_image_max_age_days (30).
 
-FROM docker.io/library/ubuntu:24.04@sha256:561618e2c15bf2397621dd04f96926663a3b5616c189cf7e38db7e82f5c538ea AS os
+FROM docker.io/library/ubuntu:24.04@sha256:496754492fb28b4d3049432f2ca787449331e23fb14f0dd3fffea86bf5a93eb4 AS pybuild
 
 # ---------------------------------------------------------------------------
 # pybuild — install Python CLIs into /opt/venv; uv and pip stay out of the
 # final image. pip 26.2.1 vendors msgpack 1.1.2 (GHSA-6v7p-g79w-8964); the
 # tools do not need pip at runtime.
 # ---------------------------------------------------------------------------
-FROM os AS pybuild
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
       ca-certificates=20260601~24.04.1 \
@@ -52,7 +54,7 @@ RUN python3 -m venv /opt/venv \
 # ---------------------------------------------------------------------------
 # Final image
 # ---------------------------------------------------------------------------
-FROM os
+FROM docker.io/library/ubuntu:24.04@sha256:496754492fb28b4d3049432f2ca787449331e23fb14f0dd3fffea86bf5a93eb4
 
 LABEL org.opencontainers.image.title="ci-cpp" \
       org.opencontainers.image.description="Short-lived C++ CI toolchain for pirlruc/cppdevops: Clang/libc++, CMake, Ninja, cppcheck, clang-tidy/format, Doxygen, gcovr, lizard, Metrix++, coverxygen, cloc, valgrind. Ubuntu 24.04. Non-root 1000:1000, linux/amd64." \
