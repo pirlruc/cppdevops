@@ -5,6 +5,19 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Changed
+
+- `docs/guardrails` tag **1.8.0** (`aa5184ce…`); `.github/scaffold` tag **1.7.0**
+  (`e76bb3fd…`). Synced issue templates, Cursor rules, `AGENTS.md`, `SKILLS.md`,
+  and `CLAUDE.md`. Decision links cite methodologies **1.6.0** (not a submodule
+  in this repo).
+- Record `SC-PROV-001` next to `SC-SIGN-001` (guardrails 1.8.0 Free-plan pattern).
+- `ci-cpp` apt packages are version-pinned (hadolint DL3008 ignores removed).
+  The base digest is a named stage, so DL3006 ignores are gone too.
+- `ci-cpp` installs `cloc` 1.98. Python tools pin `setuptools==84.0.0`,
+  `msgpack==1.2.3`, and `pygments==2.21.0`. `pip` is not left in the image
+  (it vendors msgpack 1.1.2). `linux-libc-dev` is pinned at `6.8.0-142.142`.
+
 ## [3.1.2] - 2026-09-15
 
 ### Changed

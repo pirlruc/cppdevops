@@ -2,7 +2,7 @@
 
 Short-lived C++ CI toolchain image for GitHub Actions jobs that compile, test,
 and lint C++ libraries: Clang/libc++, CMake, Ninja, cppcheck, clang-tidy/format,
-Doxygen, gcovr, lizard, Metrix++, coverxygen, valgrind. Not a product runtime —
+Doxygen, gcovr, lizard, Metrix++, coverxygen, cloc, valgrind. Not a product runtime —
 no `HEALTHCHECK`.
 
 ## Image
@@ -61,6 +61,7 @@ docker run --rm \
 | clang-format / clang-tidy / cppcheck | Lint |
 | gcovr / llvm-cov | Coverage |
 | lizard / Metrix++ / coverxygen / Doxygen | Complexity and docs |
+| cloc | Line counts for quality gates |
 | valgrind | Dynamic analysis |
 
 Not a product runtime — no `HEALTHCHECK`.

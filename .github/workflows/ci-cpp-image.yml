@@ -76,8 +76,8 @@ jobs:
       image_title: ci-cpp
       image_description: >-
         Short-lived C++ CI toolchain: Clang/libc++, CMake, Ninja, cppcheck,
-        clang-tidy/format, Doxygen, gcovr, lizard, Metrix++, coverxygen, valgrind.
-        Ubuntu 24.04. Non-root 1000:1000, linux/amd64.
+        clang-tidy/format, Doxygen, gcovr, lizard, Metrix++, coverxygen, cloc,
+        valgrind. Ubuntu 24.04. Non-root 1000:1000, linux/amd64.
       dhi_login: true
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -128,8 +128,8 @@ jobs:
       image_title: ci-cpp
       image_description: >-
         Short-lived C++ CI toolchain: Clang/libc++, CMake, Ninja, cppcheck,
-        clang-tidy/format, Doxygen, gcovr, lizard, Metrix++, coverxygen, valgrind.
-        Ubuntu 24.04. Non-root 1000:1000, linux/amd64.
+        clang-tidy/format, Doxygen, gcovr, lizard, Metrix++, coverxygen, cloc,
+        valgrind. Ubuntu 24.04. Non-root 1000:1000, linux/amd64.
       image_documentation: https://hub.docker.com/r/pirlruc/ci-cpp
       image_url: https://hub.docker.com/r/pirlruc/ci-cpp
       image_vendor: pirlruc
