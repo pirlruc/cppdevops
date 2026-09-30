@@ -54,7 +54,7 @@ jobs:
       contents: read
       security-events: write
       packages: read
-    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@32384866e5669dbde8bdecde153a6ae6ead728ed
+    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@2dd60d34418051fb0505f476d926b20550becfad
     with:
       # Same digest as reusable cpp-* `container:` pins (CI-018). Do not float
       # on :latest; weekly rescan of a digest still picks up new CVEs.
