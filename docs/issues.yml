@@ -882,6 +882,45 @@ milestones:
       - git -C docs/guardrails describe --tags --exact-match
       guardrail_refs:
       - SC-DEP-004
+  - id: CPPD-FUZZ-001
+    status: open
+    title: Add a reusable fuzz job for C++ libraries
+    overview:
+      problem: >-
+        cpp-quality covers sanitizers and tests. No reusable workflow runs a
+        libFuzzer or ClusterFuzzLite target, so the C++ pack cannot require
+        fuzzing of parsers that take untrusted input.
+      goal: >-
+        cppdevops publishes a token-free cpp-fuzz workflow callers pin by SHA.
+        A library with no fuzz target skips it with an explicit input.
+    decision: >-
+      In the context of C++ libraries that parse untrusted bytes, facing no
+      org fuzz job, we decided the workflow lives in cppdevops, to achieve one
+      pin, accepting that the guardrails pack stays silent until the job exists.
+    out_of_scope:
+      - Writing fuzz targets inside product libraries in this change
+    architecture:
+      target: .github/workflows/cpp-fuzz.yml
+      modules:
+      - .github/workflows/
+    acceptance_criteria:
+    - A reusable workflow builds and runs a caller-named fuzz target
+    - The uses pin is a commit SHA
+    guardrail_refs:
+    - CPP-TEST-001
+    - CI-035
+    tasks:
+    - id: CPPD-FUZZ-001-T1
+      status: open
+      title: Add cpp-fuzz.yml
+      instructions:
+        files:
+        - .github/workflows/
+      verification:
+      - test -f .github/workflows/cpp-fuzz.yml
+      guardrail_refs:
+      - CI-035
+
   tasks:
   - id: CPPD-SCAN-001
     status: open
