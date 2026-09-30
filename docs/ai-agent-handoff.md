@@ -29,12 +29,13 @@ Never `@main`. Checklist: [`docs/consumer-checklist.md`](consumer-checklist.md).
 
 Contract reference: [`docs/workflows.md`](workflows.md).
 
-## Pins (2026-09-15)
+## Pins (2026-09-30)
 
 | Submodule / artifact | Pin |
 |----------------------|-----|
-| `docs/guardrails` | tag **1.6.0** → `77cf16eb…` |
-| `.github/scaffold` | tag **1.5.0** → `9e04ed53…` |
+| `docs/guardrails` | tag **1.8.0** → `aa5184ce…` |
+| `.github/scaffold` | tag **1.7.0** → `e76bb3fd…` |
+| methodologies (links only; not a submodule) | tag **1.6.0** |
 | `ghcr.io/pirlruc/ci-cpp` | `@sha256:f42b11bc342c0dd6faef6454f4a37cf4230b9c2c87357623cad5ed0102608656` (Hub/GHCR tags `:3.1.0` / `:latest` from the 3.1.0 Release publish). Reusable `container:` and `cppdevops-security.yml` published rescan share this digest. |
 | commondevops `uses:` | tag **5.1.2** → `b3c462bed0de4f6475e6be7875c4ababd831acc6` |
 | containerdevops `uses:` | tag **5.0.2** → `32384866e5669dbde8bdecde153a6ae6ead728ed` |
@@ -57,7 +58,7 @@ Open companion PRs (not merged): [guardrails #58](https://github.com/pirlruc/gua
 | CPPD-ECO-001 | Done in yaml (checklist shipped; library pin bumps are still those repos) |
 | CPPD-WF-003 | Done — digest docs, fail-closed memcheck (CI-035), security digest pin (`2.1.0`) |
 | CPPD-PIN-001 | Done (this wave) |
-| Deviations remaining | SC-SIGN-001 (Free-plan private-repo pattern) |
+| Deviations remaining | SC-SIGN-001 and SC-PROV-001 (Free-plan private-repo pattern) |
 
 ## Mobile toolchain pins (`CPP-BUILD-012`)
 
@@ -142,6 +143,15 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Recent history
 
+- 2026-09-30: guardrails **1.8.0** / scaffold **1.7.0**. Methodology decision
+  links cite **1.6.0** (no methodologies submodule). `ci-cpp` pins apt
+  versions, installs cloc, drops hadolint DL3006/DL3008 ignores, and upgrades
+  the fixable Scout packages (`linux-libc-dev` 6.8.0-142.142, setuptools
+  84.0.0, msgpack 1.2.3, pygments 2.21.0; pip removed). Base digest is
+  `ubuntu:24.04@sha256:49675449…` (created 2026-09-11), repeated on both
+  stages. `SC-PROV-001` recorded. Unfixed kernel advisories still attach to
+  `linux-libc-dev`. Image CI scans language packages only; OS confirmation is
+  CPPD-SCAN-001. Refresh this digest before 2026-10-11.
 - 2026-09-15: **3.1.2** — re-pin commondevops 5.1.2; check-ci-docker default
   ci-lint 5.1.1 alpine digest; seed `@3.1.2`. Annotated tag only (no GitHub
   Release). Threshold-drift still skips without `GUARDRAILS_READ_TOKEN` (private
@@ -176,4 +186,4 @@ python3 .github/scaffold/scripts/issues-sync.py \
   `feature-ai-reviewer-issues` (merged as #52). Wave 3 yaml marks MOBILE-MECH-001,
   AIREV-MECH-001, and DEP-MECH-001 done; GitHub issues still open pending `--update`.
 
-*Last updated: 2026-09-15*
+*Last updated: 2026-09-30*

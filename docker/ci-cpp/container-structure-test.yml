@@ -60,6 +60,10 @@ commandTests:
     command: "valgrind"
     args: ["--version"]
     exitCode: 0
+  - name: cloc
+    command: "cloc"
+    args: ["--version"]
+    exitCode: 0
   - name: llvm-cov
     command: "llvm-cov"
     args: ["--version"]

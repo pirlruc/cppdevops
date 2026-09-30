@@ -159,13 +159,13 @@ Triggers (same shape as commondevops `ci-lint-image.yml`):
 
 Secrets: `CONTAINERDEVOPS_READ_TOKEN`, `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`.
 Size gate `size_class: ci_toolchain` (DOCKER-PERF-002, `ci_image_max_size_mb` 2000).
-Private repo: `sign` is false (SC-SIGN-001 deviation).
+Private repo: `sign` is false (SC-SIGN-001 / SC-PROV-001 deviations).
 
 ## `cppdevops-ci.yml` (self)
 
 `push` / `pull_request` on `main` plus `workflow_dispatch`. Calls commondevops
-`common-infra-lint` and runs `scripts/check-threshold-drift.sh`. Skips Dependabot
-actor (CI-024).
+`common-infra-lint` and runs `scripts/check-threshold-drift.sh`. Secret-backed
+jobs skip Dependabot (CI-024). The token-free `pins` job still runs.
 
 ## `cppdevops-security.yml` (scheduled)
 
