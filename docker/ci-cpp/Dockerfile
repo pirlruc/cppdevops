@@ -19,7 +19,7 @@
 # publishes a newer noble config. Do not move this image to ubuntu:26.04
 # (CPP-BUILD-004).
 
-FROM docker.io/library/ubuntu:24.04@sha256:008173c23f95b170204355c12626cb5a965d779a7e1283b09e9cffbb1bf33ca3 AS pybuild
+FROM docker.io/library/ubuntu:26.04@sha256:da6fc2be547864451aa253836dd926da33623312df4a9a243e35dc877c378a78 AS pybuild
 
 # ---------------------------------------------------------------------------
 # pybuild — install Python CLIs into /opt/venv; uv and pip stay out of the
@@ -57,7 +57,7 @@ RUN python3 -m venv /opt/venv \
 # ---------------------------------------------------------------------------
 # Final image
 # ---------------------------------------------------------------------------
-FROM docker.io/library/ubuntu:24.04@sha256:008173c23f95b170204355c12626cb5a965d779a7e1283b09e9cffbb1bf33ca3
+FROM docker.io/library/ubuntu:26.04@sha256:da6fc2be547864451aa253836dd926da33623312df4a9a243e35dc877c378a78
 
 LABEL org.opencontainers.image.title="ci-cpp" \
       org.opencontainers.image.description="Short-lived C++ CI toolchain for pirlruc/cppdevops: Clang/libc++, CMake, Ninja, cppcheck, clang-tidy/format, Doxygen, gcovr, lizard, Metrix++, coverxygen, cloc, valgrind. Ubuntu 24.04. Non-root 1000:1000, linux/amd64." \
