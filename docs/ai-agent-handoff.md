@@ -6,7 +6,7 @@
 |-------|-------|
 | **Folder** | `ops/cppdevops/` |
 | **Remote** | https://github.com/pirlruc/cppdevops |
-| **Branch** | `main` → tag **4.0.0** (publishes ci-cpp; digest write-back is 4.0.1) |
+| **Branch** | `main` → tag **4.0.1** (digest write-back; image stays **4.0.0**) |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
@@ -37,7 +37,7 @@ Contract reference: [`docs/workflows.md`](workflows.md).
 | `docs/guardrails` | tag **1.9.0** → `16a2c95c…` |
 | `.github/scaffold` | tag **1.8.0** → `ac9059fd…` |
 | methodologies (links only; not a submodule) | tag **1.8.0** |
-| `ghcr.io/pirlruc/ci-cpp` | Workflow `container:` still `@sha256:f42b11bc…` (3.1.0) until the 4.0.1 digest write-back. 4.0.0 republishes the image. |
+| `ghcr.io/pirlruc/ci-cpp` | `4.0.0` `sha256:cf40f3bc99ebe50a286d1e57ac0aa63c28678ef44e65b3a6dbef0c7420afa47f` (same digest on Docker Hub) |
 | commondevops `uses:` | tag **5.2.6** → `8aad4ba4a597a87565d6d3d1a92a8bdd7568921c` |
 | containerdevops `uses:` | tag **6.1.0** → `edef9c8413363c46dcb276f5188a033d9fc6fd4e` |
 
@@ -95,7 +95,7 @@ python3 .github/scaffold/scripts/issues-sync.py \
   (`efficiencyScore` 0.971077…) vs org floor 95%. Host `dive` was missing;
   used `wagoodman/dive:v0.13.1`. Do not lower the gate.
 - Reusable workflows and published rescan pin
-  `container: ghcr.io/pirlruc/ci-cpp@sha256:f42b11bc…` (CI-018). Do not float `:latest`.
+  `container: ghcr.io/pirlruc/ci-cpp@sha256:cf40f3bc…` (CI-018). Do not float `:latest`.
 - Leftover `container-image-ci-cpp` Actions artifacts were deleted after the
   3.1.0 image publish. Do **not** delete published GHCR/Hub tags. Image builds
   inherit containerdevops BuildKit `cache-to: type=gha,mode=min`.
@@ -140,6 +140,8 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Recent history
 
+- 2026-10-01: **4.0.1** (tag-only) — workflow and rescan pins use ci-cpp 4.0.0
+  `sha256:cf40f3bc…`. No GitHub Release, so the image is not republished.
 - 2026-10-01: **4.0.0** — guardrails **1.9.0**, scaffold **1.8.0**, methodologies
   links **1.8.0**. `scripts_ref` is required cross-repo. commondevops **5.2.6**,
   containerdevops **6.1.0**. ci-cpp stays Ubuntu 24.04 (`008173c2…`, config
@@ -188,4 +190,4 @@ python3 .github/scaffold/scripts/issues-sync.py \
   `feature-ai-reviewer-issues` (merged as #52). Wave 3 yaml marks MOBILE-MECH-001,
   AIREV-MECH-001, and DEP-MECH-001 done; GitHub issues still open pending `--update`.
 
-*Last updated: 2026-10-01 (4.0.0 scripts_ref, guardrails 1.9.0, ci-cpp clang-format 23)*
+*Last updated: 2026-10-01 (4.0.1 digest write-back for ci-cpp 4.0.0)*

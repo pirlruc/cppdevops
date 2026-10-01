@@ -18,7 +18,7 @@ no `HEALTHCHECK`.
 
 | Tag | Meaning |
 |-----|---------|
-| `4.0.0` | Ubuntu 24.04 release with clang-format 23. Digest is written in 4.0.1 after publish |
+| `4.0.0` | Ubuntu 24.04 release with clang-format 23. Digest `sha256:cf40f3bc99ebe50a286d1e57ac0aa63c28678ef44e65b3a6dbef0c7420afa47f` |
 | `3.1.0` | Previous immutable Ubuntu 24.04 release |
 | `3.0.0` | Previous immutable release |
 | `latest` | Latest non-prerelease publish |
@@ -29,7 +29,7 @@ Prefer a digest (or a version tag) in production. `latest` is never the only tag
 ```bash
 docker pull pirlruc/ci-cpp:3.1.0
 # or
-docker pull pirlruc/ci-cpp@sha256:f42b11bc342c0dd6faef6454f4a37cf4230b9c2c87357623cad5ed0102608656
+docker pull pirlruc/ci-cpp@sha256:cf40f3bc99ebe50a286d1e57ac0aa63c28678ef44e65b3a6dbef0c7420afa47f
 ```
 
 ## Quick start
@@ -70,7 +70,7 @@ Not a product runtime — no `HEALTHCHECK`.
 ## Verify a publish
 
 ```bash
-docker pull pirlruc/ci-cpp@sha256:f42b11bc342c0dd6faef6454f4a37cf4230b9c2c87357623cad5ed0102608656
+docker pull pirlruc/ci-cpp@sha256:cf40f3bc99ebe50a286d1e57ac0aa63c28678ef44e65b3a6dbef0c7420afa47f
 ```
 
 Signing is skipped while the repo is private on the Free plan (`SC-SIGN-001` /
@@ -79,12 +79,14 @@ Signing is skipped while the repo is private on the Free plan (`SC-SIGN-001` /
 ## Vulnerabilities
 
 The blocking image scan covers language packages plus `docker/ci-cpp/.trivyignore.yaml`.
-An advisory posture scan covers `os,library` with no ignorefile. The 4.0.0
-digest and its finding list are written here in 4.0.1, after the image is
-published. Until then, `3.1.0` / `latest` remain
-`sha256:f42b11bc342c0dd6faef6454f4a37cf4230b9c2c87357623cad5ed0102608656`.
-Unfixed `linux-libc-dev` highs can remain; the compiler image needs that
-package (CPPD-SCAN-001).
+An advisory posture scan covers `os,library` with no ignorefile. A local Trivy
+scan of this image (os and library, no ignorefile) found 5 CRITICAL and 163
+HIGH, all in `linux-libc-dev`. The fixable highs named for 3.1.0 are gone
+(CVE-2025-10263, CVE-2026-53186, CVE-2026-64091, CVE-2026-57585,
+GHSA-6v7p-g79w-8964, CVE-2025-47273). CVE-2026-64564 remains, with the other
+unfixed kernel-header findings. The compiler image needs that package
+(CPPD-SCAN-001). The Ubuntu config Created date is still 2026-09-11, so the
+30-day age gate fails on 2026-10-11.
 
 ## License
 
