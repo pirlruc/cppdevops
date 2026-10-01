@@ -27,7 +27,7 @@ no `HEALTHCHECK`.
 Prefer a digest (or a version tag) in production. `latest` is never the only tag.
 
 ```bash
-docker pull pirlruc/ci-cpp:3.1.0
+docker pull pirlruc/ci-cpp:4.0.0
 # or
 docker pull pirlruc/ci-cpp@sha256:cf40f3bc99ebe50a286d1e57ac0aa63c28678ef44e65b3a6dbef0c7420afa47f
 ```
@@ -36,7 +36,7 @@ docker pull pirlruc/ci-cpp@sha256:cf40f3bc99ebe50a286d1e57ac0aa63c28678ef44e65b3
 
 ```bash
 docker run --rm -v "$PWD:/workspace:ro" -w /workspace \
-  pirlruc/ci-cpp:3.1.0 \
+  pirlruc/ci-cpp:4.0.0 \
   clang++ --version
 ```
 
@@ -49,7 +49,7 @@ docker run --rm \
   --security-opt no-new-privileges \
   --tmpfs /tmp:rw,noexec,nosuid,size=256m \
   -v "$PWD:/workspace:ro" -w /workspace \
-  pirlruc/ci-cpp:3.1.0 \
+  pirlruc/ci-cpp:4.0.0 \
   clang++ --version
 ```
 
@@ -59,7 +59,7 @@ docker run --rm \
 |------|------|
 | clang / clang++ / libc++ | Compile (CPP-BUILD-004 / 009) |
 | cmake / ninja | Configure and build |
-| clang-format / clang-tidy / cppcheck | Lint |
+| clang-format 23.1.0 / clang-tidy / cppcheck | Lint |
 | gcovr / llvm-cov | Coverage |
 | lizard / Metrix++ / coverxygen / Doxygen | Complexity and docs |
 | cloc | Line counts for quality gates |

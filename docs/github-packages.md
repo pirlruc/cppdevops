@@ -29,14 +29,14 @@ Prefer a digest in production.
 If the package is public, anonymous pulls work:
 
 ```bash
-docker pull ghcr.io/pirlruc/ci-cpp:3.1.0
+docker pull ghcr.io/pirlruc/ci-cpp:4.0.0
 ```
 
 If the package is private, authenticate with a PAT that has `read:packages`:
 
 ```bash
 echo "$CR_PAT" | docker login ghcr.io -u USERNAME --password-stdin
-docker pull ghcr.io/pirlruc/ci-cpp:3.1.0
+docker pull ghcr.io/pirlruc/ci-cpp:4.0.0
 # or
 docker pull ghcr.io/pirlruc/ci-cpp@sha256:cf40f3bc99ebe50a286d1e57ac0aa63c28678ef44e65b3a6dbef0c7420afa47f
 ```
