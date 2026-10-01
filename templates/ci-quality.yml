@@ -3,6 +3,10 @@
 # bump deliberately with changelog review (CI-019). Dependabot github-actions can
 # update this file once it lands in a consumer's .github/workflows/.
 #
+# scripts_ref must equal the uses pin (CI-034). Quality, tests, and docs check
+# out cppdevops, so they need CPPDEVOPS_READ_TOKEN. Security and infra check out
+# commondevops, so they need COMMONDEVOPS_READ_TOKEN.
+#
 # Quota mode: workflow_dispatch only (re-enable push/PR or label-gated CI later).
 
 name: Quality
@@ -26,66 +30,90 @@ jobs:
   quality:
     permissions:
       contents: read
-    uses: pirlruc/cppdevops/.github/workflows/cpp-quality.yml@3.1.2
+    uses: pirlruc/cppdevops/.github/workflows/cpp-quality.yml@4.0.0
     with:
       library_path: .
       blocking: ${{ inputs.blocking }}
+      scripts_ref: 4.0.0
+    secrets:
+      checkout_token: ${{ secrets.CPPDEVOPS_READ_TOKEN }}
   tests:
     permissions:
       contents: read
-    uses: pirlruc/cppdevops/.github/workflows/cpp-tests.yml@3.1.2
+    uses: pirlruc/cppdevops/.github/workflows/cpp-tests.yml@4.0.0
     with:
       library_path: .
       blocking: ${{ inputs.blocking }}
+      scripts_ref: 4.0.0
+    secrets:
+      checkout_token: ${{ secrets.CPPDEVOPS_READ_TOKEN }}
   docs:
     permissions:
       contents: read
-    uses: pirlruc/cppdevops/.github/workflows/cpp-docs.yml@3.1.2
+    uses: pirlruc/cppdevops/.github/workflows/cpp-docs.yml@4.0.0
     with:
       library_path: .
       blocking: ${{ inputs.blocking }}
+      scripts_ref: 4.0.0
+    secrets:
+      checkout_token: ${{ secrets.CPPDEVOPS_READ_TOKEN }}
   security:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/cppdevops/.github/workflows/cpp-security.yml@3.1.2
+    uses: pirlruc/cppdevops/.github/workflows/cpp-security.yml@4.0.0
     with:
       library_path: .
       blocking: ${{ inputs.blocking }}
+      run_sbom: true
     secrets:
       checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
   codeql:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/cppdevops/.github/workflows/cpp-codeql.yml@3.1.2
+    uses: pirlruc/cppdevops/.github/workflows/cpp-codeql.yml@4.0.0
     with:
       library_path: .
       blocking: ${{ inputs.blocking }}
+      scripts_ref: 4.0.0
     secrets:
       checkout_token: ${{ secrets.CPPDEVOPS_READ_TOKEN }}
   dynamic:
     permissions:
       contents: read
-    uses: pirlruc/cppdevops/.github/workflows/cpp-dynamic.yml@3.1.2
+    uses: pirlruc/cppdevops/.github/workflows/cpp-dynamic.yml@4.0.0
     with:
       library_path: .
       blocking: ${{ inputs.blocking }}
+      scripts_ref: 4.0.0
     secrets:
       checkout_token: ${{ secrets.CPPDEVOPS_READ_TOKEN }}
   mobile:
     permissions:
       contents: read
-    uses: pirlruc/cppdevops/.github/workflows/cpp-mobile-matrix.yml@3.1.2
+    uses: pirlruc/cppdevops/.github/workflows/cpp-mobile-matrix.yml@4.0.0
     with:
       library_path: .
       blocking: ${{ inputs.blocking }}
+      scripts_ref: 4.0.0
+    secrets:
+      checkout_token: ${{ secrets.CPPDEVOPS_READ_TOKEN }}
+  fuzz:
+    permissions:
+      contents: read
+    uses: pirlruc/cppdevops/.github/workflows/cpp-fuzz.yml@4.0.0
+    with:
+      library_path: .
+      blocking: ${{ inputs.blocking }}
+      run_fuzz: false
+      scripts_ref: 4.0.0
     secrets:
       checkout_token: ${{ secrets.CPPDEVOPS_READ_TOKEN }}
   infra:
     permissions:
       contents: read
-    uses: pirlruc/cppdevops/.github/workflows/cpp-infra.yml@3.1.2
+    uses: pirlruc/cppdevops/.github/workflows/cpp-infra.yml@4.0.0
     with:
       blocking: ${{ inputs.blocking }}
       working_directory: .

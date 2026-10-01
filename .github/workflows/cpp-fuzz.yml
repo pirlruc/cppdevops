@@ -1,0 +1,132 @@
+name: C++ Fuzz (reusable)
+
+# Builds and runs one libFuzzer target with ASan inside ci-cpp.
+# A library with no fuzz target sets run_fuzz false (the default) and this
+# job is skipped. Does not write fuzz targets for product libraries.
+# C++/NDK and Swift are out of scope; this is a host libFuzzer job.
+
+on:
+  workflow_call:
+    inputs:
+      library_path:
+        description: Path to the library folder
+        required: true
+        type: string
+      fuzz_target:
+        description: CMake target that links libFuzzer
+        required: false
+        type: string
+        default: ""
+      fuzz_seconds:
+        description: libFuzzer -max_total_time
+        required: false
+        type: string
+        default: "30"
+      run_fuzz:
+        description: Set true only when fuzz_target exists
+        required: false
+        type: boolean
+        default: false
+      blocking:
+        description: When false, failures are advisory only
+        required: false
+        type: boolean
+        default: false
+      scripts_ref:
+        description: Commit SHA matching the uses pin (required cross-repo, CI-034)
+        required: false
+        type: string
+        default: ""
+    secrets:
+      checkout_token:
+        required: false
+
+permissions: {}
+
+env:
+  ADVISORY: ${{ inputs.blocking == false }}
+
+jobs:
+  fuzz:
+    if: inputs.run_fuzz
+    runs-on: ubuntu-24.04
+    container: ghcr.io/pirlruc/ci-cpp@sha256:f42b11bc342c0dd6faef6454f4a37cf4230b9c2c87357623cad5ed0102608656
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: ${{ inputs.library_path }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Checkout cppdevops scripts
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: pirlruc/cppdevops
+          ref: ${{ inputs.scripts_ref || github.sha }}
+          token: ${{ secrets.checkout_token || github.token }}
+          persist-credentials: false
+          path: _cppdevops
+          sparse-checkout: |
+            scripts
+          sparse-checkout-cone-mode: false
+
+      - name: Require scripts_ref for cross-repo callers (CI-034)
+        env:
+          SCRIPTS_REF: ${{ inputs.scripts_ref }}
+          REPO: ${{ github.repository }}
+        working-directory: ${{ github.workspace }}
+        run: |
+          if [ "${REPO}" != "pirlruc/cppdevops" ] && [ -z "${SCRIPTS_REF}" ]; then
+            echo "CI-034: cross-repo callers must pass scripts_ref matching the uses: pin" >&2
+            exit 1
+          fi
+
+      - name: Build fuzz target
+        id: build
+        continue-on-error: true
+        env:
+          FUZZ_TARGET: ${{ inputs.fuzz_target }}
+        run: |
+          set -euo pipefail
+          if [ -z "${FUZZ_TARGET}" ]; then
+            echo "run_fuzz is true but fuzz_target is empty" >&2
+            exit 1
+          fi
+          # libFuzzer in the Ubuntu clang package is built against libstdc++.
+          # Do not pass -stdlib=libc++ here or the link fails.
+          flags="-fsanitize=fuzzer,address -g"
+          cmake -B build \
+            -DCMAKE_CXX_COMPILER=clang++ \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_CXX_FLAGS="${flags}" \
+            -DCMAKE_EXE_LINKER_FLAGS="${flags}"
+          cmake --build build --target "${FUZZ_TARGET}" -j
+
+      - name: Run libFuzzer
+        id: run
+        continue-on-error: true
+        env:
+          FUZZ_TARGET: ${{ inputs.fuzz_target }}
+          FUZZ_SECONDS: ${{ inputs.fuzz_seconds }}
+        run: |
+          set -euo pipefail
+          bin="$(find build -type f -name "${FUZZ_TARGET}" -print -quit)"
+          if [ -z "${bin}" ]; then
+            echo "fuzz binary not found: ${FUZZ_TARGET}" >&2
+            exit 1
+          fi
+          "${bin}" "-max_total_time=${FUZZ_SECONDS}" "-timeout=10"
+
+      - name: Gate
+        if: always()
+        env:
+          ADVISORY: ${{ env.ADVISORY }}
+        run: |
+          set -euo pipefail
+          bash "${GITHUB_WORKSPACE}/_cppdevops/scripts/gate-aggregate.sh" \
+            build="${{ steps.build.outcome }}" \
+            run="${{ steps.run.outcome }}"

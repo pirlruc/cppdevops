@@ -1,7 +1,8 @@
 name: Cppdevops CI (self)
 
 # Deterministic infra lint + threshold drift. Time-varying security stays on
-# cppdevops-security.yml (schedule). Dependabot actor skipped (CI-024).
+# cppdevops-security.yml (schedule). Secret jobs skip Dependabot by pull
+# request author (CI-024). pins, scaffold, and lint-dependabot stay token-free.
 
 on:
   push:
@@ -36,39 +37,69 @@ jobs:
       - name: SC-DEP-004 submodule pin assert
         run: sh scripts/check-submodule-pins.sh
 
-  docs:
-    if: github.actor != 'dependabot[bot]'
+  scaffold:
     permissions:
       contents: read
-    uses: pirlruc/commondevops/.github/workflows/common-doc-verify.yml@b3c462bed0de4f6475e6be7875c4ababd831acc6
+    uses: pirlruc/commondevops/.github/workflows/common-scaffold-verify.yml@8aad4ba4a597a87565d6d3d1a92a8bdd7568921c
+    with:
+      blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
+      scripts_ref: 8aad4ba4a597a87565d6d3d1a92a8bdd7568921c
+    secrets:
+      checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
+
+  lint-dependabot:
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-24.04
+    container: ghcr.io/pirlruc/ci-lint@sha256:e0a51c64b004c6f4e4ca1672f3bb865aaf03d91bd8a2e228e0fa39be1174dfb4
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: actionlint
+        run: actionlint -color=false .github/workflows/*.yml
+      - name: shellcheck
+        run: find scripts -name '*.sh' -print0 | xargs -0 shellcheck
+      - name: hadolint
+        run: hadolint docker/ci-cpp/Dockerfile
+      - name: zizmor
+        run: zizmor --min-severity=low -c .github/config/zizmor.yml .github/workflows
+
+  docs:
+    if: github.event.pull_request.user.login != 'dependabot[bot]'
+    permissions:
+      contents: read
+    uses: pirlruc/commondevops/.github/workflows/common-doc-verify.yml@8aad4ba4a597a87565d6d3d1a92a8bdd7568921c
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       shell_scripts: scripts/*.sh
       ruff_paths: scripts/lint-doc-links.py scripts/validate-yaml.py
-      yaml_files: docs/issues.yml docs/guardrail-deviations.yml
+      yaml_files: docs/issues.yml docs/guardrail-deviations.yml .github/dependabot.yml
       yaml_globs: .github/workflows/*.yml
       run_link_lint: true
-      scripts_ref: b3c462bed0de4f6475e6be7875c4ababd831acc6
+      scripts_ref: 8aad4ba4a597a87565d6d3d1a92a8bdd7568921c
     secrets:
       checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
 
   infra-lint:
-    if: github.actor != 'dependabot[bot]'
+    if: github.event.pull_request.user.login != 'dependabot[bot]'
     permissions:
       contents: read
-    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@b3c462bed0de4f6475e6be7875c4ababd831acc6
+    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@8aad4ba4a597a87565d6d3d1a92a8bdd7568921c
     with:
       # Push/PR are blocking; workflow_dispatch honours the input.
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       working_directory: .
       shell_scripts: scripts/*.sh
       dockerfiles: docker/ci-cpp/Dockerfile
-      scripts_ref: b3c462bed0de4f6475e6be7875c4ababd831acc6
+      scripts_ref: 8aad4ba4a597a87565d6d3d1a92a8bdd7568921c
     secrets:
       checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
 
   threshold-drift:
-    if: github.actor != 'dependabot[bot]'
+    if: github.event.pull_request.user.login != 'dependabot[bot]'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
@@ -110,7 +141,8 @@ jobs:
       - name: Drift-check vendored C++ thresholds
         if: steps.token.outputs.available == 'true'
         run: bash scripts/check-threshold-drift.sh
-      - name: Note skipped content drift
+      - name: Require the guardrails token for content drift
         if: steps.token.outputs.available != 'true'
         run: |
-          echo "::notice::GUARDRAILS_READ_TOKEN unset; skipped threshold content drift. Run scripts/check-threshold-drift.sh locally with docs/guardrails initialized. Do not use submodules: true on this job."
+          echo "::error::GUARDRAILS_READ_TOKEN is required outside Dependabot pull requests. The pin job still runs without it." >&2
+          exit 1

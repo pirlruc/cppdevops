@@ -2,9 +2,11 @@
 
 All workflows support `workflow_call` (and `workflow_dispatch` where noted).
 Top-level `permissions: {}` (CI-025); jobs grant least privilege. Secret-using
-jobs skip when `github.actor == 'dependabot[bot]'` (CI-024). Nested script
-checkout uses `actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1`
-(v7.0.1) with `persist-credentials: false`.
+jobs skip when `github.event.pull_request.user.login == 'dependabot[bot]'`
+(CI-024). Do not compare `github.actor`. Nested script checkout uses
+`actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1` (v7.0.1) with
+`persist-credentials: false` and `ref: scripts_ref` (CI-034). Cross-repo
+callers must pass `scripts_ref` equal to the `uses:` pin.
 
 Shared inputs:
 
@@ -12,7 +14,8 @@ Shared inputs:
 |-------|------|---------|-------|
 | `library_path` | string | (required on most) | Library root relative to the caller checkout |
 | `blocking` | bool | `false` | `false` → collect-then-fail stays advisory (`ADVISORY=true`); missing tools/thresholds always fail |
-| `checkout_token` (secret) | string | — | PAT with `contents:read` on `pirlruc/cppdevops` (and nested `commondevops` when forwarded) for private cross-repo callers |
+| `scripts_ref` | string | `""` | Commit SHA matching the `uses:` pin. Required for cross-repo callers (CI-034). |
+| `checkout_token` (secret) | string | — | PAT with `contents:read` on `pirlruc/cppdevops` for quality/tests/docs/codeql/dynamic/mobile/fuzz, and on `commondevops` for security/infra |
 
 Consumers pin `pirlruc/cppdevops/.github/workflows/<name>.yml@<sha-or-tag>`
 (`CI-018`). Prefer `@<sha>` or an annotated release tag over `@main`.
@@ -124,10 +127,29 @@ hadolint, zizmor).
 
 ---
 
+## `cpp-fuzz.yml`
+
+Builds one CMake target with `-fsanitize=fuzzer,address` and runs it for
+`fuzz_seconds`. `run_fuzz` defaults to false, which skips the job when the
+library has no fuzz target (CPPD-FUZZ-001).
+
+| Input | Default |
+|-------|---------|
+| `library_path` | required |
+| `fuzz_target` | `""` |
+| `fuzz_seconds` | `30` |
+| `run_fuzz` | `false` |
+| `blocking` | `false` |
+| `scripts_ref` | `""` |
+
+---
+
 ## `cpp-mobile-matrix.yml`
 
 Cross-compiles `scripts/mobile-smoke/smoke.cpp` on Android NDK (`min_ndk`) and
-iOS Xcode (`min_xcode`) with clang + libc++ (MOBILE-MECH-001).
+iOS Xcode (`min_xcode`) with clang + libc++ (MOBILE-MECH-001). This is C++/NDK
+and Xcode only. Kotlin, Gradle, Compose, and Swift stay in the product
+repository (CPPD-MOBILE-002, CPPD-PIN-002).
 
 | Input | Default |
 |-------|---------|

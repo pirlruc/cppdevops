@@ -18,7 +18,8 @@ no `HEALTHCHECK`.
 
 | Tag | Meaning |
 |-----|---------|
-| `3.1.0` | Immutable Ubuntu 24.04 release (this wave) |
+| `4.0.0` | Ubuntu 24.04 release with clang-format 23. Digest is written in 4.0.1 after publish |
+| `3.1.0` | Previous immutable Ubuntu 24.04 release |
 | `3.0.0` | Previous immutable release |
 | `latest` | Latest non-prerelease publish |
 | `sha-<git>` | Exact git SHA of the published commit |
@@ -72,4 +73,19 @@ Not a product runtime — no `HEALTHCHECK`.
 docker pull pirlruc/ci-cpp@sha256:f42b11bc342c0dd6faef6454f4a37cf4230b9c2c87357623cad5ed0102608656
 ```
 
-Signing is skipped on this private Free-plan repo (`SC-SIGN-001` / `SC-PROV-001`).
+Signing is skipped while the repo is private on the Free plan (`SC-SIGN-001` /
+`SC-PROV-001`). Publish sets `sign` from repository visibility.
+
+## Vulnerabilities
+
+The blocking image scan covers language packages plus `docker/ci-cpp/.trivyignore.yaml`.
+An advisory posture scan covers `os,library` with no ignorefile. The 4.0.0
+digest and its finding list are written here in 4.0.1, after the image is
+published. Until then, `3.1.0` / `latest` remain
+`sha256:f42b11bc342c0dd6faef6454f4a37cf4230b9c2c87357623cad5ed0102608656`.
+Unfixed `linux-libc-dev` highs can remain; the compiler image needs that
+package (CPPD-SCAN-001).
+
+## License
+
+MIT. Source: https://github.com/pirlruc/cppdevops

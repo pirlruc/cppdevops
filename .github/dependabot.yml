@@ -2,12 +2,12 @@
 # Cadence: docs/guardrails/supply-chain/profile.thresholds.yml
 # Multi-ecosystem docs:
 # https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/configuring-multi-ecosystem-updates
-# Process: https://github.com/pirlruc/methodologies/blob/1.6.0/github-issue-adr/docs/process/dependency-updates.md
+# Process: https://github.com/pirlruc/methodologies/blob/1.8.0/github-issue-adr/docs/process/dependency-updates.md
 #
 # Personal-account private access (Dependabot secrets — not Actions):
 #   DEPENDABOT_GITHUB_TOKEN — Contents: Read on this repo, private submodules,
 #     and reusable-workflow hosts (commondevops, containerdevops, github-scaffold, guardrails).
-#   DOCKERHUB_USERNAME / DOCKERHUB_TOKEN — dhi.io Community DHI pulls.
+# ci-cpp is Ubuntu, not a dhi.io base, so this file has no docker-registry.
 # When migrating from per-ecosystem configs, close stale Dependabot PRs before expecting
 # the grouped all-dependencies PR (open-PR limit otherwise blocks creation).
 
@@ -19,12 +19,6 @@ registries:
     url: https://github.com
     username: x-access-token
     password: ${{secrets.DEPENDABOT_GITHUB_TOKEN}}
-  dhi:
-    type: docker-registry
-    url: https://dhi.io
-    username: ${{secrets.DOCKERHUB_USERNAME}}
-    password: ${{secrets.DOCKERHUB_TOKEN}}
-
 multi-ecosystem-groups:
   all-dependencies:
     schedule:
@@ -51,7 +45,6 @@ updates:
     multi-ecosystem-group: all-dependencies
     registries:
       - github-private
-      - dhi
     cooldown:
       default-days: 7
 

@@ -883,7 +883,7 @@ milestones:
       guardrail_refs:
       - SC-DEP-004
   - id: CPPD-FUZZ-001
-    status: open
+    status: done
     title: Add a reusable fuzz job for C++ libraries
     overview:
       problem: >-
@@ -911,7 +911,7 @@ milestones:
     - CI-035
     tasks:
     - id: CPPD-FUZZ-001-T1
-      status: open
+      status: done
       title: Add cpp-fuzz.yml
       instructions:
         files:
@@ -920,6 +920,48 @@ milestones:
       - test -f .github/workflows/cpp-fuzz.yml
       guardrail_refs:
       - CI-035
+  - id: CPPD-PIN-003
+    status: done
+    title: Pin guardrails 1.9.0 and record Free-plan CI-032 and REL-PUB-004
+    overview:
+      problem: >-
+        The gitlinks were guardrails 1.8.0 and scaffold 1.7.0. The repository
+        returns to private on the Free plan, which cannot protect branches or
+        use tag Environments.
+      goal: >-
+        Pin guardrails 1.9.0 and scaffold 1.8.0, and record CI-032 and
+        REL-PUB-004.
+    decision: >-
+      In the context of the org pin window, facing a private Free-plan host,
+      we decided to bump both submodules and record the two Free-plan
+      deviations, to achieve SC-DEP-004, accepting that image tags stay on
+      their own release line.
+    architecture:
+      target: submodule gitlinks and deviations
+      modules:
+      - docs/guardrails
+      - .github/scaffold
+      - docs/guardrail-deviations.yml
+    acceptance_criteria:
+    - check-submodule-pins.sh expects guardrails 1.9.0 and scaffold 1.8.0
+    - CI-032 and REL-PUB-004 are recorded
+    guardrail_refs:
+    - SC-DEP-004
+    - CI-032
+    - REL-PUB-004
+    tasks:
+    - id: CPPD-PIN-003-T1
+      status: done
+      title: Bump the gitlinks and record the Free-plan deviations
+      instructions:
+        files:
+        - docs/guardrails
+        - .github/scaffold
+        - docs/guardrail-deviations.yml
+      verification:
+      - sh scripts/check-submodule-pins.sh
+      guardrail_refs:
+      - SC-DEP-004
 
   tasks:
   - id: CPPD-SCAN-001

@@ -5,20 +5,44 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [4.0.0] - 2026-10-01
+
+### Breaking
+
+- Cross-repo callers of `cpp-*` must pass `scripts_ref` equal to the `uses:`
+  pin (CI-034). `templates/ci-quality.yml` does this and passes
+  `CPPDEVOPS_READ_TOKEN` into quality, tests, docs, codeql, dynamic, mobile,
+  and fuzz.
+- Nested commondevops pin is **5.2.6**
+  (`8aad4ba4a597a87565d6d3d1a92a8bdd7568921c`). Nested containerdevops pin is
+  **6.1.0** (`edef9c8413363c46dcb276f5188a033d9fc6fd4e`). Publish needs
+  `attestations: write`.
+
+### Added
+
+- `cpp-fuzz.yml` builds and runs one libFuzzer target. `run_fuzz` defaults to
+  false so a library with no target skips it (CPPD-FUZZ-001). `ci-cpp` installs
+  `libfuzzer-18-dev` and `libclang-rt-18-dev` so `-fsanitize=fuzzer,address` links.
+- Advisory OS+library posture scan (`ignorefile: none`) next to the blocking
+  library scan.
+- Deviations CI-032 and REL-PUB-004. The repository returns to private on the
+  Free plan (CPPD-PIN-003).
+
 ### Changed
 
-- `docs/guardrails` tag **1.8.0** (`aa5184ce…`); `.github/scaffold` tag **1.7.0**
-  (`e76bb3fd…`). Synced issue templates, Cursor rules, `AGENTS.md`, `SKILLS.md`,
-  and `CLAUDE.md`. Decision links cite methodologies **1.6.0** (not a submodule
-  in this repo).
-- Record `SC-PROV-001` next to `SC-SIGN-001` (guardrails 1.8.0 Free-plan pattern).
-- `ci-cpp` apt packages are version-pinned (hadolint DL3008 ignores removed).
-  Both stages repeat `ubuntu:24.04@sha256:49675449…` (config created 2026-09-11).
-  The previous digest was 60 days old, and a stage alias fails the base-image
-  age gate.
-- `ci-cpp` installs `cloc` 1.98. Python tools pin `setuptools==84.0.0`,
-  `msgpack==1.2.3`, and `pygments==2.21.0`. `pip` is not left in the image
-  (it vendors msgpack 1.1.2). `linux-libc-dev` is pinned at `6.8.0-142.142`.
+- `docs/guardrails` tag **1.9.0** (`16a2c95c…`); `.github/scaffold` tag
+  **1.8.0** (`ac9059fd…`). Decision links cite methodologies **1.8.0**.
+- CI-024 skips use `github.event.pull_request.user.login`. Dependabot pull
+  requests run `pins`, `scaffold`, and a token-free `lint-dependabot` job.
+- `ci-cpp` stays on Ubuntu 24.04 (CPP-BUILD-004). Both stages pin
+  `ubuntu:24.04@sha256:008173c2…`. The config Created date is still
+  2026-09-11, so DOCKER-BUILD-006 fails on 2026-10-11 until Ubuntu publishes
+  a newer noble config. clang-format **23.1.0** comes from the venv; apt
+  clang-format 18 is not installed. Pre-commit mirrors-clang-format is v23.1.0.
+- `dhi_login` is false. Publish verifies with `clang++ --version`. Handoff
+  cleanup runs whenever publish did not succeed.
+- The artifact sweep also deletes `*.dockerbuild` artifacts and Actions
+  caches on pull and tag refs.
 
 ## [3.1.2] - 2026-09-15
 

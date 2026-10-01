@@ -70,7 +70,9 @@ invalid and must not be filed.
 | Design flaw | Baking threshold numbers into workflows; dual security paths vs commondevops |
 
 Identify **improvements, bugs, and design flaws** in workflows, scripts, templates, and
-docs — not only process/docs hygiene.
+docs — not only process/docs hygiene. Prefer **local-first validation** (`docker build`,
+structure-test, Trivy library and raw os,library) before recommending Actions-only
+verification.
 
 ### 4. Optional: alternatives (lightweight)
 
@@ -146,7 +148,9 @@ Do not recommend removing these without **requires user decision**:
 3. CI-024 Dependabot skip on jobs needing Actions secrets / private reusable pins
 4. `docs/issues.yml` is the authored backlog
 5. Guardrails stay canonical in `pirlruc/guardrails` — record deviations here only
-6. Mobile matrix compiles a header-including smoke TU (MOBILE-MECH-001)
+6. Mobile matrix compiles a header-including smoke TU (MOBILE-MECH-001). It does not build Kotlin or Swift
+7. Cross-repo callers pass `scripts_ref` matching the `uses:` pin (CI-034)
+8. Do not delete published GHCR or Docker Hub tags as quota cleanup
 
 ## Automation configuration
 

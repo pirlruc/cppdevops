@@ -4,9 +4,9 @@
 
 | Field | Value |
 |-------|-------|
-| **Folder** | `cpp/cppdevops/` |
+| **Folder** | `ops/cppdevops/` |
 | **Remote** | https://github.com/pirlruc/cppdevops |
-| **Branch** | `feature-digest-3.1.2` → tag **3.1.2** (no GitHub Release) |
+| **Branch** | `main` → tag **4.0.0** (publishes ci-cpp; digest write-back is 4.0.1) |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
@@ -22,27 +22,24 @@ Owns reusable workflows under `.github/workflows/`:
 
 Also owns `templates/`, `scripts/sync-library-*.sh`, and `docker/ci-cpp/`.
 
-Standalone library callers should pin `pirlruc/cppdevops@3.1.2` or `@<sha>` (`CI-018`).
-`templates/ci-quality.yml` pins `@3.1.2`. Hub/Packages: [`docs/docker-hub.md`](docker-hub.md),
+Standalone library callers should pin `pirlruc/cppdevops@4.0.0` or `@<sha>` (`CI-018`)
+and pass the same value as `scripts_ref`. `templates/ci-quality.yml` pins `@4.0.0`.
+Hub/Packages: [`docs/docker-hub.md`](docker-hub.md),
 [`docs/github-packages.md`](github-packages.md).
 Never `@main`. Checklist: [`docs/consumer-checklist.md`](consumer-checklist.md).
 
 Contract reference: [`docs/workflows.md`](workflows.md).
 
-## Pins (2026-09-30)
+## Pins (2026-10-01)
 
 | Submodule / artifact | Pin |
 |----------------------|-----|
-| `docs/guardrails` | tag **1.8.0** → `aa5184ce…` |
-| `.github/scaffold` | tag **1.7.0** → `e76bb3fd…` |
-| methodologies (links only; not a submodule) | tag **1.6.0** |
-| `ghcr.io/pirlruc/ci-cpp` | `@sha256:f42b11bc342c0dd6faef6454f4a37cf4230b9c2c87357623cad5ed0102608656` (Hub/GHCR tags `:3.1.0` / `:latest` from the 3.1.0 Release publish). Reusable `container:` and `cppdevops-security.yml` published rescan share this digest. |
-| commondevops `uses:` | tag **5.1.2** → `b3c462bed0de4f6475e6be7875c4ababd831acc6` |
-| containerdevops `uses:` | tag **5.0.2** → `32384866e5669dbde8bdecde153a6ae6ead728ed` |
-
-Open companion PRs (not merged): [guardrails #58](https://github.com/pirlruc/guardrails/pull/58),
-[github-scaffold #37](https://github.com/pirlruc/github-scaffold/pull/37),
-[methodologies #49](https://github.com/pirlruc/methodologies/pull/49).
+| `docs/guardrails` | tag **1.9.0** → `16a2c95c…` |
+| `.github/scaffold` | tag **1.8.0** → `ac9059fd…` |
+| methodologies (links only; not a submodule) | tag **1.8.0** |
+| `ghcr.io/pirlruc/ci-cpp` | Workflow `container:` still `@sha256:f42b11bc…` (3.1.0) until the 4.0.1 digest write-back. 4.0.0 republishes the image. |
+| commondevops `uses:` | tag **5.2.6** → `8aad4ba4a597a87565d6d3d1a92a8bdd7568921c` |
+| containerdevops `uses:` | tag **6.1.0** → `edef9c8413363c46dcb276f5188a033d9fc6fd4e` |
 
 ## Delivery status
 
@@ -143,6 +140,11 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Recent history
 
+- 2026-10-01: **4.0.0** — guardrails **1.9.0**, scaffold **1.8.0**, methodologies
+  links **1.8.0**. `scripts_ref` is required cross-repo. commondevops **5.2.6**,
+  containerdevops **6.1.0**. ci-cpp stays Ubuntu 24.04 (`008173c2…`, config
+  still 2026-09-11) and installs clang-format 23.1.0. `cpp-fuzz.yml` added.
+  CI-032 and REL-PUB-004 recorded.
 - 2026-09-30: guardrails **1.8.0** / scaffold **1.7.0**. Methodology decision
   links cite **1.6.0** (no methodologies submodule). `ci-cpp` pins apt
   versions, installs cloc, drops hadolint DL3006/DL3008 ignores, and upgrades
@@ -186,4 +188,4 @@ python3 .github/scaffold/scripts/issues-sync.py \
   `feature-ai-reviewer-issues` (merged as #52). Wave 3 yaml marks MOBILE-MECH-001,
   AIREV-MECH-001, and DEP-MECH-001 done; GitHub issues still open pending `--update`.
 
-*Last updated: 2026-09-30*
+*Last updated: 2026-10-01 (4.0.0 scripts_ref, guardrails 1.9.0, ci-cpp clang-format 23)*

@@ -1,7 +1,8 @@
-name: Artifact sweep (container-image*)
+name: Artifact sweep (container-image*, build records, stale caches)
 
-# Safety net for leftover image-tar artifacts from pre-5.0.0 containerdevops.
-# Does not delete GHCR packages or scan-result artifacts.
+# Safety net for leftover image-tar artifacts, docker build records, and
+# Actions caches on pull-request or tag refs. Does not delete GHCR packages,
+# container-scan-*, or caches on the default branch.
 
 on:
   schedule:
@@ -13,7 +14,7 @@ permissions: {}
 jobs:
   sweep:
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 20
     permissions:
       actions: write
     steps:
@@ -24,7 +25,7 @@ jobs:
         run: |
           set -euo pipefail
           mapfile -t rows < <(gh api --paginate "/repos/${REPO}/actions/artifacts?per_page=100" \
-            --jq '.artifacts[] | select(.expired|not) | select(.name|startswith("container-image")) | [.id,.name] | @tsv')
+            --jq '.artifacts[] | select(.expired|not) | select(.name|startswith("container-image") or contains(".dockerbuild")) | [.id,.name] | @tsv')
           deleted=0
           for row in "${rows[@]}"; do
             [[ -z "${row}" ]] && continue
@@ -34,4 +35,24 @@ jobs:
             gh api -X DELETE "/repos/${REPO}/actions/artifacts/${id}"
             deleted=$((deleted + 1))
           done
-          echo "deleted ${deleted} container-image* artifacts"
+          echo "deleted ${deleted} container-image* or dockerbuild artifacts"
+
+      - name: Delete pull and tag Actions caches
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          mapfile -t rows < <(gh api --paginate "/repos/${REPO}/actions/caches?per_page=100" \
+            --jq '.actions_caches[] | select(.ref | startswith("refs/pull/") or startswith("refs/tags/") or contains("/refs/tags/")) | [.id, .ref, .key] | @tsv')
+          deleted=0
+          for row in "${rows[@]}"; do
+            [[ -z "${row}" ]] && continue
+            id="${row%%$'\t'*}"
+            rest="${row#*$'\t'}"
+            ref="${rest%%$'\t'*}"
+            echo "deleting cache ${id} (${ref})"
+            gh api -X DELETE "/repos/${REPO}/actions/caches/${id}" >/dev/null
+            deleted=$((deleted + 1))
+          done
+          echo "deleted ${deleted} pull or tag caches"

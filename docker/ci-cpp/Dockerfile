@@ -14,10 +14,12 @@
 # Base tag in a comment for DOCKER-BUILD-003: ubuntu:24.04
 # Both stages repeat this digest. check-base-image-age.sh pulls every FROM
 # that is not scratch or ${ARG}, so a stage name such as `os` fails closed.
-# Config created 2026-09-11. Refresh before 2026-10-11 so the monthly rebuild
-# still satisfies base_image_max_age_days (30).
+# Digest refreshed 2026-10-01. The image config Created date is still
+# 2026-09-11, so base_image_max_age_days (30) fails on 2026-10-11 until Ubuntu
+# publishes a newer noble config. Do not move this image to ubuntu:26.04
+# (CPP-BUILD-004).
 
-FROM docker.io/library/ubuntu:24.04@sha256:496754492fb28b4d3049432f2ca787449331e23fb14f0dd3fffea86bf5a93eb4 AS pybuild
+FROM docker.io/library/ubuntu:24.04@sha256:008173c23f95b170204355c12626cb5a965d779a7e1283b09e9cffbb1bf33ca3 AS pybuild
 
 # ---------------------------------------------------------------------------
 # pybuild — install Python CLIs into /opt/venv; uv and pip stay out of the
@@ -40,6 +42,7 @@ RUN python3 -m venv /opt/venv \
       'pip==26.2.1' \
       'setuptools==84.0.0' \
       'msgpack==1.2.3' \
+      'clang-format==23.1.0' \
       'pygments==2.21.0' \
       'coverxygen==1.8.2' \
       'cpplint==2.0.2' \
@@ -54,7 +57,7 @@ RUN python3 -m venv /opt/venv \
 # ---------------------------------------------------------------------------
 # Final image
 # ---------------------------------------------------------------------------
-FROM docker.io/library/ubuntu:24.04@sha256:496754492fb28b4d3049432f2ca787449331e23fb14f0dd3fffea86bf5a93eb4
+FROM docker.io/library/ubuntu:24.04@sha256:008173c23f95b170204355c12626cb5a965d779a7e1283b09e9cffbb1bf33ca3
 
 LABEL org.opencontainers.image.title="ci-cpp" \
       org.opencontainers.image.description="Short-lived C++ CI toolchain for pirlruc/cppdevops: Clang/libc++, CMake, Ninja, cppcheck, clang-tidy/format, Doxygen, gcovr, lizard, Metrix++, coverxygen, cloc, valgrind. Ubuntu 24.04. Non-root 1000:1000, linux/amd64." \
@@ -80,7 +83,6 @@ RUN apt-get update \
  && apt-get upgrade -y --no-install-recommends \
  && apt-get install -y --no-install-recommends \
       clang=1:18.0-59~exp2 \
-      clang-format=1:18.0-59~exp2 \
       clang-tidy=1:18.0-59~exp2 \
       cmake=3.28.3-1build7 \
       cppcheck=2.13.0-2ubuntu3 \
@@ -88,6 +90,8 @@ RUN apt-get update \
       graphviz=2.42.2-9ubuntu0.1 \
       libc++-dev=1:18.0-59~exp2 \
       libc++abi-dev=1:18.0-59~exp2 \
+      libclang-rt-18-dev=1:18.1.3-1ubuntu1 \
+      libfuzzer-18-dev=1:18.1.3-1ubuntu1 \
       llvm=1:18.0-59~exp2 \
       ninja-build=1.11.1-2 \
       python3=3.12.3-0ubuntu2.1 \
