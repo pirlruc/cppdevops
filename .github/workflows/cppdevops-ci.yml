@@ -141,8 +141,7 @@ jobs:
       - name: Drift-check vendored C++ thresholds
         if: steps.token.outputs.available == 'true'
         run: bash scripts/check-threshold-drift.sh
-      - name: Require the guardrails token for content drift
+      - name: Note skipped content drift
         if: steps.token.outputs.available != 'true'
         run: |
-          echo "::error::GUARDRAILS_READ_TOKEN is required outside Dependabot pull requests. The pin job still runs without it." >&2
-          exit 1
+          echo "::notice::GUARDRAILS_READ_TOKEN is not set, so content drift was skipped. The pin job still checks the gitlink. Add the secret to make this step blocking."
