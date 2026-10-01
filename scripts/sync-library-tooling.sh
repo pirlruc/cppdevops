@@ -78,77 +78,11 @@ if [[ "${STANDALONE}" == "1" ]]; then
   # Create-once: libraries customize callers (mobile, run_sbom, SHA pins).
   # Overwriting would strip those customizations (CI-018 / CPP-SEC-003).
   if [[ ! -f "${LIB}/.github/workflows/ci-quality.yml" ]]; then
-    # Quota mode: manual workflow_dispatch only (CI-TRIGGER-001)
-    cat > "${LIB}/.github/workflows/ci-quality.yml" <<EOF
-name: Quality
-
-on:
-  workflow_dispatch:
-    inputs:
-      blocking:
-        description: Pass blocking=true when ready to enforce
-        type: boolean
-        default: false
-  # Re-enable when Actions quota allows:
-  # push:
-  #   branches: [main]
-  # pull_request:
-
-# CI-025: default-deny; reusable workflows grant what they need.
-permissions: {}
-
-jobs:
-  quality:
-    uses: pirlruc/cppdevops/.github/workflows/cpp-quality.yml@${CPPDEVOPS_REF}
-    with:
-      library_path: .
-      blocking: \${{ inputs.blocking }}
-  tests:
-    uses: pirlruc/cppdevops/.github/workflows/cpp-tests.yml@${CPPDEVOPS_REF}
-    with:
-      library_path: .
-      blocking: \${{ inputs.blocking }}
-  docs:
-    uses: pirlruc/cppdevops/.github/workflows/cpp-docs.yml@${CPPDEVOPS_REF}
-    with:
-      library_path: .
-      blocking: \${{ inputs.blocking }}
-  security:
-    uses: pirlruc/cppdevops/.github/workflows/cpp-security.yml@${CPPDEVOPS_REF}
-    with:
-      library_path: .
-      blocking: \${{ inputs.blocking }}
-      # SC-SBOM-001 / CPP-SEC-003: default true; set false only with a deviation
-      run_sbom: true
-  codeql:
-    uses: pirlruc/cppdevops/.github/workflows/cpp-codeql.yml@${CPPDEVOPS_REF}
-    with:
-      library_path: .
-      blocking: \${{ inputs.blocking }}
-    secrets:
-      checkout_token: \${{ secrets.CPPDEVOPS_READ_TOKEN }}
-  dynamic:
-    uses: pirlruc/cppdevops/.github/workflows/cpp-dynamic.yml@${CPPDEVOPS_REF}
-    with:
-      library_path: .
-      blocking: \${{ inputs.blocking }}
-    secrets:
-      checkout_token: \${{ secrets.CPPDEVOPS_READ_TOKEN }}
-  mobile:
-    uses: pirlruc/cppdevops/.github/workflows/cpp-mobile-matrix.yml@${CPPDEVOPS_REF}
-    with:
-      library_path: .
-      blocking: \${{ inputs.blocking }}
-    secrets:
-      checkout_token: \${{ secrets.CPPDEVOPS_READ_TOKEN }}
-  infra:
-    uses: pirlruc/cppdevops/.github/workflows/cpp-infra.yml@${CPPDEVOPS_REF}
-    with:
-      blocking: \${{ inputs.blocking }}
-      working_directory: .
-    secrets:
-      checkout_token: \${{ secrets.COMMONDEVOPS_READ_TOKEN }}
-EOF
+    # Quota mode: manual workflow_dispatch only (CI-TRIGGER-001).
+    # The template pin 4.0.0 is replaced with CPPDEVOPS_WORKFLOW_REF.
+    sed "s/4\\.0\\.0/${CPPDEVOPS_REF}/g" \
+      "${CPPDEVOPS_ROOT}/templates/ci-quality.yml" \
+      > "${LIB}/.github/workflows/ci-quality.yml"
   else
     echo "keep existing ${LIB}/.github/workflows/ci-quality.yml (create-once)"
   fi

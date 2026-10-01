@@ -2,6 +2,8 @@ name: C++ Mobile matrix (reusable)
 
 # Cross-compile a header-including smoke TU on Android NDK and iOS Xcode
 # (MOBILE-MECH-001 / CI-014 / CPP-BUILD-010/011). Pins: CPP-BUILD-012.
+# This workflow is C++/NDK and Xcode only. It does not build Kotlin, Gradle,
+# Compose, or Swift packages. Those jobs stay in the product repository.
 
 on:
   workflow_call:
@@ -21,6 +23,12 @@ on:
         required: false
         type: boolean
         default: false
+      scripts_ref:
+        description: Commit SHA matching the uses pin (required cross-repo, CI-034)
+        required: false
+        type: string
+        default: ""
+
     secrets:
       checkout_token:
         required: false
@@ -49,6 +57,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: pirlruc/cppdevops
+          ref: ${{ inputs.scripts_ref || github.sha }}
           token: ${{ secrets.checkout_token || github.token }}
           persist-credentials: false
           path: _cppdevops
@@ -56,6 +65,18 @@ jobs:
             scripts/mobile-smoke
             scripts/gate-aggregate.sh
           sparse-checkout-cone-mode: false
+
+      - name: Require scripts_ref for cross-repo callers (CI-034)
+        env:
+          SCRIPTS_REF: ${{ inputs.scripts_ref }}
+          REPO: ${{ github.repository }}
+        working-directory: ${{ github.workspace }}
+        run: |
+          if [ "${REPO}" != "pirlruc/cppdevops" ] && [ -z "${SCRIPTS_REF}" ]; then
+            echo "CI-034: cross-repo callers must pass scripts_ref matching the uses: pin" >&2
+            exit 1
+          fi
+
 
       - name: Setup Android NDK
         uses: nttld/setup-ndk@ed92fe6cadad69be94a966a7ee3271275e62f779 # v1.6.0
@@ -117,6 +138,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: pirlruc/cppdevops
+          ref: ${{ inputs.scripts_ref || github.sha }}
           token: ${{ secrets.checkout_token || github.token }}
           persist-credentials: false
           path: _cppdevops
@@ -124,6 +146,18 @@ jobs:
             scripts/mobile-smoke
             scripts/gate-aggregate.sh
           sparse-checkout-cone-mode: false
+
+      - name: Require scripts_ref for cross-repo callers (CI-034)
+        env:
+          SCRIPTS_REF: ${{ inputs.scripts_ref }}
+          REPO: ${{ github.repository }}
+        working-directory: ${{ github.workspace }}
+        run: |
+          if [ "${REPO}" != "pirlruc/cppdevops" ] && [ -z "${SCRIPTS_REF}" ]; then
+            echo "CI-034: cross-repo callers must pass scripts_ref matching the uses: pin" >&2
+            exit 1
+          fi
+
 
       - uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
         with:

@@ -14,6 +14,12 @@ on:
         required: false
         type: boolean
         default: false
+      scripts_ref:
+        description: Commit SHA matching the uses pin (required cross-repo, CI-034)
+        required: false
+        type: string
+        default: ""
+
     secrets:
       checkout_token:
         required: false
@@ -43,12 +49,25 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: pirlruc/cppdevops
+          ref: ${{ inputs.scripts_ref || github.sha }}
           token: ${{ secrets.checkout_token || github.token }}
           persist-credentials: false
           path: _cppdevops
           sparse-checkout: |
             scripts
           sparse-checkout-cone-mode: false
+
+      - name: Require scripts_ref for cross-repo callers (CI-034)
+        env:
+          SCRIPTS_REF: ${{ inputs.scripts_ref }}
+          REPO: ${{ github.repository }}
+        working-directory: ${{ github.workspace }}
+        run: |
+          if [ "${REPO}" != "pirlruc/cppdevops" ] && [ -z "${SCRIPTS_REF}" ]; then
+            echo "CI-034: cross-repo callers must pass scripts_ref matching the uses: pin" >&2
+            exit 1
+          fi
+
 
       - name: Configure and build
         id: build

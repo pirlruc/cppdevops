@@ -14,6 +14,12 @@ on:
         required: false
         type: string
         default: ci-linux
+      scripts_ref:
+        description: Commit SHA matching the uses pin (required cross-repo, CI-034)
+        required: false
+        type: string
+        default: ""
+
     secrets:
       checkout_token:
         required: false
@@ -27,7 +33,7 @@ env:
 jobs:
   codeql:
     # CI-024: CodeQL upload needs security-events; skip Dependabot secret path.
-    if: github.actor != 'dependabot[bot]'
+    if: github.event.pull_request.user.login != 'dependabot[bot]'
     runs-on: ubuntu-24.04
     # CodeQL action runs on the job container; keep toolchain from ci-cpp.
     container: ghcr.io/pirlruc/ci-cpp@sha256:f42b11bc342c0dd6faef6454f4a37cf4230b9c2c87357623cad5ed0102608656
@@ -48,6 +54,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: pirlruc/cppdevops
+          ref: ${{ inputs.scripts_ref || github.sha }}
           token: ${{ secrets.checkout_token || github.token }}
           persist-credentials: false
           path: _cppdevops
@@ -55,10 +62,22 @@ jobs:
             scripts
           sparse-checkout-cone-mode: false
 
+      - name: Require scripts_ref for cross-repo callers (CI-034)
+        env:
+          SCRIPTS_REF: ${{ inputs.scripts_ref }}
+          REPO: ${{ github.repository }}
+        working-directory: ${{ github.workspace }}
+        run: |
+          if [ "${REPO}" != "pirlruc/cppdevops" ] && [ -z "${SCRIPTS_REF}" ]; then
+            echo "CI-034: cross-repo callers must pass scripts_ref matching the uses: pin" >&2
+            exit 1
+          fi
+
+
       - name: Initialize CodeQL
         id: init
         continue-on-error: true
-        uses: github/codeql-action/init@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4.37.9
+        uses: github/codeql-action/init@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
         with:
           languages: cpp
           config-file: ${{ inputs.library_path }}/.github/codeql/codeql-config.yml
@@ -78,7 +97,7 @@ jobs:
       - name: Perform CodeQL Analysis
         id: analyze
         continue-on-error: true
-        uses: github/codeql-action/analyze@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4.37.9
+        uses: github/codeql-action/analyze@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
         with:
           category: "/language:cpp"
 
