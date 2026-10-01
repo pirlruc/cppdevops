@@ -102,10 +102,9 @@ python3 .github/scaffold/scripts/issues-sync.py \
 - Threshold drift CI checks out **only** the `docs/guardrails` gitlink SHA
   with `GUARDRAILS_READ_TOKEN` (contents:read on private `pirlruc/guardrails`).
   Do not use `submodules: true` — that also clones private `github-scaffold`
-  with `github.token` and fails 404. When the token is unset the job notices
-  and skips the content diff (SC-DEP-004 `pins` still runs). Do not fall back
-  to `COMMONDEVOPS_READ_TOKEN`. Local `scripts/check-threshold-drift.sh` uses
-  an initialized submodule.
+  with `github.token` and fails 404. The job fails if the token is unset.
+  Dependabot skips the job. Do not fall back to `COMMONDEVOPS_READ_TOKEN`.
+  Local `scripts/check-threshold-drift.sh` uses an initialized submodule.
 - Compose GHCR scan/publish refs from `handoff_package` + `digest`. Do not
   pass `needs.build.outputs.image_ref` (Actions secret-masks the owner).
 - `sync-library-tooling.sh` requires `CPPDEVOPS_WORKFLOW_REF`; it never

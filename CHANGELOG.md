@@ -5,6 +5,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [4.0.3] - 2026-10-02
+
+### Changed
+
+- Threshold drift fails when `GUARDRAILS_READ_TOKEN` is unset. The secret is
+  now on the repository. Dependabot still skips the job. Tag only. No GitHub
+  Release, so the image is not republished.
+
 ## [4.0.2] - 2026-10-01
 
 ### Changed
