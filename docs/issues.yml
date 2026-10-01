@@ -962,6 +962,106 @@ milestones:
       - sh scripts/check-submodule-pins.sh
       guardrail_refs:
       - SC-DEP-004
+  - id: CPPD-QUOTA-001
+    status: done
+    title: Cut Actions artifact and cache growth
+    overview:
+      problem: Build records and unpublished ci-run tags outlive the workflow run.
+      goal: Re-pin containerdevops 6.1.0 and sweep pull and tag caches.
+    decision: >-
+      In the context of Actions quota, facing leftover build records, we decided
+      to re-pin containerdevops 6.1.0 and delete pull and tag caches, to achieve
+      retention that falls off after the run, accepting a new attestations
+      permission on publish.
+    guardrail_refs:
+    - DOCKER-DELIV-004
+    - CI-004
+    tasks:
+    - id: CPPD-QUOTA-001-T1
+      status: done
+      title: Re-pin containerdevops and widen the handoff cleanup
+      instructions:
+        files:
+        - .github/workflows/ci-cpp-image.yml
+        - .github/workflows/artifact-sweep.yml
+      verification:
+      - grep -q edef9c84 .github/workflows/ci-cpp-image.yml
+      guardrail_refs:
+      - CI-004
+  - id: CPPD-MOBILE-002
+    status: done
+    title: State that cpp-mobile-matrix does not cover Kotlin or Swift
+    overview:
+      problem: The mobile workflow name sounds generic.
+      goal: The workflow and docs say it is C++/NDK and Xcode only.
+    decision: >-
+      In the context of mixed-language product repos, facing a mobile workflow
+      whose name sounds generic, we decided to document the C++/NDK scope, to
+      achieve an obvious non-reuse, accepting that Kotlin and Swift jobs are
+      not added here.
+    guardrail_refs:
+    - CI-031
+    tasks:
+    - id: CPPD-MOBILE-002-T1
+      status: done
+      title: Document the NDK and Xcode boundary
+      instructions:
+        files:
+        - .github/workflows/cpp-mobile-matrix.yml
+        - docs/workflows.md
+      verification:
+      - grep -q Swift docs/workflows.md
+      guardrail_refs:
+      - CI-031
+  - id: CPPD-PIN-002
+    status: done
+    title: Re-pin guardrails and state cpp-mobile is not AGP
+    overview:
+      problem: Callers were treating cpp-mobile-matrix as an Android Gradle job.
+      goal: The docs say the matrix is NDK and Xcode, not AGP.
+    decision: >-
+      In the context of a C++ reusable host, facing an Android app looking for
+      jobs to reuse, we decided to label the mobile matrix as NDK-only, to
+      achieve CI-014 without a false Android caller, accepting that AGP stays
+      in the product repo.
+    guardrail_refs:
+    - CI-014
+    - CI-018
+    tasks:
+    - id: CPPD-PIN-002-T1
+      status: done
+      title: Document the NDK boundary
+      instructions:
+        files:
+        - docs/workflows.md
+      verification:
+      - grep -q NDK docs/workflows.md
+      guardrail_refs:
+      - CI-014
+  - id: CPP-PIN-018
+    status: done
+    title: Pin guardrails 1.8.0 and scaffold 1.7.0
+    overview:
+      problem: This pin was requested, then superseded by guardrails 1.9.0.
+      goal: The gitlinks are at least those tags. 4.0.0 moves them to 1.9.0 and 1.8.0.
+    decision: >-
+      In the context of the org pins moving, facing a request for 1.8.0 and
+      1.7.0, we decided to land the newer 1.9.0 and 1.8.0 pins instead, to
+      achieve one bump, accepting that the original issue closes as done.
+    guardrail_refs:
+    - SC-DEP-004
+    tasks:
+    - id: CPP-PIN-018-T1
+      status: done
+      title: Bump the guardrails and scaffold gitlinks
+      instructions:
+        files:
+        - docs/guardrails
+        - .github/scaffold
+      verification:
+      - sh scripts/check-submodule-pins.sh
+      guardrail_refs:
+      - SC-DEP-004
 
   tasks:
   - id: CPPD-SCAN-001
