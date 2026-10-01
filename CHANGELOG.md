@@ -5,6 +5,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [4.0.2] - 2026-10-01
+
+### Changed
+
+- Hub and Packages examples pull `4.0.0`, the current image. Tag only.
+  No GitHub Release, so the image is not republished.
+
 ## [4.0.1] - 2026-10-01
 
 ### Changed
