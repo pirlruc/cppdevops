@@ -5,6 +5,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [4.0.1] - 2026-10-01
+
+### Changed
+
+- Write the 4.0.0 digest `sha256:cf40f3bc99ebe50a286d1e57ac0aa63c28678ef44e65b3a6dbef0c7420afa47f`
+  into the workflow `container:` pins, the published rescan, and the Hub and
+  Packages pages. Tag only. No GitHub Release, so the image is not republished.
+
 ## [4.0.0] - 2026-10-01
 
 ### Breaking
