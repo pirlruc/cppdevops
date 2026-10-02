@@ -139,6 +139,10 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Recent history
 
+- 2026-10-02: CPPD-SCAN-001 local build pins
+  `ubuntu:24.04@sha256:a853f94d…` (Created 2026-09-18). Trivy os+library,
+  no ignorefile: 168 unfixed HIGH/CRITICAL, all `linux-libc-dev`. The six
+  fixable highs from 3.1.0 are absent. CVE-2026-64564 remains. Not published.
 - 2026-10-01: **4.0.1** (tag-only) — workflow and rescan pins use ci-cpp 4.0.0
   `sha256:cf40f3bc…`. No GitHub Release, so the image is not republished.
 - 2026-10-01: **4.0.0** — guardrails **1.9.0**, scaffold **1.8.0**, methodologies
@@ -189,4 +193,4 @@ python3 .github/scaffold/scripts/issues-sync.py \
   `feature-ai-reviewer-issues` (merged as #52). Wave 3 yaml marks MOBILE-MECH-001,
   AIREV-MECH-001, and DEP-MECH-001 done; GitHub issues still open pending `--update`.
 
-*Last updated: 2026-10-01 (4.0.1 digest write-back for ci-cpp 4.0.0)*
+*Last updated: 2026-10-02 (CPPD-SCAN-001 ubuntu digest a853f94d, local OS scan)*

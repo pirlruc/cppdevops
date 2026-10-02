@@ -5,6 +5,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Changed
+
+- Pin both `ci-cpp` stages to `ubuntu:24.04@sha256:a853f94d…` (config Created
+  2026-09-18). The previous pin (`008173c2…`, Created 2026-09-11) fails
+  DOCKER-BUILD-006 on 2026-10-11. Local Trivy `os,library` (no ignorefile):
+  the fixable highs from 3.1.0 are gone; CVE-2026-64564 and 167 other unfixed
+  `linux-libc-dev` highs remain (CPPD-SCAN-001).
+
 ## [4.0.3] - 2026-10-02
 
 ### Changed

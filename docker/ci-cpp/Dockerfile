@@ -14,12 +14,11 @@
 # Base tag in a comment for DOCKER-BUILD-003: ubuntu:24.04
 # Both stages repeat this digest. check-base-image-age.sh pulls every FROM
 # that is not scratch or ${ARG}, so a stage name such as `os` fails closed.
-# Digest refreshed 2026-10-01. The image config Created date is still
-# 2026-09-11, so base_image_max_age_days (30) fails on 2026-10-11 until Ubuntu
-# publishes a newer noble config. Do not move this image to ubuntu:26.04
-# (CPP-BUILD-004).
+# Digest refreshed 2026-10-02. Config Created is 2026-09-18
+# (sha256:a853f94d…), so base_image_max_age_days (30) fails on 2026-10-18.
+# Do not move this image to ubuntu:26.04 (CPP-BUILD-004).
 
-FROM docker.io/library/ubuntu:24.04@sha256:008173c23f95b170204355c12626cb5a965d779a7e1283b09e9cffbb1bf33ca3 AS pybuild
+FROM docker.io/library/ubuntu:24.04@sha256:a853f94d226358a79c740cfc7bce0c289748f3fe3488d921d038ccd752c61b60 AS pybuild
 
 # ---------------------------------------------------------------------------
 # pybuild — install Python CLIs into /opt/venv; uv and pip stay out of the
@@ -57,7 +56,7 @@ RUN python3 -m venv /opt/venv \
 # ---------------------------------------------------------------------------
 # Final image
 # ---------------------------------------------------------------------------
-FROM docker.io/library/ubuntu:24.04@sha256:008173c23f95b170204355c12626cb5a965d779a7e1283b09e9cffbb1bf33ca3
+FROM docker.io/library/ubuntu:24.04@sha256:a853f94d226358a79c740cfc7bce0c289748f3fe3488d921d038ccd752c61b60
 
 LABEL org.opencontainers.image.title="ci-cpp" \
       org.opencontainers.image.description="Short-lived C++ CI toolchain for pirlruc/cppdevops: Clang/libc++, CMake, Ninja, cppcheck, clang-tidy/format, Doxygen, gcovr, lizard, Metrix++, coverxygen, cloc, valgrind. Ubuntu 24.04. Non-root 1000:1000, linux/amd64." \
