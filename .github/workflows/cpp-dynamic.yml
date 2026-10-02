@@ -38,7 +38,7 @@ jobs:
   asan:
     if: inputs.run_asan
     runs-on: ubuntu-24.04
-    container: ghcr.io/pirlruc/ci-cpp@sha256:cf40f3bc99ebe50a286d1e57ac0aa63c28678ef44e65b3a6dbef0c7420afa47f
+    container: ghcr.io/pirlruc/ci-cpp@sha256:3406477bb7fc730c53df4a28dffa07a9dce5ee6f6830102df1bedc8727973b67
     timeout-minutes: 45
     permissions:
       contents: read
@@ -111,7 +111,7 @@ jobs:
   valgrind:
     if: inputs.run_valgrind
     runs-on: ubuntu-24.04
-    container: ghcr.io/pirlruc/ci-cpp@sha256:cf40f3bc99ebe50a286d1e57ac0aa63c28678ef44e65b3a6dbef0c7420afa47f
+    container: ghcr.io/pirlruc/ci-cpp@sha256:3406477bb7fc730c53df4a28dffa07a9dce5ee6f6830102df1bedc8727973b67
     timeout-minutes: 60
     permissions:
       contents: read

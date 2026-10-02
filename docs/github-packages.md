@@ -16,7 +16,9 @@ Not a product runtime — no `HEALTHCHECK`.
 
 | Tag | Meaning |
 |-----|---------|
-| `4.0.0` | Ubuntu 24.04 release with clang-format 23. Digest `sha256:cf40f3bc99ebe50a286d1e57ac0aa63c28678ef44e65b3a6dbef0c7420afa47f` |
+| `5.0.0` / `5.0.0-debian` | Debian 13 analysis. Digest `sha256:3406477bb7fc730c53df4a28dffa07a9dce5ee6f6830102df1bedc8727973b67` |
+| `5.0.0-alpine` | Alpine 3.24 analysis. Digest `sha256:78103428af883fe259241796d359edd3cfbaefe34e11878760a97c1a9efc2986` |
+| `4.0.0` | Previous Ubuntu 24.04 release. Digest `sha256:cf40f3bc99ebe50a286d1e57ac0aa63c28678ef44e65b3a6dbef0c7420afa47f` |
 | `3.1.0` | Previous immutable Ubuntu 24.04 release |
 | `3.0.0` | Previous immutable release |
 | `latest` | Latest non-prerelease publish |

@@ -34,12 +34,14 @@ Contract reference: [`docs/workflows.md`](workflows.md).
 
 | Submodule / artifact | Pin |
 |----------------------|-----|
-| `docs/guardrails` | tag **1.9.0** → `16a2c95c…` |
+| `docs/guardrails` | tag **1.10.0** → `e2db476f…` |
 | `.github/scaffold` | tag **1.8.0** → `ac9059fd…` |
 | methodologies (links only; not a submodule) | tag **1.8.0** |
-| `ghcr.io/pirlruc/ci-cpp` | `4.0.0` `sha256:cf40f3bc99ebe50a286d1e57ac0aa63c28678ef44e65b3a6dbef0c7420afa47f` (same digest on Docker Hub) |
+| `ghcr.io/pirlruc/ci-cpp` (debian, unsuffixed) | `5.0.0` `sha256:3406477bb7fc730c53df4a28dffa07a9dce5ee6f6830102df1bedc8727973b67` |
+| `ghcr.io/pirlruc/ci-cpp` (alpine) | `5.0.0-alpine` `sha256:78103428af883fe259241796d359edd3cfbaefe34e11878760a97c1a9efc2986` |
+| `ghcr.io/pirlruc/ci-cpp-ubuntu` | `5.0.0` `sha256:0a6f9b7f044e9e1a2098ff7f57425d16245daaeff505b07dca90199933a3011f` |
 | commondevops `uses:` | tag **5.3.0** → `803bfe60ff30d5bbcefe7fe6e38070999a66531d` |
-| containerdevops `uses:` | `2ad052e69d2587cdaf8ccac59b9dae5c60f5560b` (feature-ops-hardening; not tagged) |
+| containerdevops `uses:` | `2ad052e69d2587cdaf8ccac59b9dae5c60f5560b` (included in tag **6.2.0**) |
 
 ## Delivery status
 
@@ -206,4 +208,4 @@ python3 .github/scaffold/scripts/issues-sync.py \
   stages clear setuid. Hub and GHCR docs describe Debian, Alpine, and the
   Ubuntu compile image. Release 5.0.0 waits on green CI.
 
-*Last updated: 2026-10-02 (commondevops pin is tag 5.3.0; images not published)*
+*Last updated: 2026-10-02 (5.0.0 digests pinned; guardrails 1.10.0)*
