@@ -36,19 +36,26 @@ on:
 # CI-025: default-deny; reusable jobs grant the minimum they need.
 permissions: {}
 
+concurrency:
+  group: >-
+    ${{ github.event_name == 'workflow_dispatch'
+        && format('dispatch-{0}-{1}', github.workflow, github.ref)
+        || format('call-{0}-{1}', github.workflow, github.run_id) }}
+  cancel-in-progress: ${{ github.event_name == 'workflow_dispatch' }}
+
 jobs:
   infra:
     # CI-024: Dependabot PRs cannot use Actions secrets for private reusables.
     if: github.event.pull_request.user.login != 'dependabot[bot]'
     permissions:
       contents: read
-    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@8aad4ba4a597a87565d6d3d1a92a8bdd7568921c
+    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@803bfe60ff30d5bbcefe7fe6e38070999a66531d
     with:
       blocking: ${{ inputs.blocking }}
       working_directory: ${{ inputs.working_directory || '.' }}
       shell_scripts: ${{ inputs.shell_scripts || '' }}
       dockerfiles: ${{ inputs.dockerfiles || '' }}
       # Must match uses: @pin (CI-018).
-      scripts_ref: 8aad4ba4a597a87565d6d3d1a92a8bdd7568921c
+      scripts_ref: 803bfe60ff30d5bbcefe7fe6e38070999a66531d
     secrets:
       checkout_token: ${{ secrets.checkout_token }}

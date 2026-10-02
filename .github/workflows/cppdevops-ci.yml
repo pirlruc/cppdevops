@@ -40,10 +40,10 @@ jobs:
   scaffold:
     permissions:
       contents: read
-    uses: pirlruc/commondevops/.github/workflows/common-scaffold-verify.yml@8aad4ba4a597a87565d6d3d1a92a8bdd7568921c
+    uses: pirlruc/commondevops/.github/workflows/common-scaffold-verify.yml@803bfe60ff30d5bbcefe7fe6e38070999a66531d
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
-      scripts_ref: 8aad4ba4a597a87565d6d3d1a92a8bdd7568921c
+      scripts_ref: 803bfe60ff30d5bbcefe7fe6e38070999a66531d
     secrets:
       checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
 
@@ -71,7 +71,7 @@ jobs:
     if: github.event.pull_request.user.login != 'dependabot[bot]'
     permissions:
       contents: read
-    uses: pirlruc/commondevops/.github/workflows/common-doc-verify.yml@8aad4ba4a597a87565d6d3d1a92a8bdd7568921c
+    uses: pirlruc/commondevops/.github/workflows/common-doc-verify.yml@803bfe60ff30d5bbcefe7fe6e38070999a66531d
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       shell_scripts: scripts/*.sh
@@ -79,7 +79,7 @@ jobs:
       yaml_files: docs/issues.yml docs/guardrail-deviations.yml .github/dependabot.yml
       yaml_globs: .github/workflows/*.yml
       run_link_lint: true
-      scripts_ref: 8aad4ba4a597a87565d6d3d1a92a8bdd7568921c
+      scripts_ref: 803bfe60ff30d5bbcefe7fe6e38070999a66531d
     secrets:
       checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
 
@@ -87,14 +87,14 @@ jobs:
     if: github.event.pull_request.user.login != 'dependabot[bot]'
     permissions:
       contents: read
-    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@8aad4ba4a597a87565d6d3d1a92a8bdd7568921c
+    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@803bfe60ff30d5bbcefe7fe6e38070999a66531d
     with:
       # Push/PR are blocking; workflow_dispatch honours the input.
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       working_directory: .
       shell_scripts: scripts/*.sh
       dockerfiles: docker/ci-cpp/Dockerfile
-      scripts_ref: 8aad4ba4a597a87565d6d3d1a92a8bdd7568921c
+      scripts_ref: 803bfe60ff30d5bbcefe7fe6e38070999a66531d
     secrets:
       checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
 
@@ -104,16 +104,16 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: read
-    env:
-      # COMMONDEVOPS_READ_TOKEN is not a fallback: it may lack contents:read on
-      # pirlruc/guardrails and then 403s. Cross-repo checkout needs this PAT.
-      GUARDRAILS_TOKEN: ${{ secrets.GUARDRAILS_READ_TOKEN }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - name: Require GUARDRAILS_READ_TOKEN
         id: token
+        env:
+          # COMMONDEVOPS_READ_TOKEN is not a fallback: it may lack contents:read on
+          # pirlruc/guardrails and then 403s. Cross-repo checkout needs this PAT.
+          GUARDRAILS_TOKEN: ${{ secrets.GUARDRAILS_READ_TOKEN }}
         run: |
           set -euo pipefail
           if [ -z "${GUARDRAILS_TOKEN}" ]; then

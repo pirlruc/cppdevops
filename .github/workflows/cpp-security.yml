@@ -36,6 +36,13 @@ on:
 # CI-025
 permissions: {}
 
+concurrency:
+  group: >-
+    ${{ github.event_name == 'workflow_dispatch'
+        && format('dispatch-{0}-{1}', github.workflow, github.ref)
+        || format('call-{0}-{1}', github.workflow, github.run_id) }}
+  cancel-in-progress: ${{ github.event_name == 'workflow_dispatch' }}
+
 jobs:
   secrets-sast:
     # CI-024
@@ -43,11 +50,11 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@8aad4ba4a597a87565d6d3d1a92a8bdd7568921c
+    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@803bfe60ff30d5bbcefe7fe6e38070999a66531d
     with:
       blocking: ${{ inputs.blocking }}
       working_directory: ${{ inputs.library_path }}
-      scripts_ref: 8aad4ba4a597a87565d6d3d1a92a8bdd7568921c
+      scripts_ref: 803bfe60ff30d5bbcefe7fe6e38070999a66531d
     secrets:
       checkout_token: ${{ secrets.checkout_token }}
 
@@ -57,10 +64,10 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@8aad4ba4a597a87565d6d3d1a92a8bdd7568921c
+    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@803bfe60ff30d5bbcefe7fe6e38070999a66531d
     with:
       blocking: ${{ inputs.blocking }}
       working_directory: ${{ inputs.library_path }}
-      scripts_ref: 8aad4ba4a597a87565d6d3d1a92a8bdd7568921c
+      scripts_ref: 803bfe60ff30d5bbcefe7fe6e38070999a66531d
     secrets:
       checkout_token: ${{ secrets.checkout_token }}

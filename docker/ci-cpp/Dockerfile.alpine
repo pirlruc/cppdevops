@@ -1,0 +1,64 @@
+# syntax=docker/dockerfile:1
+# C++ analysis image on DHI Alpine 3.24. libc++ on this catalog requires
+# Clang 20 or newer, so this variant is Clang 20 plus clang20-rtlib.
+# Debian stays Clang 18.
+# No HEALTHCHECK. kics-scan disable=b03a748a-542d-44f4-bb86-9199ab4fd2d5
+# Base tag in a comment for DOCKER-BUILD-003: dhi.io/python:3.13-alpine3.24-dev
+
+FROM dhi.io/python:3.13-alpine3.24-dev@sha256:b638b0f214ccf84e1bf0814dfcb81774e470f7aaa206f7bf77edd8ba357ee79a AS pybuild
+COPY --from=ghcr.io/astral-sh/uv:0.12.0@sha256:606e70c71c852d03f611b1e56a195d08648507018a7057fab82c4974c4eae105 \
+  /uv /usr/local/bin/uv
+COPY requirements-alpine.txt /tmp/requirements.txt
+RUN /usr/local/bin/uv venv /opt/venv --python /usr/bin/python3 \
+ && /usr/local/bin/uv pip install --python /opt/venv/bin/python --no-cache --require-hashes \
+      -r /tmp/requirements.txt \
+ && rm -f /tmp/requirements.txt
+
+FROM dhi.io/python:3.13-alpine3.24-dev@sha256:b638b0f214ccf84e1bf0814dfcb81774e470f7aaa206f7bf77edd8ba357ee79a
+
+LABEL org.opencontainers.image.title="ci-cpp" \
+      org.opencontainers.image.description="C++ analysis toolchain, Alpine 3.24 variant. Non-root 1000:1000, linux/amd64." \
+      org.opencontainers.image.source="https://github.com/pirlruc/cppdevops" \
+      org.opencontainers.image.vendor="pirlruc" \
+      org.opencontainers.image.licenses="MIT"
+
+ENV PATH="/opt/venv/bin:/usr/local/bin:${PATH}" \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+USER root
+RUN apk add --no-cache \
+      clang20=20.1.8-r3 \
+      clang20-extra-tools=20.1.8-r3 \
+      clang20-rtlib=0.1.0-r3 \
+      llvm20=20.1.8-r1 \
+      libc++-dev=22.1.3-r0 \
+      llvm-libunwind-dev=22.1.3-r0 \
+      cmake=4.2.3-r0 \
+      ninja-build=1.13.2-r1 \
+      cppcheck=2.21.0-r0 \
+      valgrind=3.25.1-r2 \
+      doxygen=1.17.0-r0 \
+      git=2.54.0-r0 \
+ && mkdir -p /usr/local/bin \
+ && ln -sf /usr/bin/clang-20 /usr/local/bin/clang \
+ && ln -sf /usr/bin/clang++-20 /usr/local/bin/clang++ \
+ && ln -sf /usr/lib/llvm20/bin/clang-tidy /usr/local/bin/clang-tidy \
+ && ln -sf /usr/bin/llvm20-cov /usr/local/bin/llvm-cov \
+ && ln -sf /usr/bin/llvm20-profdata /usr/local/bin/llvm-profdata \
+ && ln -sf /usr/bin/llvm20-symbolizer /usr/local/bin/llvm-symbolizer \
+ && ln -sf /usr/lib/ninja-build/bin/ninja /usr/local/bin/ninja \
+ && if ! id -u 1000 >/dev/null 2>&1; then \
+      printf 'ci:x:1000:1000::/home/ci:/bin/sh\n' >> /etc/passwd; \
+      printf 'ci:x:1000:\n' >> /etc/group; \
+    fi \
+ && mkdir -p /home/ci /workspace \
+ && chown -R 1000:1000 /workspace /home/ci
+
+COPY --from=pybuild --chown=1000:1000 /opt/venv /opt/venv
+
+WORKDIR /workspace
+RUN find / -xdev -type f \( -perm -4000 -o -perm -2000 \) -exec chmod a-s {} +
+USER 1000:1000
+ENTRYPOINT []
+CMD ["sh"]

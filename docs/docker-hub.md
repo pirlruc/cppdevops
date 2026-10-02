@@ -1,9 +1,11 @@
 # ci-cpp
 
-Short-lived C++ CI toolchain image for GitHub Actions jobs that compile, test,
-and lint C++ libraries: Clang/libc++, CMake, Ninja, cppcheck, clang-tidy/format,
-Doxygen, gcovr, lizard, Metrix++, coverxygen, cloc, valgrind. Not a product runtime —
-no `HEALTHCHECK`.
+Short-lived C++ CI toolchain images. The unsuffixed `ci-cpp` tag is the Debian 13
+analysis image (Clang 18, libc++, CMake, Ninja, cppcheck, clang-tidy/format,
+Doxygen, gcovr, lizard, Metrix++, coverxygen, valgrind). `ci-cpp` `-alpine` is
+the Alpine 3.24 analysis image (Clang 20, because Alpine libc++ is LLVM 22).
+`ci-cpp-ubuntu` is compile-only: Clang 18, libc++, CMake, Ninja, and git.
+Not a product runtime — no `HEALTHCHECK`. graphviz, cloc, and curl are not installed.
 
 ## Image
 
@@ -12,7 +14,7 @@ no `HEALTHCHECK`.
 | Docker Hub | `pirlruc/ci-cpp` |
 | Architectures | `linux/amd64` |
 | User | non-root `1000:1000` |
-| Base | Ubuntu 24.04 (digest-pinned at publish) |
+| Base | Debian 13 via `dhi.io/python` for `ci-cpp`; Alpine 3.24 for `-alpine`; Ubuntu 24.04 official for `ci-cpp-ubuntu` |
 
 ### Tags
 
@@ -57,13 +59,12 @@ docker run --rm \
 
 | Tool | Role |
 |------|------|
-| clang / clang++ / libc++ | Compile (CPP-BUILD-004 / 009) |
+| clang / clang++ / libc++ | Compile. Debian and Ubuntu stay on Clang 18. Alpine is Clang 20 |
 | cmake / ninja | Configure and build |
-| clang-format 23.1.0 / clang-tidy / cppcheck | Lint |
-| gcovr / llvm-cov | Coverage |
-| lizard / Metrix++ / coverxygen / Doxygen | Complexity and docs |
-| cloc | Line counts for quality gates |
-| valgrind | Dynamic analysis |
+| clang-format 23.1.0 / clang-tidy / cppcheck | Lint (analysis images only) |
+| gcovr / llvm-cov | Coverage (analysis images only) |
+| lizard / Metrix++ / coverxygen / Doxygen | Complexity and docs (analysis images only) |
+| valgrind | Dynamic analysis (analysis images only) |
 
 Not a product runtime — no `HEALTHCHECK`.
 
@@ -73,8 +74,15 @@ Not a product runtime — no `HEALTHCHECK`.
 docker pull pirlruc/ci-cpp@sha256:cf40f3bc99ebe50a286d1e57ac0aa63c28678ef44e65b3a6dbef0c7420afa47f
 ```
 
-Signing is skipped while the repo is private on the Free plan (`SC-SIGN-001` /
-`SC-PROV-001`). Publish sets `sign` from repository visibility.
+Signing is skipped while the repo is private on the Free plan (`SC-SIGN-001`).
+The registry still stores BuildKit provenance (`mode=max`) and an SBOM.
+Publish sets `sign` from repository visibility. Pull by digest:
+
+```bash
+docker pull pirlruc/ci-cpp@sha256:cf40f3bc99ebe50a286d1e57ac0aa63c28678ef44e65b3a6dbef0c7420afa47f
+```
+
+That digest is the published 4.0.0 Ubuntu image. 5.0.0 replaces it after release.
 
 ## Vulnerabilities
 

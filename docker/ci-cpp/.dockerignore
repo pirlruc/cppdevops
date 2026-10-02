@@ -1,4 +1,6 @@
 *
+!requirements.txt
+!requirements-alpine.txt
 !Dockerfile
 !container-structure-test.yml
 !README.md

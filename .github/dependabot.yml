@@ -7,7 +7,7 @@
 # Personal-account private access (Dependabot secrets — not Actions):
 #   DEPENDABOT_GITHUB_TOKEN — Contents: Read on this repo, private submodules,
 #     and reusable-workflow hosts (commondevops, containerdevops, github-scaffold, guardrails).
-# ci-cpp is Ubuntu, not a dhi.io base, so this file has no docker-registry.
+#   DOCKERHUB_USERNAME / DOCKERHUB_TOKEN — dhi.io pulls for the analysis images.
 # When migrating from per-ecosystem configs, close stale Dependabot PRs before expecting
 # the grouped all-dependencies PR (open-PR limit otherwise blocks creation).
 
@@ -19,6 +19,11 @@ registries:
     url: https://github.com
     username: x-access-token
     password: ${{secrets.DEPENDABOT_GITHUB_TOKEN}}
+  dhi:
+    type: docker-registry
+    url: https://dhi.io
+    username: ${{secrets.DOCKERHUB_USERNAME}}
+    password: ${{secrets.DOCKERHUB_TOKEN}}
 multi-ecosystem-groups:
   all-dependencies:
     schedule:
@@ -45,6 +50,7 @@ updates:
     multi-ecosystem-group: all-dependencies
     registries:
       - github-private
+      - dhi
     cooldown:
       default-days: 7
 

@@ -38,8 +38,8 @@ Contract reference: [`docs/workflows.md`](workflows.md).
 | `.github/scaffold` | tag **1.8.0** → `ac9059fd…` |
 | methodologies (links only; not a submodule) | tag **1.8.0** |
 | `ghcr.io/pirlruc/ci-cpp` | `4.0.0` `sha256:cf40f3bc99ebe50a286d1e57ac0aa63c28678ef44e65b3a6dbef0c7420afa47f` (same digest on Docker Hub) |
-| commondevops `uses:` | tag **5.2.6** → `8aad4ba4a597a87565d6d3d1a92a8bdd7568921c` |
-| containerdevops `uses:` | tag **6.1.0** → `edef9c8413363c46dcb276f5188a033d9fc6fd4e` |
+| commondevops `uses:` | tag **5.3.0** → `803bfe60ff30d5bbcefe7fe6e38070999a66531d` |
+| containerdevops `uses:` | `2ad052e69d2587cdaf8ccac59b9dae5c60f5560b` (feature-ops-hardening; not tagged) |
 
 ## Delivery status
 
@@ -139,6 +139,18 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Recent history
 
+- 2026-10-02: spike. Hello-world `-stdlib=libc++ -fsanitize=address,undefined`
+  passes on Debian Clang 18.1.8 and Alpine Clang 20.1.8. Ubuntu compile image
+  passes without sanitizers. Alpine Clang 18 cannot compile libc++ 22.
+  edda-cpp configure identifies Clang 18.1.8 and stops on jsoncpp, which the
+  image does not ship (the Ubuntu image did not either).
+- 2026-10-02: ci-cpp analysis is Debian 13 Clang 18. Alpine is Clang 20 because
+  libc++ 22 does not compile with Clang 18. ci-cpp-ubuntu is compile-only.
+  CPP-BUILD-004 deviation, review 2027-01-31. Images are not published yet.
+- 2026-10-02: CPPD-SCAN-001 local build pins
+  `ubuntu:24.04@sha256:a853f94d…` (Created 2026-09-18). Trivy os+library,
+  no ignorefile: 168 unfixed HIGH/CRITICAL, all `linux-libc-dev`. The six
+  fixable highs from 3.1.0 are absent. CVE-2026-64564 remains. Not published.
 - 2026-10-01: **4.0.1** (tag-only) — workflow and rescan pins use ci-cpp 4.0.0
   `sha256:cf40f3bc…`. No GitHub Release, so the image is not republished.
 - 2026-10-01: **4.0.0** — guardrails **1.9.0**, scaffold **1.8.0**, methodologies
@@ -189,4 +201,9 @@ python3 .github/scaffold/scripts/issues-sync.py \
   `feature-ai-reviewer-issues` (merged as #52). Wave 3 yaml marks MOBILE-MECH-001,
   AIREV-MECH-001, and DEP-MECH-001 done; GitHub issues still open pending `--update`.
 
-*Last updated: 2026-10-01 (4.0.1 digest write-back for ci-cpp 4.0.0)*
+- 2026-10-02: Scorecard and token audit on the Wednesday security workflow.
+  zizmor policy is hash-pin. `GUARDRAILS_TOKEN` is step-scoped. Final image
+  stages clear setuid. Hub and GHCR docs describe Debian, Alpine, and the
+  Ubuntu compile image. Release 5.0.0 waits on green CI.
+
+*Last updated: 2026-10-02 (commondevops pin is tag 5.3.0; images not published)*
