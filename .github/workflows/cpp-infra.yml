@@ -49,13 +49,13 @@ jobs:
     if: github.event.pull_request.user.login != 'dependabot[bot]'
     permissions:
       contents: read
-    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@0b37bd52212bbe0d6eac70f955203d7582dfd9da
+    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@803bfe60ff30d5bbcefe7fe6e38070999a66531d
     with:
       blocking: ${{ inputs.blocking }}
       working_directory: ${{ inputs.working_directory || '.' }}
       shell_scripts: ${{ inputs.shell_scripts || '' }}
       dockerfiles: ${{ inputs.dockerfiles || '' }}
       # Must match uses: @pin (CI-018).
-      scripts_ref: 0b37bd52212bbe0d6eac70f955203d7582dfd9da
+      scripts_ref: 803bfe60ff30d5bbcefe7fe6e38070999a66531d
     secrets:
       checkout_token: ${{ secrets.checkout_token }}
