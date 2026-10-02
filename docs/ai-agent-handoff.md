@@ -201,4 +201,9 @@ python3 .github/scaffold/scripts/issues-sync.py \
   `feature-ai-reviewer-issues` (merged as #52). Wave 3 yaml marks MOBILE-MECH-001,
   AIREV-MECH-001, and DEP-MECH-001 done; GitHub issues still open pending `--update`.
 
-*Last updated: 2026-10-02 (ci-cpp Debian 13, Alpine Clang 20, ci-cpp-ubuntu)*
+- 2026-10-02: Scorecard and token audit on the Wednesday security workflow.
+  zizmor policy is hash-pin. `GUARDRAILS_TOKEN` is step-scoped. Final image
+  stages clear setuid. Hub and GHCR docs describe Debian, Alpine, and the
+  Ubuntu compile image. Release 5.0.0 waits on green CI.
+
+*Last updated: 2026-10-02 (compliance wiring; images not published)*

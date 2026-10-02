@@ -10,7 +10,7 @@ Not a product runtime — no `HEALTHCHECK`.
 | GHCR | `ghcr.io/pirlruc/ci-cpp` |
 | Architectures | `linux/amd64` |
 | User | non-root `1000:1000` |
-| Base | Ubuntu 24.04 (digest-pinned at publish) |
+| Base | Debian 13 analysis (`ci-cpp`), Alpine 3.24 (`-alpine`), Ubuntu 24.04 compile (`ghcr.io/pirlruc/ci-cpp-ubuntu`) |
 
 ### Tags
 
@@ -41,6 +41,19 @@ docker pull ghcr.io/pirlruc/ci-cpp:4.0.0
 docker pull ghcr.io/pirlruc/ci-cpp@sha256:cf40f3bc99ebe50a286d1e57ac0aa63c28678ef44e65b3a6dbef0c7420afa47f
 ```
 
+## Hardened local run
+
+```bash
+docker run --rm \
+  --read-only \
+  --cap-drop ALL \
+  --security-opt no-new-privileges \
+  --tmpfs /tmp:rw,noexec,nosuid,size=256m \
+  -v "$PWD:/workspace:ro" -w /workspace \
+  ghcr.io/pirlruc/ci-cpp@sha256:cf40f3bc99ebe50a286d1e57ac0aa63c28678ef44e65b3a6dbef0c7420afa47f \
+  clang++ --version
+```
+
 ## Use as a GitHub Actions job container
 
 ```yaml
@@ -67,7 +80,7 @@ That digest is 4.0.0, the same manifest Docker Hub publishes.
 ## Vulnerabilities
 
 See [docker-hub.md](docker-hub.md). Signing follows repository visibility
-(`SC-SIGN-001` / `SC-PROV-001` while private).
+(`SC-SIGN-001` while private). Registry provenance is BuildKit `mode=max`.
 
 ## License
 

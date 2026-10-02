@@ -104,16 +104,16 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: read
-    env:
-      # COMMONDEVOPS_READ_TOKEN is not a fallback: it may lack contents:read on
-      # pirlruc/guardrails and then 403s. Cross-repo checkout needs this PAT.
-      GUARDRAILS_TOKEN: ${{ secrets.GUARDRAILS_READ_TOKEN }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - name: Require GUARDRAILS_READ_TOKEN
         id: token
+        env:
+          # COMMONDEVOPS_READ_TOKEN is not a fallback: it may lack contents:read on
+          # pirlruc/guardrails and then 403s. Cross-repo checkout needs this PAT.
+          GUARDRAILS_TOKEN: ${{ secrets.GUARDRAILS_READ_TOKEN }}
         run: |
           set -euo pipefail
           if [ -z "${GUARDRAILS_TOKEN}" ]; then

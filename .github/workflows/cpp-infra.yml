@@ -36,6 +36,13 @@ on:
 # CI-025: default-deny; reusable jobs grant the minimum they need.
 permissions: {}
 
+concurrency:
+  group: >-
+    ${{ github.event_name == 'workflow_dispatch'
+        && format('dispatch-{0}-{1}', github.workflow, github.ref)
+        || format('call-{0}-{1}', github.workflow, github.run_id) }}
+  cancel-in-progress: ${{ github.event_name == 'workflow_dispatch' }}
+
 jobs:
   infra:
     # CI-024: Dependabot PRs cannot use Actions secrets for private reusables.

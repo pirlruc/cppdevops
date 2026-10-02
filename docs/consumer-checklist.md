@@ -4,6 +4,15 @@ Library-side follow-up for [CI-018](https://github.com/pirlruc/guardrails/blob/m
 (owned by each library repo, tracked here as CPPD-ECO-001). Pin reusable
 workflows at a **tag or full SHA**, never `@main`.
 
+## 5.0.0 image base (breaking for direct image users)
+
+`ci-cpp` analysis moves from Ubuntu 24.04 to a Docker Hardened Images Debian 13
+base. Alpine is published as `ci-cpp` with tag suffix `-alpine`. Compile-and-ctest
+on Ubuntu uses the separate `ci-cpp-ubuntu` image. graphviz, cloc, and curl are
+not in the analysis image. The devcontainer stays Ubuntu 24.04. Do not pin the
+5.0.0 workflows until `ci-cpp-ubuntu:5.0.0` exists; the `ubuntu-compile` job
+references that tag.
+
 ## Who still pins `@main`
 
 Seven Nordic libraries still call `pirlruc/cppdevops/.github/workflows/*.yml@main`:

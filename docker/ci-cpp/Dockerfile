@@ -68,6 +68,7 @@ RUN apt-get update \
 COPY --from=pybuild --chown=1000:1000 /opt/venv /opt/venv
 
 WORKDIR /workspace
+RUN find / -xdev -type f \( -perm -4000 -o -perm -2000 \) -exec chmod a-s {} +
 USER 1000:1000
 ENTRYPOINT []
 CMD ["sh"]

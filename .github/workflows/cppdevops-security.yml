@@ -48,6 +48,30 @@ jobs:
     secrets:
       checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
 
+  scorecard:
+    if: >-
+      github.event.pull_request.user.login != 'dependabot[bot]' &&
+      github.event.repository.fork == false
+    permissions:
+      contents: read
+      security-events: write
+      id-token: write
+    uses: pirlruc/commondevops/.github/workflows/common-scorecard.yml@fae623dc9d004e93206749be2721aa4aa9420f5e
+    with:
+      blocking: false
+      publish_results: false
+    secrets:
+      repo_token: ${{ secrets.SCORECARD_TOKEN }}
+
+  token-audit:
+    if: github.event.pull_request.user.login != 'dependabot[bot]'
+    permissions: {}
+    uses: pirlruc/commondevops/.github/workflows/common-token-audit.yml@fae623dc9d004e93206749be2721aa4aa9420f5e
+    secrets:
+      scorecard_token: ${{ secrets.SCORECARD_TOKEN }}
+      guardrails_token: ${{ secrets.GUARDRAILS_READ_TOKEN }}
+      checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
+
   published-ci-cpp-rescan:
     if: github.event.pull_request.user.login != 'dependabot[bot]'
     permissions:
