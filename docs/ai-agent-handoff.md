@@ -38,8 +38,8 @@ Contract reference: [`docs/workflows.md`](workflows.md).
 | `.github/scaffold` | tag **1.8.0** → `ac9059fd…` |
 | methodologies (links only; not a submodule) | tag **1.8.0** |
 | `ghcr.io/pirlruc/ci-cpp` | `4.0.0` `sha256:cf40f3bc99ebe50a286d1e57ac0aa63c28678ef44e65b3a6dbef0c7420afa47f` (same digest on Docker Hub) |
-| commondevops `uses:` | `1eaf78aedffbfc1921daa2623150db9fb722879d` (feature-ops-hardening; not tagged) |
-| containerdevops `uses:` | tag **6.1.0** → `edef9c8413363c46dcb276f5188a033d9fc6fd4e` |
+| commondevops `uses:` | `0b37bd52212bbe0d6eac70f955203d7582dfd9da` (feature-ops-hardening; not tagged) |
+| containerdevops `uses:` | `2ad052e69d2587cdaf8ccac59b9dae5c60f5560b` (feature-ops-hardening; not tagged) |
 
 ## Delivery status
 
@@ -206,4 +206,4 @@ python3 .github/scaffold/scripts/issues-sync.py \
   stages clear setuid. Hub and GHCR docs describe Debian, Alpine, and the
   Ubuntu compile image. Release 5.0.0 waits on green CI.
 
-*Last updated: 2026-10-02 (compliance wiring; images not published)*
+*Last updated: 2026-10-02 (image workflows pin containerdevops 2ad052e6; not published)*

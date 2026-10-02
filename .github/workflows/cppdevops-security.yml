@@ -27,11 +27,11 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@1eaf78aedffbfc1921daa2623150db9fb722879d
+    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@0b37bd52212bbe0d6eac70f955203d7582dfd9da
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       working_directory: .
-      scripts_ref: 1eaf78aedffbfc1921daa2623150db9fb722879d
+      scripts_ref: 0b37bd52212bbe0d6eac70f955203d7582dfd9da
     secrets:
       checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
 
@@ -40,11 +40,11 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@1eaf78aedffbfc1921daa2623150db9fb722879d
+    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@0b37bd52212bbe0d6eac70f955203d7582dfd9da
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       working_directory: .
-      scripts_ref: 1eaf78aedffbfc1921daa2623150db9fb722879d
+      scripts_ref: 0b37bd52212bbe0d6eac70f955203d7582dfd9da
     secrets:
       checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
 
@@ -56,7 +56,7 @@ jobs:
       contents: read
       security-events: write
       id-token: write
-    uses: pirlruc/commondevops/.github/workflows/common-scorecard.yml@1eaf78aedffbfc1921daa2623150db9fb722879d
+    uses: pirlruc/commondevops/.github/workflows/common-scorecard.yml@0b37bd52212bbe0d6eac70f955203d7582dfd9da
     with:
       blocking: false
       publish_results: false
@@ -66,7 +66,7 @@ jobs:
   token-audit:
     if: github.event.pull_request.user.login != 'dependabot[bot]'
     permissions: {}
-    uses: pirlruc/commondevops/.github/workflows/common-token-audit.yml@1eaf78aedffbfc1921daa2623150db9fb722879d
+    uses: pirlruc/commondevops/.github/workflows/common-token-audit.yml@0b37bd52212bbe0d6eac70f955203d7582dfd9da
     secrets:
       scorecard_token: ${{ secrets.SCORECARD_TOKEN }}
       guardrails_token: ${{ secrets.GUARDRAILS_READ_TOKEN }}
@@ -78,12 +78,12 @@ jobs:
       contents: read
       security-events: write
       packages: read
-    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@d86b6f328d9ec5afeb0a24c0825255b129a6881e
+    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
     with:
       # Same digest as reusable cpp-* `container:` pins (CI-018). Do not float
       # on :latest; weekly rescan of a digest still picks up new CVEs.
       image: ghcr.io/pirlruc/ci-cpp@sha256:cf40f3bc99ebe50a286d1e57ac0aa63c28678ef44e65b3a6dbef0c7420afa47f
-      scripts_ref: d86b6f328d9ec5afeb0a24c0825255b129a6881e
+      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
       pkg_types: library
       ignorefile: docker/ci-cpp/.trivyignore.yaml
       results_artifact: published-ci-cpp-scan
