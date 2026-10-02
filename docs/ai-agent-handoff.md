@@ -6,7 +6,7 @@
 |-------|-------|
 | **Folder** | `ops/cppdevops/` |
 | **Remote** | https://github.com/pirlruc/cppdevops |
-| **Branch** | `main` → tag **5.0.1** (digest write-back; images stay **5.0.0**) |
+| **Branch** | `main` → tag **5.0.2** (Hub suffixes; pinned digests stay **5.0.0** until write-back) |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
@@ -125,10 +125,9 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Suggested next work
 
-1. Bump the seven `@main` consumers ([checklist](consumer-checklist.md)) to **3.1.2**.
-2. Dependabot #76 is closed as superseded (clang-format v23 was not taken).
-   Review open Dependabot #79 separately. Do **not** merge #79 (clang-format v23
-   vs ci-cpp clang-format 18).
+1. After the 5.0.2 image publish finishes, write the new digests back.
+   Create Docker Hub `pirlruc/ci-cpp-ubuntu` if the ubuntu publish cannot create it.
+2. Refresh the Ubuntu 24.04 base digest before 2026-10-18 (CPPD-SCAN-001).
 
 ## See also
 
@@ -211,4 +210,4 @@ python3 .github/scaffold/scripts/issues-sync.py \
   Ubuntu compile image. 5.0.0 is published. 5.0.0 Debian has no `-debian`
   tag; `ci-cpp-ubuntu` is GHCR-only until the next publish.
 
-*Last updated: 2026-10-02 (registry docs match 5.0.0; tip tag 5.0.1)*
+*Last updated: 2026-10-02 (CPPD-IMG-003 done; release 5.0.2 publishes suffixes)*
