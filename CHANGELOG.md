@@ -5,6 +5,19 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [5.0.1] - 2026-10-02
+
+### Changed
+
+- Pin analysis jobs to ci-cpp **5.0.0** Debian
+  `sha256:3406477bb7fc730c53df4a28dffa07a9dce5ee6f6830102df1bedc8727973b67`.
+  The ubuntu-compile job pins ci-cpp-ubuntu
+  `sha256:0a6f9b7f044e9e1a2098ff7f57425d16245daaeff505b07dca90199933a3011f`.
+  Alpine is `sha256:78103428af883fe259241796d359edd3cfbaefe34e11878760a97c1a9efc2986`.
+- Pin guardrails **1.10.0**.
+
+## [5.0.0] - 2026-10-02
+
 ### Changed
 
 - **Breaking:** `ci-cpp` analysis moves from Ubuntu 24.04 to DHI Debian 13
