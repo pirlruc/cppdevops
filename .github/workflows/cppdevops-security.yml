@@ -27,11 +27,11 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@8aad4ba4a597a87565d6d3d1a92a8bdd7568921c
+    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@1eaf78aedffbfc1921daa2623150db9fb722879d
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       working_directory: .
-      scripts_ref: 8aad4ba4a597a87565d6d3d1a92a8bdd7568921c
+      scripts_ref: 1eaf78aedffbfc1921daa2623150db9fb722879d
     secrets:
       checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
 
@@ -40,11 +40,11 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@8aad4ba4a597a87565d6d3d1a92a8bdd7568921c
+    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@1eaf78aedffbfc1921daa2623150db9fb722879d
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       working_directory: .
-      scripts_ref: 8aad4ba4a597a87565d6d3d1a92a8bdd7568921c
+      scripts_ref: 1eaf78aedffbfc1921daa2623150db9fb722879d
     secrets:
       checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
 
@@ -56,7 +56,7 @@ jobs:
       contents: read
       security-events: write
       id-token: write
-    uses: pirlruc/commondevops/.github/workflows/common-scorecard.yml@fae623dc9d004e93206749be2721aa4aa9420f5e
+    uses: pirlruc/commondevops/.github/workflows/common-scorecard.yml@1eaf78aedffbfc1921daa2623150db9fb722879d
     with:
       blocking: false
       publish_results: false
@@ -66,7 +66,7 @@ jobs:
   token-audit:
     if: github.event.pull_request.user.login != 'dependabot[bot]'
     permissions: {}
-    uses: pirlruc/commondevops/.github/workflows/common-token-audit.yml@fae623dc9d004e93206749be2721aa4aa9420f5e
+    uses: pirlruc/commondevops/.github/workflows/common-token-audit.yml@1eaf78aedffbfc1921daa2623150db9fb722879d
     secrets:
       scorecard_token: ${{ secrets.SCORECARD_TOKEN }}
       guardrails_token: ${{ secrets.GUARDRAILS_READ_TOKEN }}

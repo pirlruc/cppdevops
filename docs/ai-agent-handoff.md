@@ -38,7 +38,7 @@ Contract reference: [`docs/workflows.md`](workflows.md).
 | `.github/scaffold` | tag **1.8.0** → `ac9059fd…` |
 | methodologies (links only; not a submodule) | tag **1.8.0** |
 | `ghcr.io/pirlruc/ci-cpp` | `4.0.0` `sha256:cf40f3bc99ebe50a286d1e57ac0aa63c28678ef44e65b3a6dbef0c7420afa47f` (same digest on Docker Hub) |
-| commondevops `uses:` | tag **5.2.6** → `8aad4ba4a597a87565d6d3d1a92a8bdd7568921c` |
+| commondevops `uses:` | `1eaf78aedffbfc1921daa2623150db9fb722879d` (feature-ops-hardening; not tagged) |
 | containerdevops `uses:` | tag **6.1.0** → `edef9c8413363c46dcb276f5188a033d9fc6fd4e` |
 
 ## Delivery status

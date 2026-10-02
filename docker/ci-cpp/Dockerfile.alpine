@@ -43,9 +43,11 @@ RUN apk add --no-cache \
  && mkdir -p /usr/local/bin \
  && ln -sf /usr/bin/clang-20 /usr/local/bin/clang \
  && ln -sf /usr/bin/clang++-20 /usr/local/bin/clang++ \
- && ln -sf /usr/bin/clang-tidy-20 /usr/local/bin/clang-tidy \
- && ln -sf /usr/bin/llvm-cov-20 /usr/local/bin/llvm-cov \
- && ln -sf /usr/bin/llvm-profdata-20 /usr/local/bin/llvm-profdata \
+ && ln -sf /usr/lib/llvm20/bin/clang-tidy /usr/local/bin/clang-tidy \
+ && ln -sf /usr/bin/llvm20-cov /usr/local/bin/llvm-cov \
+ && ln -sf /usr/bin/llvm20-profdata /usr/local/bin/llvm-profdata \
+ && ln -sf /usr/bin/llvm20-symbolizer /usr/local/bin/llvm-symbolizer \
+ && ln -sf /usr/lib/ninja-build/bin/ninja /usr/local/bin/ninja \
  && if ! id -u 1000 >/dev/null 2>&1; then \
       printf 'ci:x:1000:1000::/home/ci:/bin/sh\n' >> /etc/passwd; \
       printf 'ci:x:1000:\n' >> /etc/group; \
