@@ -1063,7 +1063,7 @@ milestones:
       guardrail_refs:
       - SC-DEP-004
   - id: CPPD-IMG-003
-    status: open
+    status: done
     title: Run analysis on Debian and Alpine and keep Ubuntu for compile only
     overview:
       problem: >-
@@ -1086,7 +1086,7 @@ milestones:
     - CPP-BUILD-004
     tasks:
     - id: CPPD-IMG-003-T1
-      status: open
+      status: done
       title: Publish the Debian, Alpine, and Ubuntu images
       instructions:
         files:
