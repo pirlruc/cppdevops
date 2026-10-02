@@ -129,8 +129,8 @@ Task ids: `<EPIC-ID>-T1`, …
 | `.github/workflows/` | Reusable `cpp-*` workflows |
 | `scripts/` | Coverage, Metrix++, sync-library tooling |
 | `templates/` | Library bootstrap configs |
-| `docker/ci-cpp/` | C++ CI toolchain image |
-| `docs/docker-hub.md` / `docs/github-packages.md` | Registry pages for `pirlruc/ci-cpp` |
+| `docker/ci-cpp/` | Debian and Alpine analysis images, plus a separate Ubuntu compile Dockerfile |
+| `docs/docker-hub.md` / `docs/github-packages.md` | Registry pages for `ci-cpp` and `ci-cpp-ubuntu`. Derive which variant owns unsuffixed tags from the image workflow |
 | `docs/` | Handoff, this prompt, authored `issues.yml`, deviations |
 | `.github/dependabot.yml` | Multi-ecosystem dependency updates |
 

@@ -5,6 +5,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Changed
+
+- Document the tags 5.0.0 actually published: unsuffixed Debian, `-alpine`,
+  and GHCR-only `ci-cpp-ubuntu`. The next publish adds `-debian`,
+  `latest-alpine`, and a Docker Hub repo for `ci-cpp-ubuntu`.
+
 ## [5.0.1] - 2026-10-02
 
 ### Changed

@@ -16,14 +16,16 @@ Not a product runtime — no `HEALTHCHECK`.
 
 | Tag | Meaning |
 |-----|---------|
-| `5.0.0` / `5.0.0-debian` | Debian 13 analysis. Digest `sha256:3406477bb7fc730c53df4a28dffa07a9dce5ee6f6830102df1bedc8727973b67` |
+| `5.0.0` | Debian 13 analysis (unsuffixed). Digest `sha256:3406477bb7fc730c53df4a28dffa07a9dce5ee6f6830102df1bedc8727973b67` |
 | `5.0.0-alpine` | Alpine 3.24 analysis. Digest `sha256:78103428af883fe259241796d359edd3cfbaefe34e11878760a97c1a9efc2986` |
+| `ci-cpp-ubuntu:5.0.0` | Compile-only Ubuntu 24.04. Digest `sha256:0a6f9b7f044e9e1a2098ff7f57425d16245daaeff505b07dca90199933a3011f` |
 | `4.0.0` | Previous Ubuntu 24.04 release. Digest `sha256:cf40f3bc99ebe50a286d1e57ac0aa63c28678ef44e65b3a6dbef0c7420afa47f` |
 | `3.1.0` | Previous immutable Ubuntu 24.04 release |
 | `3.0.0` | Previous immutable release |
-| `latest` | Latest non-prerelease publish |
-| `sha-<git>` | Exact git SHA of the published commit |
+| `latest` | Latest non-prerelease Debian publish. 5.0.0 has no `latest-alpine` |
+| `sha-<git>` / `sha-<git>-alpine` | Exact git SHA of the published commit |
 
+5.0.0 has no `-debian` tag. The next publish adds it, plus `latest-alpine`.
 Prefer a digest in production.
 
 ## Authentication
@@ -31,16 +33,16 @@ Prefer a digest in production.
 If the package is public, anonymous pulls work:
 
 ```bash
-docker pull ghcr.io/pirlruc/ci-cpp:4.0.0
+docker pull ghcr.io/pirlruc/ci-cpp:5.0.0
 ```
 
 If the package is private, authenticate with a PAT that has `read:packages`:
 
 ```bash
 echo "$CR_PAT" | docker login ghcr.io -u USERNAME --password-stdin
-docker pull ghcr.io/pirlruc/ci-cpp:4.0.0
+docker pull ghcr.io/pirlruc/ci-cpp:5.0.0
 # or
-docker pull ghcr.io/pirlruc/ci-cpp@sha256:cf40f3bc99ebe50a286d1e57ac0aa63c28678ef44e65b3a6dbef0c7420afa47f
+docker pull ghcr.io/pirlruc/ci-cpp@sha256:3406477bb7fc730c53df4a28dffa07a9dce5ee6f6830102df1bedc8727973b67
 ```
 
 ## Hardened local run
@@ -52,7 +54,7 @@ docker run --rm \
   --security-opt no-new-privileges \
   --tmpfs /tmp:rw,noexec,nosuid,size=256m \
   -v "$PWD:/workspace:ro" -w /workspace \
-  ghcr.io/pirlruc/ci-cpp@sha256:cf40f3bc99ebe50a286d1e57ac0aa63c28678ef44e65b3a6dbef0c7420afa47f \
+  ghcr.io/pirlruc/ci-cpp@sha256:3406477bb7fc730c53df4a28dffa07a9dce5ee6f6830102df1bedc8727973b67 \
   clang++ --version
 ```
 
@@ -62,22 +64,22 @@ docker run --rm \
 jobs:
   quality:
     runs-on: ubuntu-24.04
-    container: ghcr.io/pirlruc/ci-cpp@sha256:cf40f3bc99ebe50a286d1e57ac0aa63c28678ef44e65b3a6dbef0c7420afa47f
+    container: ghcr.io/pirlruc/ci-cpp@sha256:3406477bb7fc730c53df4a28dffa07a9dce5ee6f6830102df1bedc8727973b67
 ```
 
 Digest-pin the container (CI-026). Do not float on `:latest`.
 
 ## What is inside
 
-Same toolchain as [docker-hub.md](docker-hub.md). clang-format in 4.0.0 is 23.1.0.
+Same toolchain as [docker-hub.md](docker-hub.md). clang-format in the analysis images is 23.1.0.
 
 ## Verify a publish
 
 ```bash
-docker pull ghcr.io/pirlruc/ci-cpp@sha256:cf40f3bc99ebe50a286d1e57ac0aa63c28678ef44e65b3a6dbef0c7420afa47f
+docker pull ghcr.io/pirlruc/ci-cpp@sha256:3406477bb7fc730c53df4a28dffa07a9dce5ee6f6830102df1bedc8727973b67
 ```
 
-That digest is 4.0.0, the same manifest Docker Hub publishes.
+That digest is 5.0.0 Debian, the same manifest Docker Hub publishes for unsuffixed `ci-cpp`.
 
 ## Vulnerabilities
 
