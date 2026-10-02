@@ -148,6 +148,7 @@ jobs:
       dockerhub_image: pirlruc/ci-cpp
       scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
       platforms: linux/amd64
+      tag_suffix: -debian
       tag_alias_unsuffixed: true
       image_title: ci-cpp
       image_description: >-
@@ -273,13 +274,13 @@ jobs:
       platforms: linux/amd64
       tag_suffix: -alpine
       tag_alias_unsuffixed: false
+      tag_latest: ${{ github.event_name != 'release' || github.event.release.prerelease == false }}
       image_title: ci-cpp
       image_description: >-
         C++ analysis toolchain, Alpine 3.24, Clang 20. Non-root 1000:1000, linux/amd64.
       sign: ${{ github.event.repository.visibility == 'public' }}
       blocking: true
       dhi_login: true
-      tag_latest: false
       verify_command: clang++ --version
       source_image: ${{ format('ghcr.io/{0}/{1}@{2}', github.repository_owner, needs.build-alpine.outputs.handoff_package, needs.build-alpine.outputs.digest) }}
     secrets:
@@ -349,11 +350,14 @@ jobs:
       context: docker/ci-cpp
       dockerfile: docker/ci-cpp/Dockerfile.ubuntu
       image_name: ci-cpp-ubuntu
+      dockerhub_image: pirlruc/ci-cpp-ubuntu
       scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
       platforms: linux/amd64
       image_title: ci-cpp-ubuntu
       image_description: >-
         Compile-only C++ toolchain: Clang 18, libc++, CMake, Ninja, git. Ubuntu 24.04.
+      dockerhub_readme: docs/docker-hub.md
+      dockerhub_short_description: Compile-only C++ toolchain on Ubuntu 24.04
       sign: ${{ github.event.repository.visibility == 'public' }}
       blocking: true
       dhi_login: false
@@ -361,4 +365,6 @@ jobs:
       verify_command: clang++ --version
       source_image: ${{ format('ghcr.io/{0}/{1}@{2}', github.repository_owner, needs.build-ubuntu.outputs.handoff_package, needs.build-ubuntu.outputs.digest) }}
     secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}

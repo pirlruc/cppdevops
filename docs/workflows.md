@@ -194,7 +194,7 @@ jobs skip Dependabot (CI-024). The token-free `pins` job still runs.
 Weekly Wednesday 06:17 UTC (staggered vs commondevops Mon / containerdevops Tue)
 plus `workflow_dispatch`. Secrets/SAST + supply-chain via commondevops; published
 `ci-cpp` rescan via containerdevops at the same digest as reusable workflow
-`container:` pins (`ghcr.io/pirlruc/ci-cpp@sha256:cf40f3bc…`, not `:latest`).
+`container:` pins (`ghcr.io/pirlruc/ci-cpp@sha256:3406477b…`, not `:latest`).
 
 ---
 

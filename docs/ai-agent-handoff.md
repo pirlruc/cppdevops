@@ -6,7 +6,7 @@
 |-------|-------|
 | **Folder** | `ops/cppdevops/` |
 | **Remote** | https://github.com/pirlruc/cppdevops |
-| **Branch** | `main` → tag **4.0.1** (digest write-back; image stays **4.0.0**) |
+| **Branch** | `main` → tag **5.0.1** (digest write-back; images stay **5.0.0**) |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
@@ -22,8 +22,9 @@ Owns reusable workflows under `.github/workflows/`:
 
 Also owns `templates/`, `scripts/sync-library-*.sh`, and `docker/ci-cpp/`.
 
-Standalone library callers should pin `pirlruc/cppdevops@4.0.0` or `@<sha>` (`CI-018`)
-and pass the same value as `scripts_ref`. `templates/ci-quality.yml` pins `@4.0.0`.
+Standalone library callers should pin `pirlruc/cppdevops@<sha>` (`CI-018`)
+and pass the same value as `scripts_ref`. The published analysis image is
+ci-cpp 5.0.0 Debian.
 Hub/Packages: [`docs/docker-hub.md`](docker-hub.md),
 [`docs/github-packages.md`](github-packages.md).
 Never `@main`. Checklist: [`docs/consumer-checklist.md`](consumer-checklist.md).
@@ -97,7 +98,7 @@ python3 .github/scaffold/scripts/issues-sync.py \
   (`efficiencyScore` 0.971077…) vs org floor 95%. Host `dive` was missing;
   used `wagoodman/dive:v0.13.1`. Do not lower the gate.
 - Reusable workflows and published rescan pin
-  `container: ghcr.io/pirlruc/ci-cpp@sha256:cf40f3bc…` (CI-018). Do not float `:latest`.
+  `container: ghcr.io/pirlruc/ci-cpp@sha256:3406477b…` (CI-018). Do not float `:latest`.
 - Leftover `container-image-ci-cpp` Actions artifacts were deleted after the
   3.1.0 image publish. Do **not** delete published GHCR/Hub tags. Image builds
   inherit containerdevops BuildKit `cache-to: type=gha,mode=min`.
@@ -111,8 +112,8 @@ python3 .github/scaffold/scripts/issues-sync.py \
   pass `needs.build.outputs.image_ref` (Actions secret-masks the owner).
 - `sync-library-tooling.sh` requires `CPPDEVOPS_WORKFLOW_REF`; it never
   defaults to `main`.
-- clang-format pre-commit stays on **v22.1.8** (ci-cpp is clang-format 18).
-  Do not take Dependabot's v23 bump unless the image formatter matches.
+- clang-format pre-commit matches the analysis image formatter (**v23.1.0**).
+  Do not bump that hook past the image's clang-format.
 - **Consumer pins (CI-018):** seven libraries still pin `@main`. See
   [`docs/consumer-checklist.md`](consumer-checklist.md). Callers pin **3.1.2**.
   github-scaffold seed `templates/ci-quality.yml` still historically pinned
@@ -148,7 +149,8 @@ python3 .github/scaffold/scripts/issues-sync.py \
   image does not ship (the Ubuntu image did not either).
 - 2026-10-02: ci-cpp analysis is Debian 13 Clang 18. Alpine is Clang 20 because
   libc++ 22 does not compile with Clang 18. ci-cpp-ubuntu is compile-only.
-  CPP-BUILD-004 deviation, review 2027-01-31. Images are not published yet.
+  CPP-BUILD-004 deviation, review 2027-01-31. Published as 5.0.0; digests
+  are pinned in 5.0.1. 5.0.0 has no `-debian` tag and no `latest-alpine`.
 - 2026-10-02: CPPD-SCAN-001 local build pins
   `ubuntu:24.04@sha256:a853f94d…` (Created 2026-09-18). Trivy os+library,
   no ignorefile: 168 unfixed HIGH/CRITICAL, all `linux-libc-dev`. The six
@@ -206,6 +208,7 @@ python3 .github/scaffold/scripts/issues-sync.py \
 - 2026-10-02: Scorecard and token audit on the Wednesday security workflow.
   zizmor policy is hash-pin. `GUARDRAILS_TOKEN` is step-scoped. Final image
   stages clear setuid. Hub and GHCR docs describe Debian, Alpine, and the
-  Ubuntu compile image. Release 5.0.0 waits on green CI.
+  Ubuntu compile image. 5.0.0 is published. 5.0.0 Debian has no `-debian`
+  tag; `ci-cpp-ubuntu` is GHCR-only until the next publish.
 
-*Last updated: 2026-10-02 (5.0.0 digests pinned; guardrails 1.10.0)*
+*Last updated: 2026-10-02 (registry docs match 5.0.0; tip tag 5.0.1)*
