@@ -139,6 +139,11 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Recent history
 
+- 2026-10-02: spike. Hello-world `-stdlib=libc++ -fsanitize=address,undefined`
+  passes on Debian Clang 18.1.8 and Alpine Clang 20.1.8. Ubuntu compile image
+  passes without sanitizers. Alpine Clang 18 cannot compile libc++ 22.
+  edda-cpp configure identifies Clang 18.1.8 and stops on jsoncpp, which the
+  image does not ship (the Ubuntu image did not either).
 - 2026-10-02: ci-cpp analysis is Debian 13 Clang 18. Alpine is Clang 20 because
   libc++ 22 does not compile with Clang 18. ci-cpp-ubuntu is compile-only.
   CPP-BUILD-004 deviation, review 2027-01-31. Images are not published yet.
