@@ -1,6 +1,6 @@
 schemaVersion: "2.0.0"
 metadataTest:
-  cmd: ["bash"]
+  cmd: ["sh"]
   user: "1000:1000"
   envVars:
     - key: PYTHONDONTWRITEBYTECODE
@@ -60,17 +60,16 @@ commandTests:
     command: "valgrind"
     args: ["--version"]
     exitCode: 0
-  - name: cloc
-    command: "cloc"
-    args: ["--version"]
-    exitCode: 0
   - name: llvm-cov
     command: "llvm-cov"
     args: ["--version"]
     exitCode: 0
+  - name: "no setuid or setgid files"
+    command: "sh"
+    args:
+      - "-c"
+      - "! find / -xdev -type f -perm -4000 -print | grep -q . && ! find / -xdev -type f -perm -2000 -print | grep -q ."
 fileExistenceTests:
-  - name: bash present
-    path: "/bin/bash"
   - name: venv python
     path: "/opt/venv/bin/python"
   - name: metrix++ binary

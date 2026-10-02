@@ -1062,6 +1062,41 @@ milestones:
       - sh scripts/check-submodule-pins.sh
       guardrail_refs:
       - SC-DEP-004
+  - id: CPPD-IMG-003
+    status: open
+    title: Run analysis on Debian and Alpine and keep Ubuntu for compile only
+    overview:
+      problem: >-
+        CPP-BUILD-004 names Ubuntu 24.04 as the development reference OS, so
+        ci-cpp cannot move to a hardened Debian or Alpine base without a
+        recorded exception.
+      goal: >-
+        Analysis images use DHI Debian 13 and Alpine 3.24. A small Ubuntu
+        image still compiles and runs ctest. The devcontainer stays Ubuntu.
+    decision: >-
+      In the context of C++ CI images, facing a guardrail that names Ubuntu
+      for the whole toolchain, we decided to keep Ubuntu for compile-and-ctest
+      and the devcontainer and move analysis to Debian and Alpine, to achieve
+      a hardened analysis base, accepting a CPP-BUILD-004 deviation until
+      GR-CPP-001 rewrites the ID.
+    acceptance_criteria:
+    - ci-cpp Debian and Alpine images build and the Ubuntu image compiles with libc++
+    - docs/guardrail-deviations.yml records CPP-BUILD-004 under this epic
+    guardrail_refs:
+    - CPP-BUILD-004
+    tasks:
+    - id: CPPD-IMG-003-T1
+      status: open
+      title: Publish the Debian, Alpine, and Ubuntu images
+      instructions:
+        files:
+        - docker/ci-cpp/Dockerfile
+        - docker/ci-cpp/Dockerfile.alpine
+        - docker/ci-cpp/Dockerfile.ubuntu
+      verification:
+      - docker build -f docker/ci-cpp/Dockerfile docker/ci-cpp
+      guardrail_refs:
+      - CPP-BUILD-004
 
   tasks:
   - id: CPPD-SCAN-001

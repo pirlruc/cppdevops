@@ -118,3 +118,29 @@ jobs:
             build="${BUILD}" \
             ctest="${CTEST}" \
             coverage="${COVERAGE}"
+
+  ubuntu-compile:
+    runs-on: ubuntu-24.04
+    # Digest is written back after ci-cpp-ubuntu publishes. Tag is 5.0.0.
+    container: ghcr.io/pirlruc/ci-cpp-ubuntu:5.0.0
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Configure, build, and test
+        working-directory: ${{ inputs.library_path }}
+        env:
+          CMAKE_PRESET: ${{ inputs.cmake_preset }}
+        run: |
+          cmake --preset "${CMAKE_PRESET}" \
+            -DPIRLRUC_WITH_TESTS=ON \
+            -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
+            || cmake -B build \
+              -DPIRLRUC_WITH_TESTS=ON \
+              -DCMAKE_CXX_COMPILER=clang++ \
+              -DCMAKE_CXX_FLAGS="-stdlib=libc++"
+          cmake --build build -j
+          ctest --test-dir build --output-on-failure

@@ -139,6 +139,9 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Recent history
 
+- 2026-10-02: ci-cpp analysis is Debian 13 Clang 18. Alpine is Clang 20 because
+  libc++ 22 does not compile with Clang 18. ci-cpp-ubuntu is compile-only.
+  CPP-BUILD-004 deviation, review 2027-01-31. Images are not published yet.
 - 2026-10-02: CPPD-SCAN-001 local build pins
   `ubuntu:24.04@sha256:a853f94d…` (Created 2026-09-18). Trivy os+library,
   no ignorefile: 168 unfixed HIGH/CRITICAL, all `linux-libc-dev`. The six
@@ -193,4 +196,4 @@ python3 .github/scaffold/scripts/issues-sync.py \
   `feature-ai-reviewer-issues` (merged as #52). Wave 3 yaml marks MOBILE-MECH-001,
   AIREV-MECH-001, and DEP-MECH-001 done; GitHub issues still open pending `--update`.
 
-*Last updated: 2026-10-02 (CPPD-SCAN-001 ubuntu digest a853f94d, local OS scan)*
+*Last updated: 2026-10-02 (ci-cpp Debian 13, Alpine Clang 20, ci-cpp-ubuntu)*

@@ -14,21 +14,21 @@ deviations:
       Private Free-plan repository; Sigstore keyless signing is unavailable.
       Image publish sets sign=false until the repo is public or a signing key
       is provisioned. Documented Free-plan pattern in guardrails 1.9.0
-      supply-chain/guardrails.md. Both SC-SIGN-001 and SC-PROV-001 are recorded.
+      supply-chain/guardrails.md. Registry provenance is mode=max without signing.
     epic: CPPD-IMG-002
     owner: pirlruc
     approved_by: Engineering Lead
     review: 2026-12-31
-  - id: SC-PROV-001
+  - id: CPP-BUILD-004
     why: >-
-      Private Free-plan repository; provenance attestation is unavailable.
-      Image publish sets sign=false, and build-push provenance stays off until
-      the repo is public. Documented Free-plan pattern in guardrails 1.9.0
-      supply-chain/guardrails.md.
-    epic: CPPD-IMG-002
+      Analysis runs on Debian 13 and Alpine 3.24. Ubuntu 24.04 stays the
+      compile-and-ctest image (ci-cpp-ubuntu) and the devcontainer. The pack
+      still names Ubuntu as the development reference OS; GR-CPP-001 asks to
+      limit this ID to compile and ctest.
+    epic: CPPD-IMG-003
     owner: pirlruc
     approved_by: Engineering Lead
-    review: 2026-12-31
+    review: 2027-01-31
   - id: CI-032
     why: >-
       A user-owned private repository on GitHub Free cannot protect the

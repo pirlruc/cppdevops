@@ -7,6 +7,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ### Changed
 
+- **Breaking:** `ci-cpp` analysis moves from Ubuntu 24.04 to DHI Debian 13
+  (Clang 18, unsuffixed tags). Alpine 3.24 is published as `-alpine` with
+  Clang 20, because the Alpine libc++ requires Clang 20. `ci-cpp-ubuntu` is
+  compile-only (Clang 18, libc++, CMake, Ninja, git). Devcontainers stay
+  Ubuntu. CPP-BUILD-004 is recorded under CPPD-IMG-003. Graphviz, cloc, and
+  curl are gone. Python tools install from a hashed lock. SC-PROV-001 is
+  retired because publish attaches registry provenance without signing.
 - Pin both `ci-cpp` stages to `ubuntu:24.04@sha256:a853f94d…` (config Created
   2026-09-18). The previous pin (`008173c2…`, Created 2026-09-11) fails
   DOCKER-BUILD-006 on 2026-10-11. Local Trivy `os,library` (no ignorefile):
