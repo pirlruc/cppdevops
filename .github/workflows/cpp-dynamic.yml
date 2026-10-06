@@ -233,7 +233,8 @@ jobs:
             echo "::error::valgrind not on PATH; memcheck cannot run (CI-035)"
             exit 1
           fi
-          mapfile -t BINS < <(find build-vg -type f -executable -name '*test*' | sort)
+          mapfile -t BINS < <(find build-vg -type f -executable -name '*test*' \
+            ! -name '*.py' ! -path '*/_deps/*' | sort)
           if [[ ${#BINS[@]} -eq 0 || -z "${BINS[0]:-}" ]]; then
             echo "::error::no test binaries under build-vg; memcheck cannot run (CI-035)"
             exit 1
