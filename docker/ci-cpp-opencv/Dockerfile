@@ -10,7 +10,7 @@
 # Digest Created 2026-09-17 (same index as ci-cpp-ubuntu).
 # base_image_max_age_days (30) fails on 2026-10-18 until Canonical publishes a newer image.
 
-FROM docker.io/library/ubuntu:24.04@sha256:534baea6a22c03a63003dbc8dbe78fe34bc0d7e595d9a9dc9834884ff530eb55 AS opencv-build
+FROM docker.io/library/ubuntu:25.10@sha256:7cc5e35f6567ee8c66d2abb4aab0fd866669e6207c237c3a8f0947a5c7f17092 AS opencv-build
 
 ENV DEBIAN_FRONTEND=noninteractive \
     OPENCV_VERSION=4.14.0 \
@@ -78,7 +78,7 @@ RUN curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors -o /tmp/vcpkg.tar.gz
  && mv "/opt/vcpkg-${VCPKG_COMMIT}" /opt/vcpkg \
  && /opt/vcpkg/bootstrap-vcpkg.sh -disableMetrics
 
-FROM docker.io/library/ubuntu:24.04@sha256:534baea6a22c03a63003dbc8dbe78fe34bc0d7e595d9a9dc9834884ff530eb55
+FROM docker.io/library/ubuntu:25.10@sha256:7cc5e35f6567ee8c66d2abb4aab0fd866669e6207c237c3a8f0947a5c7f17092
 
 LABEL org.opencontainers.image.title="ci-cpp-opencv" \
       org.opencontainers.image.description="Compile image: Clang 18, libc++, CMake, Ninja, vcpkg, OpenCV 4.14.0, Eigen 3.4. Ubuntu 24.04. Non-root 1000:1000, linux/amd64." \
