@@ -1,0 +1,46 @@
+# syntax=docker/dockerfile:1
+# ci-cpp-vcpkg: the Debian analysis image plus a pinned vcpkg.
+# OpenCV is not installed here. Builds use a files binary cache
+# (VCPKG_DEFAULT_BINARY_CACHE, default /vcpkg-cache).
+# No HEALTHCHECK: short-lived CI toolchain, not a supervised service.
+# kics-scan disable=b03a748a-542d-44f4-bb86-9199ab4fd2d5
+# Base tag in a comment for DOCKER-BUILD-003: ghcr.io/pirlruc/ci-cpp:5.0.0
+
+FROM ghcr.io/pirlruc/ci-cpp@sha256:3406477bb7fc730c53df4a28dffa07a9dce5ee6f6830102df1bedc8727973b67
+
+LABEL org.opencontainers.image.title="ci-cpp-vcpkg" \
+      org.opencontainers.image.description="C++ CI toolchain with a pinned vcpkg. OpenCV is not baked in; use the files binary cache. Non-root 1000:1000, linux/amd64." \
+      org.opencontainers.image.source="https://github.com/pirlruc/cppdevops" \
+      org.opencontainers.image.vendor="pirlruc" \
+      org.opencontainers.image.licenses="MIT"
+
+# microsoft/vcpkg 2026-10-06
+ARG VCPKG_COMMIT=434307da09bc05b2c86996dccc8b2351fc0d5d37
+
+USER root
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+      curl=8.14.1-2+deb13u5+dhi0 \
+      gzip=1.13-1+dhi1 \
+      zip=3.0-15+dhi0 \
+      unzip=6.0-29+dhi1 \
+      pkg-config=1.8.1-4+dhi1 \
+      nasm=2.16.03-1 \
+ && curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors -o /tmp/vcpkg.tar.gz \
+      "https://github.com/microsoft/vcpkg/archive/${VCPKG_COMMIT}.tar.gz" \
+ && tar -xzf /tmp/vcpkg.tar.gz -C /opt \
+ && rm -f /tmp/vcpkg.tar.gz \
+ && mv "/opt/vcpkg-${VCPKG_COMMIT}" /opt/vcpkg \
+ && /opt/vcpkg/bootstrap-vcpkg.sh -disableMetrics \
+ && mkdir -p /vcpkg-cache \
+ && chown -R 1000:1000 /opt/vcpkg /vcpkg-cache \
+ && rm -rf /var/lib/apt/lists/*
+
+ENV VCPKG_ROOT=/opt/vcpkg \
+    VCPKG_DISABLE_METRICS=1 \
+    VCPKG_DEFAULT_BINARY_CACHE=/vcpkg-cache \
+    PATH="/opt/vcpkg:${PATH}"
+
+USER 1000:1000
+ENTRYPOINT []
+CMD ["sh"]

@@ -5,3 +5,11 @@ rules:
     config:
       policies:
         "*": hash-pin
+  # container_image defaults to a digest. zizmor cannot see that pin through
+  # an input expression. Callers that override the input must pass a digest.
+  unpinned-images:
+    ignore:
+      - cpp-quality.yml
+      - cpp-tests.yml
+      - cpp-codeql.yml
+      - cpp-dynamic.yml

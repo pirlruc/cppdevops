@@ -1124,10 +1124,10 @@ milestones:
     - DOCKER-SEC-001
     - DOCKER-BUILD-006
 - name: C++ overhaul follow-up
-  status: open
+  status: done
   epics:
   - id: CPPD-PERM-001
-    status: open
+    status: done
     title: Fix reusable workflow startup when jobs need more than permissions none
     overview:
       problem: >-
@@ -1155,7 +1155,7 @@ milestones:
     - CI-025
     tasks:
     - id: CPPD-PERM-001-T1
-      status: open
+      status: done
       title: Raise workflow permissions to the job set and re-dispatch a consumer
       instructions:
         files:
@@ -1167,7 +1167,7 @@ milestones:
       guardrail_refs:
       - CI-025
   - id: CPPD-CMAKE-002
-    status: open
+    status: done
     title: Refresh the canonical pirlruc_library.cmake helper
     overview:
       problem: >-
@@ -1188,7 +1188,7 @@ milestones:
     - CPP-BUILD-001
     tasks:
     - id: CPPD-CMAKE-002-T1
-      status: open
+      status: done
       title: Update the template helper
       instructions:
         files:
@@ -1198,7 +1198,7 @@ milestones:
       guardrail_refs:
       - CPP-BUILD-001
   - id: CPPD-CACHE-001
-    status: open
+    status: done
     title: Decide a vcpkg binary cache for OpenCV-heavy C++ builds
     overview:
       problem: >-
@@ -1221,7 +1221,7 @@ milestones:
     - DOCKER-PERF-002
     tasks:
     - id: CPPD-CACHE-001-T1
-      status: open
+      status: done
       title: Propose the cache layout and size budget
       instructions:
         files:

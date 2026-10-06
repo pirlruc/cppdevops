@@ -1,7 +1,9 @@
 # Reusable workflows
 
 All workflows support `workflow_call` (and `workflow_dispatch` where noted).
-Top-level `permissions: {}` (CI-025); jobs grant least privilege. Secret-using
+Top-level `permissions` is the union of the job permissions (CI-025). A job
+cannot request a scope the workflow omitted, or the run dies at startup with
+zero jobs. Secret-using
 jobs skip when `github.event.pull_request.user.login == 'dependabot[bot]'`
 (CI-024). Do not compare `github.actor`. Nested script checkout uses
 `actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1` (v7.0.1) with
@@ -15,7 +17,9 @@ Shared inputs:
 | `library_path` | string | (required on most) | Library root relative to the caller checkout |
 | `blocking` | bool | `false` | `false` → collect-then-fail stays advisory (`ADVISORY=true`); missing tools/thresholds always fail |
 | `scripts_ref` | string | `""` | Commit SHA matching the `uses:` pin. Required for cross-repo callers (CI-034). |
-| `checkout_token` (secret) | string | — | PAT with `contents:read` on `pirlruc/cppdevops` for quality/tests/docs/codeql/dynamic/mobile/fuzz, and on `commondevops` for security/infra |
+| `container_image` | string | ci-cpp digest | quality, tests, codeql, dynamic. Pass `ci-cpp-vcpkg` for manifest builds. |
+| `use_vcpkg` | bool | `false` | Manifest mode plus a files binary cache. The image must set `VCPKG_ROOT`. Private ports need `checkout_token`. |
+| `checkout_token` (secret) | string | — | PAT with `contents:read` on `pirlruc/cppdevops` for quality/tests/docs/codeql/dynamic/mobile/fuzz, on `commondevops` for security/infra, and on private library repos when `use_vcpkg` clones them. |
 
 Consumers pin `pirlruc/cppdevops/.github/workflows/<name>.yml@<sha-or-tag>`
 (`CI-018`). Prefer `@<sha>` or an annotated release tag over `@main`.

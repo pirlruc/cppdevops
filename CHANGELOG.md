@@ -5,6 +5,25 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [5.1.0] - 2026-10-06
+
+### Fixed
+
+- Reusable `cpp-*.yml` workflows grant, at workflow level, every permission
+  their jobs request. `permissions: {}` made GitHub reject the run before any
+  job started (CPPD-PERM-001).
+
+### Added
+
+- `ci-cpp-vcpkg` image: the Debian analysis toolchain plus a pinned vcpkg.
+  OpenCV is not installed in the image. `use_vcpkg` and `container_image`
+  inputs on quality, tests, codeql, and dynamic restore a files binary cache
+  and authenticate private `vcpkg_from_git` ports from `checkout_token`
+  without writing the token into the log (CPPD-CACHE-001).
+- `templates/cmake/pirlruc_library.cmake` matches the libraries: C++20 via
+  `target_compile_features`, `FILE_SET` headers, and `EXPORT_NAME`
+  (CPPD-CMAKE-002).
+
 ## [5.0.2] - 2026-10-02
 
 ### Changed

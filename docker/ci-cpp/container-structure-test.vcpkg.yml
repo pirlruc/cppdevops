@@ -1,0 +1,31 @@
+schemaVersion: "2.0.0"
+metadataTest:
+  cmd: ["sh"]
+  user: "1000:1000"
+  envVars:
+    - key: VCPKG_ROOT
+      value: "/opt/vcpkg"
+    - key: VCPKG_DISABLE_METRICS
+      value: "1"
+commandTests:
+  - name: vcpkg
+    command: "vcpkg"
+    args: ["version"]
+    exitCode: 0
+  - name: clang
+    command: "clang++"
+    args: ["--version"]
+    exitCode: 0
+  - name: cmake
+    command: "cmake"
+    args: ["--version"]
+    exitCode: 0
+  - name: "no setuid or setgid files"
+    command: "sh"
+    args:
+      - "-c"
+      - "! find / -xdev -type f -perm -4000 -print | grep -q . && ! find / -xdev -type f -perm -2000 -print | grep -q ."
+fileExistenceTests:
+  - name: vcpkg toolchain
+    path: "/opt/vcpkg/scripts/buildsystems/vcpkg.cmake"
+    shouldExist: true

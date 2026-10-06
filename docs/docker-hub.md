@@ -5,7 +5,10 @@ analysis image (Clang 18, libc++, CMake, Ninja, cppcheck, clang-tidy/format,
 Doxygen, gcovr, lizard, Metrix++, coverxygen, valgrind). `ci-cpp` `-alpine` is
 the Alpine 3.24 analysis image (Clang 20, because Alpine libc++ is LLVM 22).
 `ci-cpp-ubuntu` is compile-only: Clang 18, libc++, CMake, Ninja, and git.
-Not a product runtime — no `HEALTHCHECK`. graphviz, cloc, and curl are not installed.
+`ci-cpp-vcpkg` is the Debian analysis image plus a pinned vcpkg. OpenCV is not
+installed; builds use a files binary cache (`VCPKG_DEFAULT_BINARY_CACHE`).
+Not a product runtime — no `HEALTHCHECK`. graphviz and cloc are not installed.
+curl is installed only in `ci-cpp-vcpkg`.
 
 ## Image
 
@@ -14,7 +17,7 @@ Not a product runtime — no `HEALTHCHECK`. graphviz, cloc, and curl are not ins
 | Docker Hub | `pirlruc/ci-cpp` |
 | Architectures | `linux/amd64` |
 | User | non-root `1000:1000` |
-| Base | Debian 13 via `dhi.io/python` for `ci-cpp`; Alpine 3.24 for `-alpine`; Ubuntu 24.04 official for `ci-cpp-ubuntu` |
+| Base | Debian 13 via `dhi.io/python` for `ci-cpp`; Alpine 3.24 for `-alpine`; Ubuntu 24.04 official for `ci-cpp-ubuntu`; published `ci-cpp` for `ci-cpp-vcpkg` |
 
 ### Tags
 

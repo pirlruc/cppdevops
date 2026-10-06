@@ -6,7 +6,7 @@
 |-------|-------|
 | **Folder** | `ops/cppdevops/` |
 | **Remote** | https://github.com/pirlruc/cppdevops |
-| **Branch** | `main` → tag **5.0.2** (Hub suffixes; pinned digests stay **5.0.0** until write-back) |
+| **Branch** | `feature-cpp-vcpkg-image` → release **5.1.0** after merge. Analysis image pins stay **5.0.0** until the image workflow writes digests back. |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
@@ -40,7 +40,8 @@ Contract reference: [`docs/workflows.md`](workflows.md).
 | methodologies (links only; not a submodule) | tag **1.8.0** |
 | `ghcr.io/pirlruc/ci-cpp` (debian, unsuffixed) | `5.0.0` `sha256:3406477bb7fc730c53df4a28dffa07a9dce5ee6f6830102df1bedc8727973b67` |
 | `ghcr.io/pirlruc/ci-cpp` (alpine) | `5.0.0-alpine` `sha256:78103428af883fe259241796d359edd3cfbaefe34e11878760a97c1a9efc2986` |
-| `ghcr.io/pirlruc/ci-cpp-ubuntu` | `5.0.0` `sha256:0a6f9b7f044e9e1a2098ff7f57425d16245daaeff505b07dca90199933a3011f` |
+| `ghcr.io/pirlruc/ci-cpp-ubuntu` | `5.0.0` `sha256:0a6f9b7f044e9e1a2098ff7f57425d16245daaeff505b07dca90199933a3011f` (Dockerfile base refreshed to `ubuntu:24.04@sha256:534baea6…`, still created 2026-09-18) |
+| `ci-cpp-vcpkg` | local tag `ci-cpp-vcpkg:debian-local` until 5.1.0 publishes. vcpkg `434307da09bc05b2c86996dccc8b2351fc0d5d37`. OpenCV is not in the image. |
 | commondevops `uses:` | tag **5.3.0** → `803bfe60ff30d5bbcefe7fe6e38070999a66531d` |
 | containerdevops `uses:` | `2ad052e69d2587cdaf8ccac59b9dae5c60f5560b` (included in tag **6.2.0**) |
 
@@ -125,9 +126,31 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Suggested next work
 
-1. After the 5.0.2 image publish finishes, write the new digests back.
-   Create Docker Hub `pirlruc/ci-cpp-ubuntu` if the ubuntu publish cannot create it.
-2. Refresh the Ubuntu 24.04 base digest before 2026-10-18 (CPPD-SCAN-001).
+1. After the 5.1.0 image publish, write the new `ci-cpp`, `ci-cpp-ubuntu`, and
+   `ci-cpp-vcpkg` digests back into the reusable workflows.
+2. CPPD-SCAN-001 stays open. The newest `ubuntu:24.04` (pulled 2026-10-06) is
+   still created 2026-09-18, so the 30-day age gate still falls on 2026-10-18.
+   DHI Debian and Alpine indexes moved, but apt pins are bound to the current
+   bases; bumping them is a separate image rebuild.
+3. Callers that pin 5.1.0 must grant `actions: write` (vcpkg binary cache) plus
+   `contents: read` and `security-events: write`.
+
+## ci-cpp-vcpkg
+
+`docker/ci-cpp/Dockerfile.vcpkg` starts FROM the published Debian ci-cpp digest
+and adds vcpkg. ci-cpp itself stays free of OpenCV (DOCKER-PERF-002).
+
+```bash
+docker build -f docker/ci-cpp/Dockerfile.vcpkg -t ci-cpp-vcpkg:debian-local docker/ci-cpp
+docker volume create pirlruc-vcpkg-cache
+docker run --rm -v pirlruc-vcpkg-cache:/vcpkg-cache -v "$PWD":/src -w /src \
+  -e VCPKG_DEFAULT_BINARY_CACHE=/vcpkg-cache ci-cpp-vcpkg:debian-local \
+  vcpkg version
+```
+
+GitHub jobs pass `use_vcpkg: true` and `container_image` once the image is
+published. `scripts/prepare-vcpkg.sh` writes `checkout_token` only into a
+gitconfig under `RUNNER_TEMP`.
 
 ## See also
 
@@ -210,4 +233,8 @@ python3 .github/scaffold/scripts/issues-sync.py \
   Ubuntu compile image. 5.0.0 is published. 5.0.0 Debian has no `-debian`
   tag; `ci-cpp-ubuntu` is GHCR-only until the next publish.
 
-*Last updated: 2026-10-02 (CPPD-IMG-003 done; release 5.0.2 publishes suffixes)*
+- 2026-10-06: CPPD-PERM-001, CPPD-CMAKE-002, CPPD-CACHE-001. Workflow
+  permissions match the jobs. `ci-cpp-vcpkg` adds vcpkg without OpenCV.
+  Ubuntu 24.04 base digest moved; its created date is still 2026-09-18.
+
+*Last updated: 2026-10-06 (permissions, vcpkg image, cmake helper)*

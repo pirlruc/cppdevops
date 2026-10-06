@@ -33,8 +33,9 @@ on:
         type: boolean
         default: false
 
-# CI-025: default-deny; reusable jobs grant the minimum they need.
-permissions: {}
+# CI-025: workflow permissions are the union of the job permissions.
+permissions:
+  contents: read
 
 concurrency:
   group: >-
