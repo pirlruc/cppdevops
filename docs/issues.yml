@@ -1123,110 +1123,110 @@ milestones:
     guardrail_refs:
     - DOCKER-SEC-001
     - DOCKER-BUILD-006
-  - name: C++ overhaul follow-up
+- name: C++ overhaul follow-up
+  status: open
+  epics:
+  - id: CPPD-PERM-001
     status: open
-    epics:
-    - id: CPPD-PERM-001
+    title: Fix reusable workflow startup when jobs need more than permissions none
+    overview:
+      problem: >-
+        cpp-quality, cpp-codeql, and cpp-security set workflow permissions to
+        an empty set while jobs request security-events write. Calling them
+        from a library repo fails at startup with zero jobs.
+      goal: >-
+        Workflow-level permissions cover every job permission the file requests,
+        and a caller dispatch of Quality starts jobs.
+    decision: >-
+      In the context of reusable C++ workflows, facing startup_failure with no
+      jobs, we decided to align workflow permissions with the job permissions,
+      to achieve a workflow that can start, accepting a wider GITHUB_TOKEN than
+      an empty set.
+    architecture:
+      target: .github/workflows/
+      modules:
+      - cpp-quality
+      - cpp-codeql
+      - cpp-security
+    acceptance_criteria:
+    - A workflow_dispatch of a consumer Quality workflow creates jobs
+    - actionlint passes
+    guardrail_refs:
+    - CI-025
+    tasks:
+    - id: CPPD-PERM-001-T1
       status: open
-      title: Fix reusable workflow startup when jobs need more than permissions none
-      overview:
-        problem: >-
-          cpp-quality, cpp-codeql, and cpp-security set workflow permissions to
-          an empty set while jobs request security-events write. Calling them
-          from a library repo fails at startup with zero jobs.
-        goal: >-
-          Workflow-level permissions cover every job permission the file requests,
-          and a caller dispatch of Quality starts jobs.
-      decision: >-
-        In the context of reusable C++ workflows, facing startup_failure with no
-        jobs, we decided to align workflow permissions with the job permissions,
-        to achieve a workflow that can start, accepting a wider GITHUB_TOKEN than
-        an empty set.
-      architecture:
-        target: .github/workflows/
-        modules:
-        - cpp-quality
-        - cpp-codeql
-        - cpp-security
-      acceptance_criteria:
-      - A workflow_dispatch of a consumer Quality workflow creates jobs
-      - actionlint passes
+      title: Raise workflow permissions to the job set and re-dispatch a consumer
+      instructions:
+        files:
+        - .github/workflows/cpp-quality.yml
+        - .github/workflows/cpp-codeql.yml
+        - .github/workflows/cpp-security.yml
+      verification:
+      - gh workflow run on a consumer feature branch creates at least one job
       guardrail_refs:
       - CI-025
-      tasks:
-      - id: CPPD-PERM-001-T1
-        status: open
-        title: Raise workflow permissions to the job set and re-dispatch a consumer
-        instructions:
-          files:
-          - .github/workflows/cpp-quality.yml
-          - .github/workflows/cpp-codeql.yml
-          - .github/workflows/cpp-security.yml
-        verification:
-        - gh workflow run on a consumer feature branch creates at least one job
-        guardrail_refs:
-        - CI-025
-    - id: CPPD-CMAKE-002
+  - id: CPPD-CMAKE-002
+    status: open
+    title: Refresh the canonical pirlruc_library.cmake helper
+    overview:
+      problem: >-
+        templates/cmake/pirlruc_library.cmake still sets CXX_STANDARD and does
+        not register headers with FILE_SET or EXPORT_NAME.
+      goal: Match the helper now used by the C++ libraries.
+    decision: >-
+      In the context of shared CMake helpers, facing drift from the libraries,
+      we decided to update the cppdevops template, to achieve one helper,
+      accepting a follow-up copy into repos that have not moved yet.
+    architecture:
+      target: templates/cmake/pirlruc_library.cmake
+      modules:
+      - templates
+    acceptance_criteria:
+    - The template uses target_compile_features, FILE_SET, and EXPORT_NAME
+    guardrail_refs:
+    - CPP-BUILD-001
+    tasks:
+    - id: CPPD-CMAKE-002-T1
       status: open
-      title: Refresh the canonical pirlruc_library.cmake helper
-      overview:
-        problem: >-
-          templates/cmake/pirlruc_library.cmake still sets CXX_STANDARD and does
-          not register headers with FILE_SET or EXPORT_NAME.
-        goal: Match the helper now used by the C++ libraries.
-      decision: >-
-        In the context of shared CMake helpers, facing drift from the libraries,
-        we decided to update the cppdevops template, to achieve one helper,
-        accepting a follow-up copy into repos that have not moved yet.
-      architecture:
-        target: templates/cmake/pirlruc_library.cmake
-        modules:
-        - templates
-      acceptance_criteria:
-      - The template uses target_compile_features, FILE_SET, and EXPORT_NAME
+      title: Update the template helper
+      instructions:
+        files:
+        - templates/cmake/pirlruc_library.cmake
+      verification:
+      - rg 'target_compile_features|FILE_SET|EXPORT_NAME' templates/cmake/pirlruc_library.cmake
       guardrail_refs:
       - CPP-BUILD-001
-      tasks:
-      - id: CPPD-CMAKE-002-T1
-        status: open
-        title: Update the template helper
-        instructions:
-          files:
-          - templates/cmake/pirlruc_library.cmake
-        verification:
-        - rg 'target_compile_features|FILE_SET|EXPORT_NAME' templates/cmake/pirlruc_library.cmake
-        guardrail_refs:
-        - CPP-BUILD-001
-    - id: CPPD-CACHE-001
+  - id: CPPD-CACHE-001
+    status: open
+    title: Decide a vcpkg binary cache for OpenCV-heavy C++ builds
+    overview:
+      problem: >-
+        ci-cpp has no vcpkg and no OpenCV. heimdallcv and draupnir rebuild those
+        dependencies on every clean run.
+      goal: >-
+        A cache image or a documented binary-cache volume, without growing the
+        default analysis image past the size gate.
+    decision: >-
+      In the context of computer-vision libraries, facing cold OpenCV builds,
+      we decided to keep OpenCV out of the default ci-cpp image and add a cache
+      path, to achieve faster builds, accepting another image or volume to maintain.
+    architecture:
+      target: docker/ci-cpp/
+      modules:
+      - docker
+    acceptance_criteria:
+    - The decision is recorded and the default ci-cpp image stays analysis-only
+    guardrail_refs:
+    - DOCKER-PERF-002
+    tasks:
+    - id: CPPD-CACHE-001-T1
       status: open
-      title: Decide a vcpkg binary cache for OpenCV-heavy C++ builds
-      overview:
-        problem: >-
-          ci-cpp has no vcpkg and no OpenCV. heimdallcv and draupnir rebuild those
-          dependencies on every clean run.
-        goal: >-
-          A cache image or a documented binary-cache volume, without growing the
-          default analysis image past the size gate.
-      decision: >-
-        In the context of computer-vision libraries, facing cold OpenCV builds,
-        we decided to keep OpenCV out of the default ci-cpp image and add a cache
-        path, to achieve faster builds, accepting another image or volume to maintain.
-      architecture:
-        target: docker/ci-cpp/
-        modules:
-        - docker
-      acceptance_criteria:
-      - The decision is recorded and the default ci-cpp image stays analysis-only
+      title: Propose the cache layout and size budget
+      instructions:
+        files:
+        - docs/ai-agent-handoff.md
+      verification:
+      - handoff names the cache and says ci-cpp itself stays free of OpenCV
       guardrail_refs:
       - DOCKER-PERF-002
-      tasks:
-      - id: CPPD-CACHE-001-T1
-        status: open
-        title: Propose the cache layout and size budget
-        instructions:
-          files:
-          - docs/ai-agent-handoff.md
-        verification:
-        - handoff names the cache and says ci-cpp itself stays free of OpenCV
-        guardrail_refs:
-        - DOCKER-PERF-002
