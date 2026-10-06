@@ -5,6 +5,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [5.1.0] - 2026-10-06
+
 ### Fixed
 
 - Reusable `cpp-*.yml` workflows grant, at workflow level, every permission
