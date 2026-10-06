@@ -60,7 +60,7 @@ jobs:
     if: inputs.run_fuzz
     runs-on: ubuntu-24.04
     container:
-      image: ghcr.io/pirlruc/ci-cpp@sha256:28db91b4a240ec459e90afedf07d9ed5030e3733933c82944127a156bca711d3
+      image: docker.io/pirlruc/ci-cpp@sha256:28db91b4a240ec459e90afedf07d9ed5030e3733933c82944127a156bca711d3
       options: --user root
     timeout-minutes: 30
     permissions:

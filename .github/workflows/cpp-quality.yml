@@ -21,7 +21,7 @@ on:
         description: Image for this job. Default is ci-cpp. Pass ci-cpp-vcpkg for manifest builds.
         required: false
         type: string
-        default: ghcr.io/pirlruc/ci-cpp@sha256:28db91b4a240ec459e90afedf07d9ed5030e3733933c82944127a156bca711d3
+        default: docker.io/pirlruc/ci-cpp@sha256:28db91b4a240ec459e90afedf07d9ed5030e3733933c82944127a156bca711d3
       use_vcpkg:
         description: Run vcpkg manifest mode with a files binary cache. The image must set VCPKG_ROOT.
         required: false

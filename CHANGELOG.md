@@ -3,6 +3,13 @@
 All notable changes to this repository are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [5.2.3] - 2026-10-06
+
+### Fixed
+
+- Analysis jobs pull `docker.io/pirlruc/ci-cpp` at the image manifest.
+  `ghcr.io/pirlruc/ci-cpp` is private, so Actions reported `manifest unknown`.
+
 ## [5.2.2] - 2026-10-06
 
 ### Fixed
