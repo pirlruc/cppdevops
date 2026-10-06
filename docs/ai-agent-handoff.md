@@ -38,11 +38,11 @@ Contract reference: [`docs/workflows.md`](workflows.md).
 | `docs/guardrails` | tag **1.10.0** → `e2db476f…` |
 | `.github/scaffold` | tag **1.8.0** → `ac9059fd…` |
 | methodologies (links only; not a submodule) | tag **1.8.0** |
-| `ghcr.io/pirlruc/ci-cpp` (debian, unsuffixed) | Hub/GHCR `5.1.2` `sha256:4cf9a6f1372e2652d329c4257e6380f5fde846dccf92f45f744f8bfb4b9b417d`. Workflow defaults still pin 5.0.0 `sha256:3406477b…` |
-| `ghcr.io/pirlruc/ci-cpp` (alpine) | `5.1.2-alpine` `sha256:d530ad4233669428fce12d3ad698e012317cec81ed8a7a07a623fad39c51cc73` |
-| `ghcr.io/pirlruc/ci-cpp-ubuntu` | `5.1.2` `sha256:cbb32848894dc532c6c7ab00691173ddb68e35619d2e385c17234140938d3704` |
-| `ci-cpp-vcpkg` | `5.1.2` `sha256:ecd3578a5c48bc2842910cadbddca78c7b0622308f81221a0b27da19f779204b`. vcpkg `434307da09bc05b2c86996dccc8b2351fc0d5d37`. OpenCV is not in this image |
-| `ci-cpp-opencv` | Local tag `ci-cpp-opencv:local`. Ubuntu 24.04, OpenCV 4.14.0 from source, Eigen 3.4 via apt. Not published |
+| `ghcr.io/pirlruc/ci-cpp` (debian, unsuffixed) | `5.2.0` `sha256:94667c573a1fe4a08aa333cd4083a53553d394c34a8d854d12912831b5536cde`. Workflow defaults pin this digest |
+| `ghcr.io/pirlruc/ci-cpp` (alpine) | `5.2.0-alpine` `sha256:f7d2f1f22eff2ed9640a4c12c76bfb459d4ecff487dcfa8820bda605850475c1` |
+| `ghcr.io/pirlruc/ci-cpp-ubuntu` | `5.2.0` `sha256:cf2464213f9460585846b3fd8e5beb8d77fa8c2774f5f03b0a5e852e4e9de77e` |
+| `ci-cpp-vcpkg` | `5.2.0` `sha256:76b9587f04834322dadd318e3ce5d17349e68df990a9575647f7dc6fb7553cde`. vcpkg `434307da09bc05b2c86996dccc8b2351fc0d5d37`. OpenCV is not in this image |
+| `ci-cpp-opencv` | `5.2.0` `sha256:561316dd5a31b8765f3d6569833ad5fff05bdba42d184a92d11cd4c0c738c42b`. OpenCV 4.14.0, Eigen 3.4, libc++ triplet |
 | commondevops `uses:` | tag **5.3.0** → `803bfe60ff30d5bbcefe7fe6e38070999a66531d` |
 | containerdevops `uses:` | `2ad052e69d2587cdaf8ccac59b9dae5c60f5560b` (included in tag **6.2.0**) |
 
@@ -236,4 +236,4 @@ gitconfig under `RUNNER_TEMP`.
   `ci-cpp-vcpkg`. `Dockerfile.opencv` builds OpenCV 4.14.0 plus Eigen 3.4.
   That image is local only until the next image release.
 
-*Last updated: 2026-10-06 (ci-cpp-opencv multi-stage, libc++ triplet)*
+*Last updated: 2026-10-06 (5.2.0 digests, workflow defaults)*

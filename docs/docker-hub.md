@@ -12,11 +12,16 @@ there and builds use `VCPKG_DEFAULT_BINARY_CACHE`. `ci-cpp-opencv` is the
 Ubuntu 24.04 compile image with OpenCV 4.14.0 built from the release tarball
 and Eigen 3.4 from `libeigen3-dev`. The same image ships vcpkg, the
 `x64-linux-libcxx` triplet, and overlay ports that satisfy `opencv4` and
-`eigen3` from the image instead of compiling them. It is published on the
-next image release; it is not on Docker Hub yet.
+`eigen3` from the image instead of compiling them. Tag `5.2.0` is on Docker Hub
+and GHCR.
 Not a product runtime — no `HEALTHCHECK`. graphviz and cloc are not installed.
 curl is installed in `ci-cpp-vcpkg` so vcpkg can bootstrap. `ci-cpp-opencv`
 bootstraps vcpkg in the build stage and does not keep curl in the final image.
+
+The 5.2.0 publish pushed the images. The Hub Overview step is advisory: the
+token can push but cannot write repository descriptions, so that step returned
+Forbidden and did not fill the Overview for `ci-cpp-ubuntu`, `ci-cpp-vcpkg`, or
+`ci-cpp-opencv`. This page is the description for every image name.
 
 ## Image
 
@@ -29,17 +34,17 @@ bootstraps vcpkg in the build stage and does not keep curl in the final image.
 
 ### Tags
 
-Digests below are the `linux/amd64` manifest. `latest` on each repository
-matches the 5.1.2 tag of that repository. Reusable workflow defaults still
-pin the 5.0.0 Debian analysis digest until that pin is written forward.
+Digests below are the manifest list. `latest` on each repository matches the
+5.2.0 tag. Reusable workflow defaults pin the 5.2.0 Debian analysis digest.
 
 | Image | Tag | Digest |
 |-------|-----|--------|
-| `pirlruc/ci-cpp` | `5.1.2` / `5.1.2-debian` / `latest` / `latest-debian` | `sha256:4cf9a6f1372e2652d329c4257e6380f5fde846dccf92f45f744f8bfb4b9b417d` |
-| `pirlruc/ci-cpp` | `5.1.2-alpine` / `latest-alpine` | `sha256:d530ad4233669428fce12d3ad698e012317cec81ed8a7a07a623fad39c51cc73` |
-| `pirlruc/ci-cpp-ubuntu` | `5.1.2` / `latest` | `sha256:cbb32848894dc532c6c7ab00691173ddb68e35619d2e385c17234140938d3704` |
-| `pirlruc/ci-cpp-vcpkg` | `5.1.2` / `latest` | `sha256:ecd3578a5c48bc2842910cadbddca78c7b0622308f81221a0b27da19f779204b` |
-| `pirlruc/ci-cpp-opencv` | not published | Built from `docker/ci-cpp/Dockerfile.opencv`. First Hub tag arrives with the next image release |
+| `pirlruc/ci-cpp` | `5.2.0` / `5.2.0-debian` / `latest` / `latest-debian` | `sha256:94667c573a1fe4a08aa333cd4083a53553d394c34a8d854d12912831b5536cde` |
+| `pirlruc/ci-cpp` | `5.2.0-alpine` / `latest-alpine` | `sha256:f7d2f1f22eff2ed9640a4c12c76bfb459d4ecff487dcfa8820bda605850475c1` |
+| `pirlruc/ci-cpp-ubuntu` | `5.2.0` / `latest` | `sha256:cf2464213f9460585846b3fd8e5beb8d77fa8c2774f5f03b0a5e852e4e9de77e` |
+| `pirlruc/ci-cpp-vcpkg` | `5.2.0` / `latest` | `sha256:76b9587f04834322dadd318e3ce5d17349e68df990a9575647f7dc6fb7553cde` |
+| `pirlruc/ci-cpp-opencv` | `5.2.0` / `latest` | `sha256:561316dd5a31b8765f3d6569833ad5fff05bdba42d184a92d11cd4c0c738c42b` |
+| `pirlruc/ci-cpp` | `5.1.2` / `5.1.2-debian` | `sha256:4cf9a6f1372e2652d329c4257e6380f5fde846dccf92f45f744f8bfb4b9b417d` |
 | `pirlruc/ci-cpp` | `5.0.0` | Previous Debian analysis. `sha256:3406477bb7fc730c53df4a28dffa07a9dce5ee6f6830102df1bedc8727973b67` |
 | `pirlruc/ci-cpp` | `5.0.0-alpine` | Previous Alpine analysis. `sha256:78103428af883fe259241796d359edd3cfbaefe34e11878760a97c1a9efc2986` |
 | `pirlruc/ci-cpp` | `4.0.0` | Previous Ubuntu 24.04 release. `sha256:cf40f3bc99ebe50a286d1e57ac0aa63c28678ef44e65b3a6dbef0c7420afa47f` |
@@ -51,9 +56,10 @@ are separate image names. Prefer a digest in production. `latest` is never
 the only tag.
 
 ```bash
-docker pull pirlruc/ci-cpp:5.1.2
-docker pull pirlruc/ci-cpp-ubuntu:5.1.2
-docker pull pirlruc/ci-cpp-vcpkg:5.1.2
+docker pull pirlruc/ci-cpp:5.2.0
+docker pull pirlruc/ci-cpp-ubuntu:5.2.0
+docker pull pirlruc/ci-cpp-vcpkg:5.2.0
+docker pull pirlruc/ci-cpp-opencv:5.2.0
 # or
 docker pull pirlruc/ci-cpp@sha256:4cf9a6f1372e2652d329c4257e6380f5fde846dccf92f45f744f8bfb4b9b417d
 ```
