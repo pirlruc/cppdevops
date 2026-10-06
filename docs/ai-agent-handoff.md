@@ -6,7 +6,7 @@
 |-------|-------|
 | **Folder** | `ops/cppdevops/` |
 | **Remote** | https://github.com/pirlruc/cppdevops |
-| **Branch** | `feature-cpp-vcpkg-image` → release **5.1.0** after merge. Analysis image pins stay **5.0.0** until the image workflow writes digests back. |
+| **Branch** | `feature-opencv-image` → release **5.2.0** publishes images. Digest write-back is **5.2.1** (tag only, no GitHub Release). |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
@@ -127,15 +127,9 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Suggested next work
 
-1. [CPPD-OCV-001](https://github.com/pirlruc/cppdevops/issues/121): publish
-   `ci-cpp-opencv` (OpenCV 4.14.0) and point workflow defaults at the 5.1.2
-   Debian digest.
-2. CPPD-SCAN-001 stays open. The newest `ubuntu:24.04` (pulled 2026-10-06) is
-   still created 2026-09-18, so the 30-day age gate still falls on 2026-10-18.
-   DHI Debian and Alpine indexes moved, but apt pins are bound to the current
-   bases; bumping them is a separate image rebuild.
-3. Callers that pin 5.1.0 must grant `actions: write` (vcpkg binary cache) plus
-   `contents: read` and `security-events: write`.
+1. Publish **5.2.0** so `ci-cpp-opencv` and the libc++ triplet on `ci-cpp-vcpkg` land, then write those digests back and tag **5.2.1** without a GitHub Release (CPPD-OCV-001-T2/T3).
+2. CPPD-SCAN-001 stays open. `ubuntu:24.04` index `sha256:534baea6…` is still created 2026-09-17, so the 30-day age gate falls on 2026-10-18. There is no newer noble index to pin.
+3. Callers that pin 5.1.0 must grant `actions: write` (vcpkg binary cache) plus `contents: read` and `security-events: write`. Callers that re-enable pull_request must pass `run_ios: false` unless they intend to pay for a macOS runner.
 
 ## ci-cpp-vcpkg
 
@@ -242,4 +236,4 @@ gitconfig under `RUNNER_TEMP`.
   `ci-cpp-vcpkg`. `Dockerfile.opencv` builds OpenCV 4.14.0 plus Eigen 3.4.
   That image is local only until the next image release.
 
-*Last updated: 2026-10-06 (5.1.2 registry docs, OpenCV image)*
+*Last updated: 2026-10-06 (ci-cpp-opencv multi-stage, libc++ triplet)*

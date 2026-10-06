@@ -1,6 +1,7 @@
 ---
 # Thin caller — publishes ghcr.io/pirlruc/ci-cpp (Debian, unsuffixed), ci-cpp
-# Alpine (-alpine), and ci-cpp-ubuntu (compile only). Devcontainers stay Ubuntu.
+# Alpine (-alpine), ci-cpp-ubuntu (compile only), ci-cpp-vcpkg, and
+# ci-cpp-opencv (OpenCV 4.14 from source). Devcontainers stay Ubuntu.
 name: CI C++ Image
 
 on:
@@ -471,6 +472,113 @@ jobs:
       tag_latest: ${{ github.event_name != 'release' || github.event.release.prerelease == false }}
       verify_command: vcpkg version
       source_image: ${{ format('ghcr.io/{0}/{1}@{2}', github.repository_owner, needs.build-vcpkg.outputs.handoff_package, needs.build-vcpkg.outputs.digest) }}
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
+
+  lint-opencv:
+    if: >-
+      github.event.pull_request.user.login != 'dependabot[bot]' &&
+      (github.event_name != 'pull_request' ||
+       github.event.pull_request.head.repo.full_name == github.repository)
+    permissions:
+      contents: read
+      security-events: write
+    uses: pirlruc/containerdevops/.github/workflows/container-lint.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    with:
+      dockerfile: docker/ci-cpp/Dockerfile.opencv
+      working_directory: .
+      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      runner_image: ""
+      run_infra_lint: false
+      run_secrets_scan: true
+      blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
+    secrets:
+      checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
+      scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
+
+  build-opencv:
+    needs: [lint-opencv]
+    if: >-
+      github.event.pull_request.user.login != 'dependabot[bot]' &&
+      (github.event_name != 'pull_request' ||
+       github.event.pull_request.head.repo.full_name == github.repository)
+    permissions:
+      contents: read
+      packages: write
+    uses: pirlruc/containerdevops/.github/workflows/container-build.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    with:
+      context: docker/ci-cpp
+      dockerfile: docker/ci-cpp/Dockerfile.opencv
+      image_name: ci-cpp-opencv:ci
+      artifact_name: container-image-ci-cpp-opencv
+      handoff_package: ci-cpp-opencv
+      structure_test_config: docker/ci-cpp/container-structure-test.opencv.yml
+      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
+      size_class: ci_toolchain
+      image_title: ci-cpp-opencv
+      image_description: >-
+        Compile image with OpenCV 4.14.0, Eigen 3.4, and a libc++ vcpkg.
+        Non-root 1000:1000, linux/amd64.
+      dhi_login: false
+    secrets:
+      scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
+
+  scan-opencv:
+    needs: build-opencv
+    if: >-
+      github.event.pull_request.user.login != 'dependabot[bot]' &&
+      (github.event_name != 'pull_request' ||
+       github.event.pull_request.head.repo.full_name == github.repository)
+    permissions:
+      contents: read
+      security-events: write
+      packages: read
+    uses: pirlruc/containerdevops/.github/workflows/container-scan.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    with:
+      image: ${{ format('ghcr.io/{0}/{1}@{2}', github.repository_owner, needs.build-opencv.outputs.handoff_package, needs.build-opencv.outputs.digest) }}
+      results_artifact: container-scan-results-ci-cpp-opencv
+      sarif_category: trivy-image-ci-cpp-opencv
+      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      pkg_types: library
+      ignorefile: docker/ci-cpp/.trivyignore.yaml
+      blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
+    secrets:
+      scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
+
+  publish-opencv:
+    needs: [build-opencv, scan-opencv]
+    if: >-
+      github.event.pull_request.user.login != 'dependabot[bot]' &&
+      (github.event_name == 'release' ||
+       github.event_name == 'schedule' ||
+       (github.event_name == 'workflow_dispatch' && inputs.publish))
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
+    uses: pirlruc/containerdevops/.github/workflows/container-publish.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    with:
+      context: docker/ci-cpp
+      dockerfile: docker/ci-cpp/Dockerfile.opencv
+      image_name: ci-cpp-opencv
+      dockerhub_image: pirlruc/ci-cpp-opencv
+      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      platforms: linux/amd64
+      image_title: ci-cpp-opencv
+      image_description: >-
+        Compile image with OpenCV 4.14.0, Eigen 3.4, and a libc++ vcpkg.
+      dockerhub_readme: docs/docker-hub.md
+      dockerhub_short_description: C++ compile image with OpenCV 4.14 and Eigen 3.4
+      sign: ${{ github.event.repository.visibility == 'public' }}
+      blocking: true
+      dhi_login: false
+      tag_latest: ${{ github.event_name != 'release' || github.event.release.prerelease == false }}
+      verify_command: clang++ --version
+      source_image: ${{ format('ghcr.io/{0}/{1}@{2}', github.repository_owner, needs.build-opencv.outputs.handoff_package, needs.build-opencv.outputs.digest) }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}

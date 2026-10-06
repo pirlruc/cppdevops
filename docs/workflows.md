@@ -19,6 +19,8 @@ Shared inputs:
 | `scripts_ref` | string | `""` | Commit SHA matching the `uses:` pin. Required for cross-repo callers (CI-034). |
 | `container_image` | string | ci-cpp digest | quality, tests, codeql, dynamic. Pass `ci-cpp-vcpkg` for manifest builds. |
 | `use_vcpkg` | bool | `false` | Manifest mode plus a files binary cache. The image must set `VCPKG_ROOT`. Private ports need `checkout_token`. |
+| `vcpkg_triplet` | string | `""` | Sets `VCPKG_DEFAULT_TRIPLET` when non-empty. ci-cpp-vcpkg and ci-cpp-opencv ship `x64-linux-libcxx`. Docs accepts the input and does not install ports. |
+| `run_ios` | bool | `true` | Mobile matrix only. `false` skips the macOS iOS smoke job. |
 | `checkout_token` (secret) | string | — | PAT with `contents:read` on `pirlruc/cppdevops` for quality/tests/docs/codeql/dynamic/mobile/fuzz, on `commondevops` for security/infra, and on private library repos when `use_vcpkg` clones them. |
 
 Consumers pin `pirlruc/cppdevops/.github/workflows/<name>.yml@<sha-or-tag>`

@@ -36,10 +36,16 @@ RUN apt-get update \
  && chown -R 1000:1000 /opt/vcpkg /vcpkg-cache \
  && rm -rf /var/lib/apt/lists/*
 
+COPY triplets/x64-linux-libcxx.cmake /opt/vcpkg-triplets/x64-linux-libcxx.cmake
+
 ENV VCPKG_ROOT=/opt/vcpkg \
     VCPKG_DISABLE_METRICS=1 \
     VCPKG_DEFAULT_BINARY_CACHE=/vcpkg-cache \
+    VCPKG_DEFAULT_TRIPLET=x64-linux-libcxx \
+    VCPKG_OVERLAY_TRIPLETS=/opt/vcpkg-triplets \
     PATH="/opt/vcpkg:${PATH}"
+
+RUN chown -R 1000:1000 /opt/vcpkg-triplets
 
 USER 1000:1000
 ENTRYPOINT []

@@ -3,11 +3,13 @@
 # bump deliberately with changelog review (CI-019). Dependabot github-actions can
 # update this file once it lands in a consumer's .github/workflows/.
 #
-# scripts_ref must equal the uses pin (CI-034). Quality, tests, and docs check
-# out cppdevops, so they need CPPDEVOPS_READ_TOKEN. Security and infra check out
-# commondevops, so they need COMMONDEVOPS_READ_TOKEN.
+# scripts_ref must equal the uses pin (CI-034). sync-library-tooling.sh replaces
+# CPPDEVOPS_PIN with CPPDEVOPS_WORKFLOW_REF. Libraries pass CPP_READ_TOKEN, which
+# needs contents:read on cppdevops, commondevops, and the private ports.
 #
-# Quota mode: workflow_dispatch only (re-enable push/PR or label-gated CI later).
+# Push and pull_request run with blocking=true. workflow_dispatch stays advisory
+# unless the caller passes blocking. run_ios is false so the macOS leg does not
+# start. Vision libraries override container_image with the ci-cpp-opencv digest.
 
 name: Quality
 
@@ -18,10 +20,27 @@ on:
         description: Pass blocking=true when ready to enforce
         type: boolean
         default: false
-  # Re-enable when Actions quota allows:
-  # push:
-  #   branches: [main]
-  # pull_request:
+      run_sbom:
+        description: "CPP-SEC-003: enable Syft/Grype/Trivy on release/merge dispatches"
+        type: boolean
+        default: false
+  push:
+    branches: [main]
+    paths:
+      - "**"
+      - "!.github/dependabot.yml"
+      - "!docs/**"
+      - "!.cursor/**"
+  pull_request:
+    paths:
+      - "**"
+      - "!.github/dependabot.yml"
+      - "!docs/**"
+      - "!.cursor/**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 # CI-025 / CI-031 — caller grants the union of scopes the callees request.
 # A reusable workflow cannot widen this set.
@@ -34,92 +53,94 @@ jobs:
   quality:
     permissions:
       contents: read
-    uses: pirlruc/cppdevops/.github/workflows/cpp-quality.yml@4.0.0
+    uses: pirlruc/cppdevops/.github/workflows/cpp-quality.yml@CPPDEVOPS_PIN
     with:
       library_path: .
-      blocking: ${{ inputs.blocking }}
-      scripts_ref: 4.0.0
+      scripts_ref: CPPDEVOPS_PIN
+      blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
+      use_vcpkg: true
+      vcpkg_triplet: x64-linux-libcxx
     secrets:
-      checkout_token: ${{ secrets.CPPDEVOPS_READ_TOKEN }}
+      checkout_token: ${{ secrets.CPP_READ_TOKEN }}
   tests:
     permissions:
       contents: read
-    uses: pirlruc/cppdevops/.github/workflows/cpp-tests.yml@4.0.0
+    uses: pirlruc/cppdevops/.github/workflows/cpp-tests.yml@CPPDEVOPS_PIN
     with:
       library_path: .
-      blocking: ${{ inputs.blocking }}
-      scripts_ref: 4.0.0
+      scripts_ref: CPPDEVOPS_PIN
+      blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
+      use_vcpkg: true
+      vcpkg_triplet: x64-linux-libcxx
     secrets:
-      checkout_token: ${{ secrets.CPPDEVOPS_READ_TOKEN }}
+      checkout_token: ${{ secrets.CPP_READ_TOKEN }}
   docs:
     permissions:
       contents: read
-    uses: pirlruc/cppdevops/.github/workflows/cpp-docs.yml@4.0.0
+    uses: pirlruc/cppdevops/.github/workflows/cpp-docs.yml@CPPDEVOPS_PIN
     with:
       library_path: .
-      blocking: ${{ inputs.blocking }}
-      scripts_ref: 4.0.0
+      scripts_ref: CPPDEVOPS_PIN
+      blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
+      vcpkg_triplet: x64-linux-libcxx
     secrets:
-      checkout_token: ${{ secrets.CPPDEVOPS_READ_TOKEN }}
+      checkout_token: ${{ secrets.CPP_READ_TOKEN }}
   security:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/cppdevops/.github/workflows/cpp-security.yml@4.0.0
+    uses: pirlruc/cppdevops/.github/workflows/cpp-security.yml@CPPDEVOPS_PIN
     with:
       library_path: .
-      blocking: ${{ inputs.blocking }}
-      run_sbom: true
+      scripts_ref: CPPDEVOPS_PIN
+      blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
+      run_sbom: ${{ github.event_name == 'workflow_dispatch' && inputs.run_sbom }}
     secrets:
-      checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
+      checkout_token: ${{ secrets.CPP_READ_TOKEN }}
   codeql:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/cppdevops/.github/workflows/cpp-codeql.yml@4.0.0
+    uses: pirlruc/cppdevops/.github/workflows/cpp-codeql.yml@CPPDEVOPS_PIN
     with:
       library_path: .
-      blocking: ${{ inputs.blocking }}
-      scripts_ref: 4.0.0
+      scripts_ref: CPPDEVOPS_PIN
+      blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
+      use_vcpkg: true
+      vcpkg_triplet: x64-linux-libcxx
     secrets:
-      checkout_token: ${{ secrets.CPPDEVOPS_READ_TOKEN }}
+      checkout_token: ${{ secrets.CPP_READ_TOKEN }}
   dynamic:
     permissions:
       contents: read
-    uses: pirlruc/cppdevops/.github/workflows/cpp-dynamic.yml@4.0.0
+    uses: pirlruc/cppdevops/.github/workflows/cpp-dynamic.yml@CPPDEVOPS_PIN
     with:
       library_path: .
-      blocking: ${{ inputs.blocking }}
-      scripts_ref: 4.0.0
+      scripts_ref: CPPDEVOPS_PIN
+      blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
+      use_vcpkg: true
+      vcpkg_triplet: x64-linux-libcxx
     secrets:
-      checkout_token: ${{ secrets.CPPDEVOPS_READ_TOKEN }}
+      checkout_token: ${{ secrets.CPP_READ_TOKEN }}
   mobile:
     permissions:
       contents: read
-    uses: pirlruc/cppdevops/.github/workflows/cpp-mobile-matrix.yml@4.0.0
+    uses: pirlruc/cppdevops/.github/workflows/cpp-mobile-matrix.yml@CPPDEVOPS_PIN
     with:
       library_path: .
-      blocking: ${{ inputs.blocking }}
-      scripts_ref: 4.0.0
+      scripts_ref: CPPDEVOPS_PIN
+      blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
+      run_ios: false
+      min_ndk: "26.1.10909125"
+      min_xcode: "15.4"
     secrets:
-      checkout_token: ${{ secrets.CPPDEVOPS_READ_TOKEN }}
-  fuzz:
-    permissions:
-      contents: read
-    uses: pirlruc/cppdevops/.github/workflows/cpp-fuzz.yml@4.0.0
-    with:
-      library_path: .
-      blocking: ${{ inputs.blocking }}
-      run_fuzz: false
-      scripts_ref: 4.0.0
-    secrets:
-      checkout_token: ${{ secrets.CPPDEVOPS_READ_TOKEN }}
+      checkout_token: ${{ secrets.CPP_READ_TOKEN }}
   infra:
     permissions:
       contents: read
-    uses: pirlruc/cppdevops/.github/workflows/cpp-infra.yml@4.0.0
+    uses: pirlruc/cppdevops/.github/workflows/cpp-infra.yml@CPPDEVOPS_PIN
     with:
-      blocking: ${{ inputs.blocking }}
-      working_directory: .
+      scripts_ref: CPPDEVOPS_PIN
+      blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
     secrets:
-      checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
+      checkout_token: ${{ secrets.CPP_READ_TOKEN }}

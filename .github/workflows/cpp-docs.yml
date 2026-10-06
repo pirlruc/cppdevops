@@ -15,6 +15,11 @@ on:
         required: false
         type: string
         default: ""
+      vcpkg_triplet:
+        description: Accepted so callers can pass one triplet to every job. Docs does not install ports.
+        required: false
+        type: string
+        default: ""
 
     secrets:
       checkout_token:
@@ -34,6 +39,8 @@ jobs:
     timeout-minutes: 20
     permissions:
       contents: read
+    env:
+      VCPKG_TRIPLET: ${{ inputs.vcpkg_triplet }}
     concurrency:
       group: docs-${{ inputs.library_path }}-${{ github.ref }}
       cancel-in-progress: true

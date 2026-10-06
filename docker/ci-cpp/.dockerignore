@@ -2,5 +2,11 @@
 !requirements.txt
 !requirements-alpine.txt
 !Dockerfile
+!Dockerfile.*
 !container-structure-test.yml
+!container-structure-test.*.yml
 !README.md
+!triplets
+!triplets/**
+!vcpkg-overlays
+!vcpkg-overlays/**

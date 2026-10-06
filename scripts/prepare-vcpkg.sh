@@ -13,6 +13,9 @@ mkdir -p "${GITHUB_WORKSPACE}/.vcpkg-bin"
 if [ -n "${GITHUB_ENV:-}" ]; then
   printf 'VCPKG_DEFAULT_BINARY_CACHE=%s\n' "${GITHUB_WORKSPACE}/.vcpkg-bin" >> "${GITHUB_ENV}"
   printf 'VCPKG_DISABLE_METRICS=1\n' >> "${GITHUB_ENV}"
+  if [ -n "${VCPKG_TRIPLET:-}" ]; then
+    printf 'VCPKG_DEFAULT_TRIPLET=%s\n' "${VCPKG_TRIPLET}" >> "${GITHUB_ENV}"
+  fi
 fi
 
 if [ -z "${CHECKOUT_TOKEN:-}" ]; then

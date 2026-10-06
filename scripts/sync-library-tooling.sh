@@ -78,9 +78,8 @@ if [[ "${STANDALONE}" == "1" ]]; then
   # Create-once: libraries customize callers (mobile, run_sbom, SHA pins).
   # Overwriting would strip those customizations (CI-018 / CPP-SEC-003).
   if [[ ! -f "${LIB}/.github/workflows/ci-quality.yml" ]]; then
-    # Quota mode: manual workflow_dispatch only (CI-TRIGGER-001).
-    # The template pin 4.0.0 is replaced with CPPDEVOPS_WORKFLOW_REF.
-    sed "s/4\\.0\\.0/${CPPDEVOPS_REF}/g" \
+    # The template token CPPDEVOPS_PIN is replaced with CPPDEVOPS_WORKFLOW_REF.
+    sed "s/CPPDEVOPS_PIN/${CPPDEVOPS_REF}/g" \
       "${CPPDEVOPS_ROOT}/templates/ci-quality.yml" \
       > "${LIB}/.github/workflows/ci-quality.yml"
   else
