@@ -5,6 +5,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [5.1.1] - 2026-10-06
+
+### Fixed
+
+- Pin commondevops 5.3.3 so nested secrets-sast and supply-chain workflows
+  grant the permissions their jobs use.
+
 ## [5.1.0] - 2026-10-06
 
 ### Fixed
