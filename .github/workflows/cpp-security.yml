@@ -18,6 +18,11 @@ on:
         required: false
         type: boolean
         default: true
+      scripts_ref:
+        description: Accepted so callers can pass the uses pin. Nested calls use the pinned SHA.
+        required: false
+        type: string
+        default: ""
     secrets:
       checkout_token:
         required: false
@@ -47,11 +52,11 @@ concurrency:
 
 jobs:
   secrets-sast:
-    # CI-024
+    # CI-024. This callee only declares contents: read. Requesting
+    # security-events here makes the call fail at startup.
     if: github.event.pull_request.user.login != 'dependabot[bot]'
     permissions:
       contents: read
-      security-events: write
     uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@9e28757e47375bbe02f1150e3612cdf69723dd29
     with:
       blocking: ${{ inputs.blocking }}
