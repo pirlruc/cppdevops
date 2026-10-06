@@ -91,7 +91,7 @@ jobs:
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ github.workspace }}/.vcpkg-bin
-          key: vcpkg-${{ hashFiles(format('{0}/vcpkg.json', inputs.library_path), format('{0}/vcpkg-configuration.json', inputs.library_path)) }}
+          key: vcpkg-${{ inputs.library_path }}-${{ hashFiles('**/vcpkg.json', '**/vcpkg-configuration.json') }}
           restore-keys: vcpkg-
 
       - name: Prepare vcpkg
