@@ -3,6 +3,17 @@
 All notable changes to this repository are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [5.2.2] - 2026-10-06
+
+### Fixed
+
+- Actions `container:` pins use the 5.2.0 image manifest, not the tag index.
+  An index digest is not a pullable container (`manifest unknown`).
+- CI containers run as root so the non-root image user can write the runner
+  workspace.
+- The mobile matrix installs NDK `r26b` when callers pass `26.1.10909125`.
+  `setup-ndk` 404s on the numeric version.
+
 ## [5.2.1] - 2026-10-06
 
 ### Changed

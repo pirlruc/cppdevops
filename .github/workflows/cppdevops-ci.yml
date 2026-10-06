@@ -50,7 +50,9 @@ jobs:
   lint-dependabot:
     if: github.event.pull_request.user.login == 'dependabot[bot]'
     runs-on: ubuntu-24.04
-    container: ghcr.io/pirlruc/ci-lint@sha256:e0a51c64b004c6f4e4ca1672f3bb865aaf03d91bd8a2e228e0fa39be1174dfb4
+    container:
+      image: ghcr.io/pirlruc/ci-lint@sha256:e0a51c64b004c6f4e4ca1672f3bb865aaf03d91bd8a2e228e0fa39be1174dfb4
+      options: --user root
     timeout-minutes: 15
     permissions:
       contents: read

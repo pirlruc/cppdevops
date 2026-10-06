@@ -126,7 +126,7 @@ Task ids: `<EPIC-ID>-T1`, …
 
 | Area | Intent |
 |------|--------|
-| `.github/workflows/` | Reusable `cpp-*` workflows |
+| `.github/workflows/` | Reusable `cpp-*` workflows. `container:` pins are the image manifest digest, not the multi-arch tag index. Jobs set `--user root` so the runner can write |
 | `scripts/` | Coverage, Metrix++, sync-library tooling |
 | `templates/` | Library bootstrap configs |
 | `docker/ci-cpp/` | Debian and Alpine analysis images, Ubuntu compile image, vcpkg image, and the OpenCV 4.14 source-build image |
