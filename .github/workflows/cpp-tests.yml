@@ -19,13 +19,25 @@ on:
         required: false
         type: string
         default: ""
+      container_image:
+        description: Image for the tests job. Default is ci-cpp. Pass ci-cpp-vcpkg for manifest builds.
+        required: false
+        type: string
+        default: ghcr.io/pirlruc/ci-cpp@sha256:3406477bb7fc730c53df4a28dffa07a9dce5ee6f6830102df1bedc8727973b67
+      use_vcpkg:
+        description: Run vcpkg manifest mode with a files binary cache. The image must set VCPKG_ROOT.
+        required: false
+        type: boolean
+        default: false
 
     secrets:
       checkout_token:
         required: false
 
-# CI-025
-permissions: {}
+# CI-025: workflow permissions are the union of the job permissions.
+permissions:
+  actions: write
+  contents: read
 
 env:
   ADVISORY: ${{ inputs.blocking == false }}
@@ -33,10 +45,13 @@ env:
 jobs:
   tests:
     runs-on: ubuntu-24.04
-    container: ghcr.io/pirlruc/ci-cpp@sha256:3406477bb7fc730c53df4a28dffa07a9dce5ee6f6830102df1bedc8727973b67
+    container: ${{ inputs.container_image }}
     timeout-minutes: 45
     permissions:
+      actions: write
       contents: read
+    env:
+      USE_VCPKG: ${{ inputs.use_vcpkg }}
     concurrency:
       group: tests-${{ inputs.library_path }}-${{ github.ref }}
       cancel-in-progress: true
@@ -68,6 +83,20 @@ jobs:
             exit 1
           fi
 
+      - name: Restore vcpkg binary cache
+        if: inputs.use_vcpkg
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ github.workspace }}/.vcpkg-bin
+          key: vcpkg-${{ hashFiles(format('{0}/vcpkg.json', inputs.library_path), format('{0}/vcpkg-configuration.json', inputs.library_path)) }}
+          restore-keys: vcpkg-
+
+      - name: Prepare vcpkg
+        if: inputs.use_vcpkg
+        working-directory: ${{ github.workspace }}
+        env:
+          CHECKOUT_TOKEN: ${{ secrets.checkout_token }}
+        run: sh _cppdevops/scripts/prepare-vcpkg.sh
 
       - name: Configure and build
         id: build
@@ -78,11 +107,11 @@ jobs:
         run: |
           # Use gcov-compatible --coverage (not llvm source-based profiling) so
           # check-coverage.sh / gcovr can produce a numeric coverage.json.
-          cmake --preset "${CMAKE_PRESET}" \
+          sh "${GITHUB_WORKSPACE}/_cppdevops/scripts/cmake-ci.sh" --preset "${CMAKE_PRESET}" \
             -DPIRLRUC_WITH_TESTS=ON \
             -DPIRLRUC_WITH_COVERAGE=ON \
             -DCMAKE_CXX_FLAGS="-stdlib=libc++ --coverage" \
-            || cmake -B build \
+            || sh "${GITHUB_WORKSPACE}/_cppdevops/scripts/cmake-ci.sh" -B build \
               -DPIRLRUC_WITH_TESTS=ON \
               -DPIRLRUC_WITH_COVERAGE=ON \
               -DCMAKE_CXX_COMPILER=clang++ \

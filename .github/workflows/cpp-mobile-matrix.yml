@@ -33,8 +33,9 @@ on:
       checkout_token:
         required: false
 
-# CI-025
-permissions: {}
+# CI-025: workflow permissions are the union of the job permissions.
+permissions:
+  contents: read
 
 env:
   ADVISORY: ${{ inputs.blocking == false }}

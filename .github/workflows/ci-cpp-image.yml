@@ -368,3 +368,110 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
+
+  lint-vcpkg:
+    if: >-
+      github.event.pull_request.user.login != 'dependabot[bot]' &&
+      (github.event_name != 'pull_request' ||
+       github.event.pull_request.head.repo.full_name == github.repository)
+    permissions:
+      contents: read
+      security-events: write
+    uses: pirlruc/containerdevops/.github/workflows/container-lint.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    with:
+      dockerfile: docker/ci-cpp/Dockerfile.vcpkg
+      working_directory: .
+      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      runner_image: ""
+      run_infra_lint: false
+      run_secrets_scan: true
+      blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
+    secrets:
+      checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
+      scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
+
+  build-vcpkg:
+    needs: [lint-vcpkg]
+    if: >-
+      github.event.pull_request.user.login != 'dependabot[bot]' &&
+      (github.event_name != 'pull_request' ||
+       github.event.pull_request.head.repo.full_name == github.repository)
+    permissions:
+      contents: read
+      packages: write
+    uses: pirlruc/containerdevops/.github/workflows/container-build.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    with:
+      context: docker/ci-cpp
+      dockerfile: docker/ci-cpp/Dockerfile.vcpkg
+      image_name: ci-cpp-vcpkg:ci
+      artifact_name: container-image-ci-cpp-vcpkg
+      handoff_package: ci-cpp-vcpkg
+      structure_test_config: docker/ci-cpp/container-structure-test.vcpkg.yml
+      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
+      size_class: ci_toolchain
+      image_title: ci-cpp-vcpkg
+      image_description: >-
+        C++ CI toolchain plus a pinned vcpkg. OpenCV is not installed;
+        builds use a files binary cache. Non-root 1000:1000, linux/amd64.
+      dhi_login: false
+    secrets:
+      scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
+
+  scan-vcpkg:
+    needs: build-vcpkg
+    if: >-
+      github.event.pull_request.user.login != 'dependabot[bot]' &&
+      (github.event_name != 'pull_request' ||
+       github.event.pull_request.head.repo.full_name == github.repository)
+    permissions:
+      contents: read
+      security-events: write
+      packages: read
+    uses: pirlruc/containerdevops/.github/workflows/container-scan.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    with:
+      image: ${{ format('ghcr.io/{0}/{1}@{2}', github.repository_owner, needs.build-vcpkg.outputs.handoff_package, needs.build-vcpkg.outputs.digest) }}
+      results_artifact: container-scan-results-ci-cpp-vcpkg
+      sarif_category: trivy-image-ci-cpp-vcpkg
+      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      pkg_types: library
+      ignorefile: docker/ci-cpp/.trivyignore.yaml
+      blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
+    secrets:
+      scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
+
+  publish-vcpkg:
+    needs: [build-vcpkg, scan-vcpkg]
+    if: >-
+      github.event.pull_request.user.login != 'dependabot[bot]' &&
+      (github.event_name == 'release' ||
+       github.event_name == 'schedule' ||
+       (github.event_name == 'workflow_dispatch' && inputs.publish))
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
+    uses: pirlruc/containerdevops/.github/workflows/container-publish.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    with:
+      context: docker/ci-cpp
+      dockerfile: docker/ci-cpp/Dockerfile.vcpkg
+      image_name: ci-cpp-vcpkg
+      dockerhub_image: pirlruc/ci-cpp-vcpkg
+      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      platforms: linux/amd64
+      image_title: ci-cpp-vcpkg
+      image_description: >-
+        C++ CI toolchain plus a pinned vcpkg. OpenCV stays in the binary cache.
+      dockerhub_readme: docs/docker-hub.md
+      dockerhub_short_description: C++ CI toolchain with vcpkg, OpenCV via binary cache
+      sign: ${{ github.event.repository.visibility == 'public' }}
+      blocking: true
+      dhi_login: false
+      tag_latest: ${{ github.event_name != 'release' || github.event.release.prerelease == false }}
+      verify_command: vcpkg version
+      source_image: ${{ format('ghcr.io/{0}/{1}@{2}', github.repository_owner, needs.build-vcpkg.outputs.handoff_package, needs.build-vcpkg.outputs.digest) }}
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
