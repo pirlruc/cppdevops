@@ -186,6 +186,9 @@ jobs:
           [[ -d include ]] && dirs+=(include)
           [[ -d src ]] && dirs+=(src)
           if [[ ${#dirs[@]} -eq 0 ]]; then echo "No include/src"; exit 0; fi
+          # Cppcheck 2.17 scans only *.cpp in a directory. Headers must be named.
+          mapfile -t FILES < <(find "${dirs[@]}" \( -name '*.cpp' -o -name '*.hpp' -o -name '*.h' -o -name '*.tpp' \) | sort)
+          if [[ ${#FILES[@]} -eq 0 ]]; then echo "No C++ sources"; exit 0; fi
           SUPP=cppcheck-suppressions.xml
           EXTRA=()
           # The scaffold file is XML. cppcheck --suppressions-list expects plain text.
@@ -194,7 +197,7 @@ jobs:
           fi
           cppcheck --enable=warning,style,performance,portability \
             --error-exitcode=1 --inline-suppr \
-            --std=c++20 "${EXTRA[@]}" "${dirs[@]}"
+            --std=c++20 "${EXTRA[@]}" "${FILES[@]}"
 
       - name: lizard complexity
         id: lizard

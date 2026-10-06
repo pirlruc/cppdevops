@@ -7,6 +7,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ### Fixed
 
+- cppcheck 2.17 does not scan headers when given a directory. Quality names
+  the `.hpp` files.
+
+
+### Fixed
+
 - Quality cpplint reads `.cpplint` and does not flag the C++20 header style
   these libraries already use.
 - Header-only libraries skip clang-tidy when CMake writes no compilation
