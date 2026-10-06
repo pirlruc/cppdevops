@@ -43,7 +43,7 @@ clang-format, cpplint, clang-tidy, cppcheck, lizard, Metrix++.
 
 Numeric gates (CCN, coverage) come from `scripts/cpp.profile.thresholds.yml`
 (CI-021/022). Job runs in
-`container: ghcr.io/pirlruc/ci-cpp@sha256:28db91b4a240ec459e90afedf07d9ed5030e3733933c82944127a156bca711d3`
+`container: docker.io/pirlruc/ci-cpp@sha256:28db91b4a240ec459e90afedf07d9ed5030e3733933c82944127a156bca711d3`
 (same digest on `cpp-tests`, `cpp-docs`, `cpp-dynamic`, `cpp-codeql`).
 
 ---

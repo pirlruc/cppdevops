@@ -35,8 +35,9 @@ Forbidden and did not fill the Overview for `ci-cpp-ubuntu`, `ci-cpp-vcpkg`, or
 ### Tags
 
 Digests below are the tag's manifest list. `latest` matches 5.2.0. Actions
-`container:` cannot pull that index. Workflow defaults pin the Debian image
-manifest `sha256:28db91b4a240ec459e90afedf07d9ed5030e3733933c82944127a156bca711d3`.
+`container:` cannot pull that index, and `ghcr.io/pirlruc/ci-cpp` is private.
+Workflow defaults pin
+`docker.io/pirlruc/ci-cpp@sha256:28db91b4a240ec459e90afedf07d9ed5030e3733933c82944127a156bca711d3`.
 
 | Image | Tag | Digest |
 |-------|-----|--------|
