@@ -84,11 +84,23 @@ jobs:
           fi
 
 
+      - name: Android NDK release name
+        id: ndk_release
+        env:
+          MIN_NDK: ${{ inputs.min_ndk }}
+        run: |
+          set -eu
+          case "${MIN_NDK}" in
+            26.1.10909125|r26b) release=r26b ;;
+            *) release="${MIN_NDK}" ;;
+          esac
+          echo "release=${release}" >> "${GITHUB_OUTPUT}"
+
       - name: Setup Android NDK
         uses: nttld/setup-ndk@ed92fe6cadad69be94a966a7ee3271275e62f779 # v1.6.0
         id: setup-ndk
         with:
-          ndk-version: ${{ inputs.min_ndk }}
+          ndk-version: ${{ steps.ndk_release.outputs.release }}
           link-to-sdk: false
 
       - name: Android NDK smoke compile

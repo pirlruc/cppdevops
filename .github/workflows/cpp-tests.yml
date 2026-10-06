@@ -23,7 +23,7 @@ on:
         description: Image for the tests job. Default is ci-cpp. Pass ci-cpp-vcpkg for manifest builds.
         required: false
         type: string
-        default: ghcr.io/pirlruc/ci-cpp@sha256:94667c573a1fe4a08aa333cd4083a53553d394c34a8d854d12912831b5536cde
+        default: ghcr.io/pirlruc/ci-cpp@sha256:28db91b4a240ec459e90afedf07d9ed5030e3733933c82944127a156bca711d3
       use_vcpkg:
         description: Run vcpkg manifest mode with a files binary cache. The image must set VCPKG_ROOT.
         required: false
@@ -52,7 +52,9 @@ jobs:
     runs-on: ubuntu-24.04
     # Default input is a digest. Callers that override must pass a digest too.
     # zizmor: ignore[unpinned-images]
-    container: ${{ inputs.container_image }}
+    container:
+      image: ${{ inputs.container_image }}
+      options: --user root
     timeout-minutes: 45
     permissions:
       actions: write
@@ -158,7 +160,9 @@ jobs:
 
   ubuntu-compile:
     runs-on: ubuntu-24.04
-    container: ghcr.io/pirlruc/ci-cpp-ubuntu@sha256:0a6f9b7f044e9e1a2098ff7f57425d16245daaeff505b07dca90199933a3011f
+    container:
+      image: ghcr.io/pirlruc/ci-cpp-ubuntu@sha256:08580497f49d79012a03023377216a3ef2e274a7b7616d4f2a155d2d6551ed68
+      options: --user root
     timeout-minutes: 30
     permissions:
       contents: read
