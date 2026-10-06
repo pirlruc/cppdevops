@@ -3,7 +3,7 @@
 All notable changes to this repository are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
-## [Unreleased]
+## [5.2.5] - 2026-10-07
 
 ### Changed
 
@@ -11,13 +11,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
   its own Hub and Packages pages (`docs/docker-hub-<image>.md`,
   `docs/github-packages-<image>.md`). Debian and Alpine stay in `docker/ci-cpp/`.
 
-## [5.2.4] - 2026-10-06
-
 ### Fixed
 
 - cppcheck 2.17 does not scan headers when given a directory. Quality names
-  the `.hpp` files.
+  the `.hpp` files. This commit landed after the v5.2.4 tag.
 
+## [5.2.4] - 2026-10-06
 
 ### Fixed
 
