@@ -8,7 +8,7 @@ Not a product runtime — no `HEALTHCHECK`.
 
 | Item | Value |
 |------|--------|
-| GHCR | `ghcr.io/pirlruc/ci-cpp`, `ghcr.io/pirlruc/ci-cpp-ubuntu`, `ghcr.io/pirlruc/ci-cpp-vcpkg`. `ghcr.io/pirlruc/ci-cpp-opencv` is created on the first publish |
+| GHCR | `ghcr.io/pirlruc/ci-cpp`, `ghcr.io/pirlruc/ci-cpp-ubuntu`, `ghcr.io/pirlruc/ci-cpp-vcpkg`, `ghcr.io/pirlruc/ci-cpp-opencv` |
 | Architectures | `linux/amd64` |
 | User | non-root `1000:1000` |
 | Base | Debian 13 analysis (`ci-cpp`, `ci-cpp-vcpkg`); Alpine 3.24 (`-alpine`); Ubuntu 24.04 compile (`ci-cpp-ubuntu`, `ci-cpp-opencv`) |

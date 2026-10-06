@@ -1232,7 +1232,7 @@ milestones:
       guardrail_refs:
       - DOCKER-PERF-002
   - id: CPPD-OCV-001
-    status: open
+    status: done
     title: Publish ci-cpp-opencv and retarget workflow image digests
     overview:
       problem: >-
@@ -1279,7 +1279,7 @@ milestones:
     - CI-026
     tasks:
     - id: CPPD-OCV-001-T1
-      status: open
+      status: done
       title: Land the OpenCV image, structure test, and registry pages
       instructions:
         files:
@@ -1295,7 +1295,7 @@ milestones:
       guardrail_refs:
       - DOCKER-BUILD-003
     - id: CPPD-OCV-001-T2
-      status: open
+      status: done
       title: Publish ci-cpp-opencv and write its digest into the registry docs
       instructions:
         files:
@@ -1306,7 +1306,7 @@ milestones:
       guardrail_refs:
       - CI-026
     - id: CPPD-OCV-001-T3
-      status: open
+      status: done
       title: Point reusable workflow defaults at the 5.1.2 Debian digest
       instructions:
         files:

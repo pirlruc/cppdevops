@@ -12,11 +12,16 @@ there and builds use `VCPKG_DEFAULT_BINARY_CACHE`. `ci-cpp-opencv` is the
 Ubuntu 24.04 compile image with OpenCV 4.14.0 built from the release tarball
 and Eigen 3.4 from `libeigen3-dev`. The same image ships vcpkg, the
 `x64-linux-libcxx` triplet, and overlay ports that satisfy `opencv4` and
-`eigen3` from the image instead of compiling them. It is published on the
-next image release; it is not on Docker Hub yet.
+`eigen3` from the image instead of compiling them. Tag `5.2.0` is on Docker Hub
+and GHCR.
 Not a product runtime — no `HEALTHCHECK`. graphviz and cloc are not installed.
 curl is installed in `ci-cpp-vcpkg` so vcpkg can bootstrap. `ci-cpp-opencv`
 bootstraps vcpkg in the build stage and does not keep curl in the final image.
+
+The 5.2.0 publish pushed the images. The Hub Overview step is advisory: the
+token can push but cannot write repository descriptions, so that step returned
+Forbidden and did not fill the Overview for `ci-cpp-ubuntu`, `ci-cpp-vcpkg`, or
+`ci-cpp-opencv`. This page is the description for every image name.
 
 ## Image
 
