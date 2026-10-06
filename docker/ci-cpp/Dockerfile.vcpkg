@@ -26,7 +26,7 @@ RUN apt-get update \
       unzip=6.0-29+dhi1 \
       pkg-config=1.8.1-4+dhi1 \
       nasm=2.16.03-1 \
- && curl -fsSL -o /tmp/vcpkg.tar.gz \
+ && curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors -o /tmp/vcpkg.tar.gz \
       "https://github.com/microsoft/vcpkg/archive/${VCPKG_COMMIT}.tar.gz" \
  && tar -xzf /tmp/vcpkg.tar.gz -C /opt \
  && rm -f /tmp/vcpkg.tar.gz \
