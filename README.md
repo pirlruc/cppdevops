@@ -107,11 +107,16 @@ Deviations: [`docs/guardrail-deviations.yml`](docs/guardrail-deviations.yml) onl
 
 - Agent handoff: [`docs/ai-agent-handoff.md`](docs/ai-agent-handoff.md)
 - Workflow contracts: [`docs/workflows.md`](docs/workflows.md)
-- Docker Hub: [`docs/docker-hub.md`](docs/docker-hub.md)
-- GitHub Packages: [`docs/github-packages.md`](docs/github-packages.md)
 - Consumer pin / draupnir retirement: [`docs/consumer-checklist.md`](docs/consumer-checklist.md)
 - Authored backlog: [`docs/issues.yml`](docs/issues.yml)
 - Changelog: [`CHANGELOG.md`](CHANGELOG.md)
+
+| Image | Docker Hub | GitHub Packages |
+|-------|------------|-----------------|
+| `ci-cpp` | [`docs/docker-hub-ci-cpp.md`](docs/docker-hub-ci-cpp.md) | [`docs/github-packages-ci-cpp.md`](docs/github-packages-ci-cpp.md) |
+| `ci-cpp-ubuntu` | [`docs/docker-hub-ci-cpp-ubuntu.md`](docs/docker-hub-ci-cpp-ubuntu.md) | [`docs/github-packages-ci-cpp-ubuntu.md`](docs/github-packages-ci-cpp-ubuntu.md) |
+| `ci-cpp-vcpkg` | [`docs/docker-hub-ci-cpp-vcpkg.md`](docs/docker-hub-ci-cpp-vcpkg.md) | [`docs/github-packages-ci-cpp-vcpkg.md`](docs/github-packages-ci-cpp-vcpkg.md) |
+| `ci-cpp-opencv` | [`docs/docker-hub-ci-cpp-opencv.md`](docs/docker-hub-ci-cpp-opencv.md) | [`docs/github-packages-ci-cpp-opencv.md`](docs/github-packages-ci-cpp-opencv.md) |
 
 ## Review protocol
 

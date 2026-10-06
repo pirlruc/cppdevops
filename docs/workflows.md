@@ -175,14 +175,17 @@ repository (CPPD-MOBILE-002, CPPD-PIN-002).
 
 ## `ci-cpp-image.yml` (caller)
 
-Thin caller into containerdevops for lint/build/scan/publish of `docker/ci-cpp`.
-Triggers (same shape as commondevops `ci-lint-image.yml`):
+Thin caller into containerdevops. One context per image name, matching
+commondevops: `docker/ci-cpp/` (Debian and Alpine), `docker/ci-cpp-ubuntu/`,
+`docker/ci-cpp-vcpkg/`, `docker/ci-cpp-opencv/`. Hub pages are
+`docs/docker-hub-<image>.md`. Triggers (same shape as commondevops
+`ci-lint-image.yml`):
 
 | Trigger | Behaviour |
 |---------|-----------|
 | `release: published` | Build + publish |
 | `schedule` (monthly, 20th 05:17 UTC) | Rebuild within `ci_image_max_age_days` (CI-027) |
-| `pull_request` → `main` (paths: `docker/ci-cpp/**`, workflow) | Lint/build/scan only |
+| `pull_request` → `main` (paths: `docker/ci-cpp*/**`, workflow) | Lint/build/scan only |
 | `workflow_dispatch` | Optional `blocking` / `publish` |
 
 Secrets: `CONTAINERDEVOPS_READ_TOKEN`, `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`.

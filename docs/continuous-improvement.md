@@ -129,8 +129,8 @@ Task ids: `<EPIC-ID>-T1`, …
 | `.github/workflows/` | Reusable `cpp-*` workflows. `container:` pins are the Docker Hub image manifest, not the GHCR package (private) and not the multi-arch tag index. Jobs set `--user root` so the runner can write |
 | `scripts/` | Coverage, Metrix++ (`std.code.mi:simple`), sync-library tooling. Quality cpplint honors `.cpplint` |
 | `templates/` | Library bootstrap configs |
-| `docker/ci-cpp/` | Debian and Alpine analysis images, Ubuntu compile image, vcpkg image, and the OpenCV 4.14 source-build image |
-| `docs/docker-hub.md` / `docs/github-packages.md` | Registry pages for every published image name: `ci-cpp`, `ci-cpp-ubuntu`, `ci-cpp-vcpkg`, and `ci-cpp-opencv`. Derive which variant owns unsuffixed tags from the image workflow |
+| `docker/<image>/` | One build context per published image name. `ci-cpp` keeps Debian and Alpine together. `ci-cpp-ubuntu`, `ci-cpp-vcpkg`, and `ci-cpp-opencv` are separate contexts |
+| `docs/docker-hub-<image>.md` / `docs/github-packages-<image>.md` | One registry page per image name. Derive which variant owns unsuffixed tags from that image's workflow |
 | `docs/` | Handoff, this prompt, authored `issues.yml`, deviations |
 | `.github/dependabot.yml` | Multi-ecosystem dependency updates |
 

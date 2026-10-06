@@ -54,6 +54,36 @@ updates:
     cooldown:
       default-days: 7
 
+  - package-ecosystem: docker
+    directory: /docker/ci-cpp-ubuntu
+    patterns: ["*"]
+    multi-ecosystem-group: all-dependencies
+    registries:
+      - github-private
+      - dhi
+    cooldown:
+      default-days: 7
+
+  - package-ecosystem: docker
+    directory: /docker/ci-cpp-vcpkg
+    patterns: ["*"]
+    multi-ecosystem-group: all-dependencies
+    registries:
+      - github-private
+      - dhi
+    cooldown:
+      default-days: 7
+
+  - package-ecosystem: docker
+    directory: /docker/ci-cpp-opencv
+    patterns: ["*"]
+    multi-ecosystem-group: all-dependencies
+    registries:
+      - github-private
+      - dhi
+    cooldown:
+      default-days: 7
+
   - package-ecosystem: pre-commit
     directory: /templates/cpp
     patterns: ["*"]

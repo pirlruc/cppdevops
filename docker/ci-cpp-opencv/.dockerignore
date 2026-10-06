@@ -1,0 +1,8 @@
+*
+!Dockerfile
+!container-structure-test.yml
+!triplets
+!triplets/**
+!vcpkg-overlays
+!vcpkg-overlays/**
+!README.md

@@ -1,7 +1,7 @@
 ---
-# Thin caller — publishes ghcr.io/pirlruc/ci-cpp (Debian, unsuffixed), ci-cpp
-# Alpine (-alpine), ci-cpp-ubuntu (compile only), ci-cpp-vcpkg, and
-# ci-cpp-opencv (OpenCV 4.14 from source). Devcontainers stay Ubuntu.
+# Thin caller — one context per image name, matching commondevops:
+# docker/ci-cpp (Debian unsuffixed, Alpine -alpine), docker/ci-cpp-ubuntu,
+# docker/ci-cpp-vcpkg, docker/ci-cpp-opencv. Devcontainers stay Ubuntu.
 name: CI C++ Image
 
 on:
@@ -13,6 +13,9 @@ on:
     branches: [main]
     paths:
       - "docker/ci-cpp/**"
+      - "docker/ci-cpp-ubuntu/**"
+      - "docker/ci-cpp-vcpkg/**"
+      - "docker/ci-cpp-opencv/**"
       - ".github/workflows/ci-cpp-image.yml"
   workflow_dispatch:
     inputs:
@@ -159,7 +162,7 @@ jobs:
       image_documentation: https://hub.docker.com/r/pirlruc/ci-cpp
       image_url: https://hub.docker.com/r/pirlruc/ci-cpp
       image_vendor: pirlruc
-      dockerhub_readme: docs/docker-hub.md
+      dockerhub_readme: docs/docker-hub-ci-cpp.md
       dockerhub_short_description: >-
         C++ CI toolchain: Clang/libc++, CMake, Ninja, quality and coverage tools
       sign: ${{ github.event.repository.visibility == 'public' }}
@@ -279,6 +282,7 @@ jobs:
       image_title: ci-cpp
       image_description: >-
         C++ analysis toolchain, Alpine 3.24, Clang 20. Non-root 1000:1000, linux/amd64.
+      dockerhub_readme: docs/docker-hub-ci-cpp.md
       sign: ${{ github.event.repository.visibility == 'public' }}
       blocking: true
       dhi_login: true
@@ -299,7 +303,7 @@ jobs:
       security-events: write
     uses: pirlruc/containerdevops/.github/workflows/container-lint.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
     with:
-      dockerfile: docker/ci-cpp/Dockerfile.ubuntu
+      dockerfile: docker/ci-cpp-ubuntu/Dockerfile
       working_directory: .
       scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
       runner_image: ""
@@ -321,12 +325,12 @@ jobs:
       packages: write
     uses: pirlruc/containerdevops/.github/workflows/container-build.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
     with:
-      context: docker/ci-cpp
-      dockerfile: docker/ci-cpp/Dockerfile.ubuntu
+      context: docker/ci-cpp-ubuntu
+      dockerfile: docker/ci-cpp-ubuntu/Dockerfile
       image_name: ci-cpp-ubuntu:ci
       artifact_name: container-image-ci-cpp-ubuntu
       handoff_package: ci-cpp-ubuntu
-      structure_test_config: docker/ci-cpp/container-structure-test.ubuntu.yml
+      structure_test_config: docker/ci-cpp-ubuntu/container-structure-test.yml
       scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
       size_class: ci_toolchain
@@ -348,8 +352,8 @@ jobs:
       attestations: write
     uses: pirlruc/containerdevops/.github/workflows/container-publish.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
     with:
-      context: docker/ci-cpp
-      dockerfile: docker/ci-cpp/Dockerfile.ubuntu
+      context: docker/ci-cpp-ubuntu
+      dockerfile: docker/ci-cpp-ubuntu/Dockerfile
       image_name: ci-cpp-ubuntu
       dockerhub_image: pirlruc/ci-cpp-ubuntu
       scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
@@ -357,7 +361,7 @@ jobs:
       image_title: ci-cpp-ubuntu
       image_description: >-
         Compile-only C++ toolchain: Clang 18, libc++, CMake, Ninja, git. Ubuntu 24.04.
-      dockerhub_readme: docs/docker-hub.md
+      dockerhub_readme: docs/docker-hub-ci-cpp-ubuntu.md
       dockerhub_short_description: Compile-only C++ toolchain on Ubuntu 24.04
       sign: ${{ github.event.repository.visibility == 'public' }}
       blocking: true
@@ -380,7 +384,7 @@ jobs:
       security-events: write
     uses: pirlruc/containerdevops/.github/workflows/container-lint.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
     with:
-      dockerfile: docker/ci-cpp/Dockerfile.vcpkg
+      dockerfile: docker/ci-cpp-vcpkg/Dockerfile
       working_directory: .
       scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
       runner_image: ""
@@ -402,12 +406,12 @@ jobs:
       packages: write
     uses: pirlruc/containerdevops/.github/workflows/container-build.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
     with:
-      context: docker/ci-cpp
-      dockerfile: docker/ci-cpp/Dockerfile.vcpkg
+      context: docker/ci-cpp-vcpkg
+      dockerfile: docker/ci-cpp-vcpkg/Dockerfile
       image_name: ci-cpp-vcpkg:ci
       artifact_name: container-image-ci-cpp-vcpkg
       handoff_package: ci-cpp-vcpkg
-      structure_test_config: docker/ci-cpp/container-structure-test.vcpkg.yml
+      structure_test_config: docker/ci-cpp-vcpkg/container-structure-test.yml
       scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
       size_class: ci_toolchain
@@ -436,7 +440,7 @@ jobs:
       sarif_category: trivy-image-ci-cpp-vcpkg
       scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
       pkg_types: library
-      ignorefile: docker/ci-cpp/.trivyignore.yaml
+      ignorefile: docker/ci-cpp-vcpkg/.trivyignore.yaml
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
     secrets:
       scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
@@ -455,8 +459,8 @@ jobs:
       attestations: write
     uses: pirlruc/containerdevops/.github/workflows/container-publish.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
     with:
-      context: docker/ci-cpp
-      dockerfile: docker/ci-cpp/Dockerfile.vcpkg
+      context: docker/ci-cpp-vcpkg
+      dockerfile: docker/ci-cpp-vcpkg/Dockerfile
       image_name: ci-cpp-vcpkg
       dockerhub_image: pirlruc/ci-cpp-vcpkg
       scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
@@ -464,7 +468,7 @@ jobs:
       image_title: ci-cpp-vcpkg
       image_description: >-
         C++ CI toolchain plus a pinned vcpkg. OpenCV stays in the binary cache.
-      dockerhub_readme: docs/docker-hub.md
+      dockerhub_readme: docs/docker-hub-ci-cpp-vcpkg.md
       dockerhub_short_description: C++ CI toolchain with vcpkg, OpenCV via binary cache
       sign: ${{ github.event.repository.visibility == 'public' }}
       blocking: true
@@ -487,7 +491,7 @@ jobs:
       security-events: write
     uses: pirlruc/containerdevops/.github/workflows/container-lint.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
     with:
-      dockerfile: docker/ci-cpp/Dockerfile.opencv
+      dockerfile: docker/ci-cpp-opencv/Dockerfile
       working_directory: .
       scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
       runner_image: ""
@@ -509,12 +513,12 @@ jobs:
       packages: write
     uses: pirlruc/containerdevops/.github/workflows/container-build.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
     with:
-      context: docker/ci-cpp
-      dockerfile: docker/ci-cpp/Dockerfile.opencv
+      context: docker/ci-cpp-opencv
+      dockerfile: docker/ci-cpp-opencv/Dockerfile
       image_name: ci-cpp-opencv:ci
       artifact_name: container-image-ci-cpp-opencv
       handoff_package: ci-cpp-opencv
-      structure_test_config: docker/ci-cpp/container-structure-test.opencv.yml
+      structure_test_config: docker/ci-cpp-opencv/container-structure-test.yml
       scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
       size_class: ci_toolchain
@@ -543,7 +547,7 @@ jobs:
       sarif_category: trivy-image-ci-cpp-opencv
       scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
       pkg_types: library
-      ignorefile: docker/ci-cpp/.trivyignore.yaml
+      ignorefile: docker/ci-cpp-opencv/.trivyignore.yaml
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
     secrets:
       scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
@@ -562,8 +566,8 @@ jobs:
       attestations: write
     uses: pirlruc/containerdevops/.github/workflows/container-publish.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
     with:
-      context: docker/ci-cpp
-      dockerfile: docker/ci-cpp/Dockerfile.opencv
+      context: docker/ci-cpp-opencv
+      dockerfile: docker/ci-cpp-opencv/Dockerfile
       image_name: ci-cpp-opencv
       dockerhub_image: pirlruc/ci-cpp-opencv
       scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
@@ -571,7 +575,7 @@ jobs:
       image_title: ci-cpp-opencv
       image_description: >-
         Compile image with OpenCV 4.14.0, Eigen 3.4, and a libc++ vcpkg.
-      dockerhub_readme: docs/docker-hub.md
+      dockerhub_readme: docs/docker-hub-ci-cpp-opencv.md
       dockerhub_short_description: C++ compile image with OpenCV 4.14 and Eigen 3.4
       sign: ${{ github.event.repository.visibility == 'public' }}
       blocking: true
