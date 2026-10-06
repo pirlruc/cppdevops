@@ -1,0 +1,64 @@
+schemaVersion: "2.0.0"
+metadataTest:
+  cmd: ["bash"]
+  user: "1000:1000"
+commandTests:
+  - name: clang
+    command: "clang++"
+    args: ["--version"]
+    exitCode: 0
+  - name: cmake
+    command: "cmake"
+    args: ["--version"]
+    exitCode: 0
+  - name: ninja
+    command: "ninja"
+    args: ["--version"]
+    exitCode: 0
+  - name: git
+    command: "git"
+    args: ["--version"]
+    exitCode: 0
+  - name: vcpkg
+    command: "vcpkg"
+    args: ["version"]
+    exitCode: 0
+  - name: opencv version
+    command: "pkg-config"
+    args: ["--modversion", "opencv4"]
+    expectedOutput: ["4.14.0"]
+  - name: opencv linked to libc++
+    command: "bash"
+    args:
+      - "-c"
+      - "ldd /usr/local/lib/libopencv_core.so | grep -q 'libc++.so'"
+    exitCode: 0
+  - name: jpeg and png headers
+    command: "bash"
+    args:
+      - "-c"
+      - "test -f /usr/include/jpeglib.h && test -f /usr/include/png.h"
+    exitCode: 0
+  - name: eigen headers
+    command: "test"
+    args: ["-f", "/usr/include/eigen3/Eigen/Core"]
+    exitCode: 0
+  - name: libc++ triplet
+    command: "test"
+    args: ["-f", "/opt/vcpkg-triplets/x64-linux-libcxx.cmake"]
+    exitCode: 0
+  - name: system overlay ports
+    command: "bash"
+    args:
+      - "-c"
+      - "test -f /opt/vcpkg-overlays/opencv4/portfile.cmake && test -f /opt/vcpkg-overlays/eigen3/portfile.cmake"
+    exitCode: 0
+  - name: curl is not in the final image
+    command: "bash"
+    args: ["-c", "! command -v curl"]
+    exitCode: 0
+  - name: "no setuid or setgid files"
+    command: "bash"
+    args:
+      - "-c"
+      - "! find / -xdev -type f -perm -4000 -print | grep -q . && ! find / -xdev -type f -perm -2000 -print | grep -q ."

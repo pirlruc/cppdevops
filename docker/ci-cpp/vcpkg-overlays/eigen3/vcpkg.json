@@ -1,0 +1,6 @@
+{
+  "name": "eigen3",
+  "version": "3.4.0",
+  "description": "System Eigen headers from libeigen3-dev. This port does not install Eigen 5.",
+  "homepage": "https://github.com/pirlruc/cppdevops"
+}

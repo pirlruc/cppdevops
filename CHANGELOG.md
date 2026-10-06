@@ -3,7 +3,25 @@
 All notable changes to this repository are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
-## [Unreleased]
+## [5.2.0] - 2026-10-06
+
+### Added
+
+- `ci-cpp-opencv` builds OpenCV 4.14.0 with libc++, ships a pinned vcpkg, the
+  `x64-linux-libcxx` triplet, and system overlay ports for `opencv4` and
+  `eigen3` so manifest installs do not rebuild those libraries
+  (CPPD-OCV-001).
+- `vcpkg_triplet` input on quality, tests, dynamic, codeql, and docs.
+  `ci-cpp-vcpkg` installs the same triplet.
+- `run_ios` input on the mobile matrix. The caller template passes `false`.
+- Caller template runs on push and pull_request with `blocking` true,
+  concurrency cancel-in-progress, and path filters.
+
+### Changed
+
+- Ubuntu 24.04 digest is unchanged. The index is still created 2026-09-17,
+  so CPPD-SCAN-001 stays open until Canonical publishes a newer noble image.
+
 
 ## [5.1.1] - 2026-10-06
 

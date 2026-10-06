@@ -1116,10 +1116,11 @@ milestones:
         unfixed linux-libc-dev highs remain. Image CI only scans language
         packages (pkg-types library), so this OS check is not covered there.
       - >-
-        ubuntu:24.04@sha256:49675449… was created 2026-09-11. base_image_max_age_days
-        is 30, so the pin fails DOCKER-BUILD-006 on 2026-10-11, before the
-        monthly rebuild on the 20th. Bump both Dockerfile FROM digests together
-        when a newer noble image exists.
+        ubuntu:24.04@sha256:534baea6a22c03a63003dbc8dbe78fe34bc0d7e595d9a9dc9834884ff530eb55
+        was created 2026-09-18. base_image_max_age_days is 30, so the pin fails
+        DOCKER-BUILD-006 on 2026-10-18. The 2026-10-06 refresh moved the tag
+        digest; the created date did not. Bump both Dockerfile FROM digests
+        together when a newer noble image exists.
     guardrail_refs:
     - DOCKER-SEC-001
     - DOCKER-BUILD-006
@@ -1230,3 +1231,92 @@ milestones:
       - handoff names the cache and says ci-cpp itself stays free of OpenCV
       guardrail_refs:
       - DOCKER-PERF-002
+  - id: CPPD-OCV-001
+    status: open
+    title: Publish ci-cpp-opencv and retarget workflow image digests
+    overview:
+      problem: >-
+        heimdallcv and draupnir need OpenCV newer than the vcpkg port, and the
+        reusable workflows still default to the 5.0.0 Debian digest. A local
+        Ubuntu 24.04 image builds OpenCV 4.14.0 from source, but it is not
+        published and the registry docs for it are uncommitted.
+      goal: >-
+        Publish pirlruc/ci-cpp-opencv and ghcr.io/pirlruc/ci-cpp-opencv, record
+        the digest, and point workflow defaults at the 5.1.2 analysis digest.
+    decision: >-
+      In the context of vision-library CI, facing a vcpkg OpenCV port that lags
+      4.14, we decided to ship OpenCV 4.14.0 as a separate Ubuntu image and keep
+      it out of ci-cpp and ci-cpp-vcpkg, to achieve a current 4.x without
+      growing the analysis image, accepting a second compile image to publish.
+    description: >-
+      Local tag ci-cpp-opencv:local installs OpenCV 4.14.0
+      (libopencv_core.so.4.14.0) and Eigen 3.4.0 from libeigen3-dev. The
+      release tarball is checked with SHA-256
+      ee8fb9b30eb60850431b4656447080e3737b56e45719c92b67f245950609f86e.
+      Modules are core, imgproc, and imgcodecs, built with libc++. vcpkg in
+      ci-cpp-vcpkg can install spdlog 1.17.0, nlohmann-json 3.12.0, and
+      eigen3 5.0.1; calib code must stay on Eigen 3.4. Workflow defaults still
+      pin ghcr.io/pirlruc/ci-cpp@sha256:3406477bb7fc730c53df4a28dffa07a9dce5ee6f6830102df1bedc8727973b67.
+      Hub 5.1.2 Debian is sha256:4cf9a6f1372e2652d329c4257e6380f5fde846dccf92f45f744f8bfb4b9b417d.
+    architecture:
+      target: docker/ci-cpp/Dockerfile.opencv
+      modules:
+      - docker/ci-cpp
+      - .github/workflows/ci-cpp-image.yml
+      - .github/workflows/cpp-quality.yml
+      - docs/docker-hub.md
+      - docs/github-packages.md
+    acceptance_criteria:
+    - ci-cpp-opencv is on Docker Hub and GHCR and the digest is in the registry docs
+    - The default analysis image and ci-cpp-vcpkg still do not install OpenCV
+    - Reusable workflow defaults pin the 5.1.2 Debian manifest, not 5.0.0
+    out_of_scope:
+    - Replacing the vcpkg OpenCV port inside ci-cpp-vcpkg
+    - Linking Eigen 5 from the vcpkg eigen3 port into heimdallcv calib
+    guardrail_refs:
+    - DOCKER-PERF-002
+    - DOCKER-BUILD-003
+    - CI-026
+    tasks:
+    - id: CPPD-OCV-001-T1
+      status: open
+      title: Land the OpenCV image, structure test, and registry pages
+      instructions:
+        files:
+        - docker/ci-cpp/Dockerfile.opencv
+        - docker/ci-cpp/container-structure-test.opencv.yml
+        - .github/workflows/ci-cpp-image.yml
+        - docs/docker-hub.md
+        - docs/github-packages.md
+        - docs/continuous-improvement.md
+      verification:
+      - docker build -f docker/ci-cpp/Dockerfile.opencv -t ci-cpp-opencv:local docker/ci-cpp
+      - pkg-config --modversion opencv4 reports 4.14.0
+      guardrail_refs:
+      - DOCKER-BUILD-003
+    - id: CPPD-OCV-001-T2
+      status: open
+      title: Publish ci-cpp-opencv and write its digest into the registry docs
+      instructions:
+        files:
+        - docs/docker-hub.md
+        - docs/github-packages.md
+      verification:
+      - docker pull pirlruc/ci-cpp-opencv at the release tag
+      guardrail_refs:
+      - CI-026
+    - id: CPPD-OCV-001-T3
+      status: open
+      title: Point reusable workflow defaults at the 5.1.2 Debian digest
+      instructions:
+        files:
+        - .github/workflows/cpp-quality.yml
+        - .github/workflows/cpp-tests.yml
+        - .github/workflows/cpp-codeql.yml
+        - .github/workflows/cpp-dynamic.yml
+        - .github/workflows/cpp-docs.yml
+        - .github/workflows/cpp-fuzz.yml
+      verification:
+      - rg 3406477bb7fc730c53df4a28dffa07a9dce5ee6f6830102df1bedc8727973b67 .github/workflows returns nothing
+      guardrail_refs:
+      - CI-026

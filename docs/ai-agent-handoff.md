@@ -6,7 +6,7 @@
 |-------|-------|
 | **Folder** | `ops/cppdevops/` |
 | **Remote** | https://github.com/pirlruc/cppdevops |
-| **Branch** | `feature-cpp-vcpkg-image` → release **5.1.0** after merge. Analysis image pins stay **5.0.0** until the image workflow writes digests back. |
+| **Branch** | `feature-opencv-image` → release **5.2.0** publishes images. Digest write-back is **5.2.1** (tag only, no GitHub Release). |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
@@ -38,10 +38,11 @@ Contract reference: [`docs/workflows.md`](workflows.md).
 | `docs/guardrails` | tag **1.10.0** → `e2db476f…` |
 | `.github/scaffold` | tag **1.8.0** → `ac9059fd…` |
 | methodologies (links only; not a submodule) | tag **1.8.0** |
-| `ghcr.io/pirlruc/ci-cpp` (debian, unsuffixed) | `5.0.0` `sha256:3406477bb7fc730c53df4a28dffa07a9dce5ee6f6830102df1bedc8727973b67` |
-| `ghcr.io/pirlruc/ci-cpp` (alpine) | `5.0.0-alpine` `sha256:78103428af883fe259241796d359edd3cfbaefe34e11878760a97c1a9efc2986` |
-| `ghcr.io/pirlruc/ci-cpp-ubuntu` | `5.0.0` `sha256:0a6f9b7f044e9e1a2098ff7f57425d16245daaeff505b07dca90199933a3011f` (Dockerfile base refreshed to `ubuntu:24.04@sha256:534baea6…`, still created 2026-09-18) |
-| `ci-cpp-vcpkg` | local tag `ci-cpp-vcpkg:debian-local` until 5.1.0 publishes. vcpkg `434307da09bc05b2c86996dccc8b2351fc0d5d37`. OpenCV is not in the image. |
+| `ghcr.io/pirlruc/ci-cpp` (debian, unsuffixed) | Hub/GHCR `5.1.2` `sha256:4cf9a6f1372e2652d329c4257e6380f5fde846dccf92f45f744f8bfb4b9b417d`. Workflow defaults still pin 5.0.0 `sha256:3406477b…` |
+| `ghcr.io/pirlruc/ci-cpp` (alpine) | `5.1.2-alpine` `sha256:d530ad4233669428fce12d3ad698e012317cec81ed8a7a07a623fad39c51cc73` |
+| `ghcr.io/pirlruc/ci-cpp-ubuntu` | `5.1.2` `sha256:cbb32848894dc532c6c7ab00691173ddb68e35619d2e385c17234140938d3704` |
+| `ci-cpp-vcpkg` | `5.1.2` `sha256:ecd3578a5c48bc2842910cadbddca78c7b0622308f81221a0b27da19f779204b`. vcpkg `434307da09bc05b2c86996dccc8b2351fc0d5d37`. OpenCV is not in this image |
+| `ci-cpp-opencv` | Local tag `ci-cpp-opencv:local`. Ubuntu 24.04, OpenCV 4.14.0 from source, Eigen 3.4 via apt. Not published |
 | commondevops `uses:` | tag **5.3.0** → `803bfe60ff30d5bbcefe7fe6e38070999a66531d` |
 | containerdevops `uses:` | `2ad052e69d2587cdaf8ccac59b9dae5c60f5560b` (included in tag **6.2.0**) |
 
@@ -126,14 +127,9 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Suggested next work
 
-1. After the 5.1.0 image publish, write the new `ci-cpp`, `ci-cpp-ubuntu`, and
-   `ci-cpp-vcpkg` digests back into the reusable workflows.
-2. CPPD-SCAN-001 stays open. The newest `ubuntu:24.04` (pulled 2026-10-06) is
-   still created 2026-09-18, so the 30-day age gate still falls on 2026-10-18.
-   DHI Debian and Alpine indexes moved, but apt pins are bound to the current
-   bases; bumping them is a separate image rebuild.
-3. Callers that pin 5.1.0 must grant `actions: write` (vcpkg binary cache) plus
-   `contents: read` and `security-events: write`.
+1. Publish **5.2.0** so `ci-cpp-opencv` and the libc++ triplet on `ci-cpp-vcpkg` land, then write those digests back and tag **5.2.1** without a GitHub Release (CPPD-OCV-001-T2/T3).
+2. CPPD-SCAN-001 stays open. `ubuntu:24.04` index `sha256:534baea6…` is still created 2026-09-17, so the 30-day age gate falls on 2026-10-18. There is no newer noble index to pin.
+3. Callers that pin 5.1.0 must grant `actions: write` (vcpkg binary cache) plus `contents: read` and `security-events: write`. Callers that re-enable pull_request must pass `run_ios: false` unless they intend to pay for a macOS runner.
 
 ## ci-cpp-vcpkg
 
@@ -236,5 +232,8 @@ gitconfig under `RUNNER_TEMP`.
 - 2026-10-06: CPPD-PERM-001, CPPD-CMAKE-002, CPPD-CACHE-001. Workflow
   permissions match the jobs. `ci-cpp-vcpkg` adds vcpkg without OpenCV.
   Ubuntu 24.04 base digest moved; its created date is still 2026-09-18.
+- 2026-10-06: Hub pages record 5.1.2 for `ci-cpp`, `ci-cpp-ubuntu`, and
+  `ci-cpp-vcpkg`. `Dockerfile.opencv` builds OpenCV 4.14.0 plus Eigen 3.4.
+  That image is local only until the next image release.
 
-*Last updated: 2026-10-06 (permissions, vcpkg image, cmake helper)*
+*Last updated: 2026-10-06 (ci-cpp-opencv multi-stage, libc++ triplet)*
