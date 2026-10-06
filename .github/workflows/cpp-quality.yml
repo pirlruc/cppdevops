@@ -43,6 +43,8 @@ env:
 jobs:
   quality:
     runs-on: ubuntu-24.04
+    # Default input is a digest. Callers that override must pass a digest too.
+    # zizmor: ignore[unpinned-images]
     container: ${{ inputs.container_image }}
     timeout-minutes: 45
     permissions:

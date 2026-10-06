@@ -49,6 +49,8 @@ jobs:
     if: github.event.pull_request.user.login != 'dependabot[bot]'
     runs-on: ubuntu-24.04
     # CodeQL action runs on the job container; keep toolchain from ci-cpp.
+    # Default input is a digest. Callers that override must pass a digest too.
+    # zizmor: ignore[unpinned-images]
     container: ${{ inputs.container_image }}
     timeout-minutes: 60
     permissions:

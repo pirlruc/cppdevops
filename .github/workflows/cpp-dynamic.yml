@@ -50,6 +50,8 @@ jobs:
   asan:
     if: inputs.run_asan
     runs-on: ubuntu-24.04
+    # Default input is a digest. Callers that override must pass a digest too.
+    # zizmor: ignore[unpinned-images]
     container: ${{ inputs.container_image }}
     timeout-minutes: 45
     permissions:
@@ -140,6 +142,8 @@ jobs:
   valgrind:
     if: inputs.run_valgrind
     runs-on: ubuntu-24.04
+    # Default input is a digest. Callers that override must pass a digest too.
+    # zizmor: ignore[unpinned-images]
     container: ${{ inputs.container_image }}
     timeout-minutes: 60
     permissions:
