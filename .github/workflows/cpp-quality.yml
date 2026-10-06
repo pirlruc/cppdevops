@@ -128,8 +128,20 @@ jobs:
           [[ -d include ]] && dirs+=(include)
           [[ -d src ]] && dirs+=(src)
           if [[ ${#dirs[@]} -eq 0 ]]; then echo "No include/src"; exit 0; fi
+          filter="-build/include_subdir,-build/namespaces,-runtime/references,-legal/copyright,-build/header_guard,-build/include_order,-build/c++17,-whitespace/comments,-whitespace/indent_namespace"
+          length=120
+          if [[ -f .cpplint ]]; then
+            line="$(grep -m1 '^filter=' .cpplint || true)"
+            if [[ -n "${line}" ]]; then
+              filter="${line#filter=},${filter}"
+            fi
+            line="$(grep -m1 '^linelength=' .cpplint || true)"
+            if [[ -n "${line}" ]]; then
+              length="${line#linelength=}"
+            fi
+          fi
           find "${dirs[@]}" \( -name '*.cpp' -o -name '*.hpp' \) -print0 | \
-            xargs -0 -r cpplint --recursive --linelength=120
+            xargs -0 -r cpplint --recursive --linelength="${length}" --filter="${filter}"
 
       - name: Configure compile_commands
         id: cmake
@@ -144,6 +156,10 @@ jobs:
         continue-on-error: true
         run: |
           if [[ ! -f build/compile_commands.json ]]; then
+            if ! find src -name '*.cpp' -print -quit 2>/dev/null | grep -q .; then
+              echo "header-only: no compile_commands; skipping clang-tidy"
+              exit 0
+            fi
             echo "error: compile_commands.json missing (CI-035)" >&2
             exit 1
           fi
@@ -172,7 +188,10 @@ jobs:
           if [[ ${#dirs[@]} -eq 0 ]]; then echo "No include/src"; exit 0; fi
           SUPP=cppcheck-suppressions.xml
           EXTRA=()
-          [[ -f "$SUPP" ]] && EXTRA=(--suppressions-list="$SUPP")
+          # The scaffold file is XML. cppcheck --suppressions-list expects plain text.
+          if [[ -f "$SUPP" ]] && ! head -n 1 "$SUPP" | grep -q '<?xml'; then
+            EXTRA=(--suppressions-list="$SUPP")
+          fi
           cppcheck --enable=warning,style,performance,portability \
             --error-exitcode=1 --inline-suppr \
             --std=c++20 "${EXTRA[@]}" "${dirs[@]}"

@@ -3,6 +3,16 @@
 All notable changes to this repository are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [5.2.4] - 2026-10-06
+
+### Fixed
+
+- Quality cpplint reads `.cpplint` and does not flag the C++20 header style
+  these libraries already use.
+- Header-only libraries skip clang-tidy when CMake writes no compilation
+  database. cppcheck ignores the XML suppressions scaffold. Metrix++ enforces
+  cyclomatic complexity. Its simple maintainability score is not the 0-100 index.
+
 ## [5.2.3] - 2026-10-06
 
 ### Fixed
