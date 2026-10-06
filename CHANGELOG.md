@@ -3,6 +3,14 @@
 All notable changes to this repository are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased]
+
+### Changed
+
+- Each published image has its own Docker context under `docker/<image>/` and
+  its own Hub and Packages pages (`docs/docker-hub-<image>.md`,
+  `docs/github-packages-<image>.md`). Debian and Alpine stay in `docker/ci-cpp/`.
+
 ## [5.2.4] - 2026-10-06
 
 ### Fixed

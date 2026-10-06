@@ -6,7 +6,7 @@
 |-------|-------|
 | **Folder** | `ops/cppdevops/` |
 | **Remote** | https://github.com/pirlruc/cppdevops |
-| **Branch** | `feature-opencv-image` → release **5.2.0** publishes images. Digest write-back is **5.2.1** (tag only, no GitHub Release). |
+| **Branch** | `feature-image-layout` splits image contexts and registry pages. `main` is **5.2.4** (workflow fixes). Images last published at **5.2.0**. |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
@@ -20,13 +20,19 @@ Owns reusable workflows under `.github/workflows/`:
 - `cpp-mobile-matrix.yml` (real NDK/Xcode smoke compile)
 - Self-CI: `cppdevops-ci.yml`, `cppdevops-security.yml`, `ci-cpp-image.yml`
 
-Also owns `templates/`, `scripts/sync-library-*.sh`, and `docker/ci-cpp/`.
+Also owns `templates/`, `scripts/sync-library-*.sh`, and one Docker context per
+image: `docker/ci-cpp/`, `docker/ci-cpp-ubuntu/`, `docker/ci-cpp-vcpkg/`,
+`docker/ci-cpp-opencv/`.
 
 Standalone library callers should pin `pirlruc/cppdevops@<sha>` (`CI-018`)
 and pass the same value as `scripts_ref`. The published analysis image is
 ci-cpp 5.0.0 Debian.
-Hub/Packages: [`docs/docker-hub.md`](docker-hub.md),
-[`docs/github-packages.md`](github-packages.md).
+Hub/Packages, one page per image:
+[`docs/docker-hub-ci-cpp.md`](docker-hub-ci-cpp.md),
+[`docs/docker-hub-ci-cpp-ubuntu.md`](docker-hub-ci-cpp-ubuntu.md),
+[`docs/docker-hub-ci-cpp-vcpkg.md`](docker-hub-ci-cpp-vcpkg.md),
+[`docs/docker-hub-ci-cpp-opencv.md`](docker-hub-ci-cpp-opencv.md),
+and the matching `docs/github-packages-ci-cpp*.md` pages.
 Never `@main`. Checklist: [`docs/consumer-checklist.md`](consumer-checklist.md).
 
 Contract reference: [`docs/workflows.md`](workflows.md).
@@ -72,7 +78,11 @@ Contract reference: [`docs/workflows.md`](workflows.md).
 ## Commands
 
 ```bash
-docker build -t ghcr.io/pirlruc/ci-cpp:local docker/ci-cpp
+docker build -t ci-cpp:debian-local docker/ci-cpp
+docker build -f docker/ci-cpp/Dockerfile.alpine -t ci-cpp:alpine-local docker/ci-cpp
+docker build -t ci-cpp-ubuntu:local docker/ci-cpp-ubuntu
+docker build -t ci-cpp-vcpkg:debian-local docker/ci-cpp-vcpkg
+docker build -t ci-cpp-opencv:local docker/ci-cpp-opencv
 ./scripts/check-ci-local.sh
 ./scripts/check-ci-docker.sh
 ./scripts/sync-library-tooling.sh /path/to/library
@@ -127,17 +137,17 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Suggested next work
 
-1. Publish **5.2.0** so `ci-cpp-opencv` and the libc++ triplet on `ci-cpp-vcpkg` land, then write those digests back and tag **5.2.1** without a GitHub Release (CPPD-OCV-001-T2/T3).
-2. CPPD-SCAN-001 stays open. `ubuntu:24.04` index `sha256:534baea6…` is still created 2026-09-17, so the 30-day age gate falls on 2026-10-18. There is no newer noble index to pin.
-3. Callers that pin 5.1.0 must grant `actions: write` (vcpkg binary cache) plus `contents: read` and `security-events: write`. Callers that re-enable pull_request must pass `run_ios: false` unless they intend to pay for a macOS runner.
+1. CPPD-SCAN-001 stays open. `ubuntu:24.04` index `sha256:534baea6…` is still created 2026-09-17, so the 30-day age gate falls on 2026-10-18. There is no newer noble index to pin. The pin is in `docker/ci-cpp-ubuntu/Dockerfile` and `docker/ci-cpp-opencv/Dockerfile`.
+2. Callers that need vcpkg must pin a `linux/amd64` image manifest of `ci-cpp-vcpkg`, not the tag index `sha256:76b9587f…`. The same rule applies to `ci-cpp-opencv` (`sha256:561316dd…` is the tag index).
+3. Library callers pass `run_ios: false`. iOS is a recorded `CPP-BUILD-010` deviation.
 
 ## ci-cpp-vcpkg
 
-`docker/ci-cpp/Dockerfile.vcpkg` starts FROM the published Debian ci-cpp digest
+`docker/ci-cpp-vcpkg/Dockerfile` starts FROM the published Debian ci-cpp digest
 and adds vcpkg. ci-cpp itself stays free of OpenCV (DOCKER-PERF-002).
 
 ```bash
-docker build -f docker/ci-cpp/Dockerfile.vcpkg -t ci-cpp-vcpkg:debian-local docker/ci-cpp
+docker build -t ci-cpp-vcpkg:debian-local docker/ci-cpp-vcpkg
 docker volume create pirlruc-vcpkg-cache
 docker run --rm -v pirlruc-vcpkg-cache:/vcpkg-cache -v "$PWD":/src -w /src \
   -e VCPKG_DEFAULT_BINARY_CACHE=/vcpkg-cache ci-cpp-vcpkg:debian-local \
@@ -236,4 +246,4 @@ gitconfig under `RUNNER_TEMP`.
   `ci-cpp-vcpkg`. `Dockerfile.opencv` builds OpenCV 4.14.0 plus Eigen 3.4.
   That image is local only until the next image release.
 
-*Last updated: 2026-10-06 (5.2.0 digests, workflow defaults)*
+*Last updated: 2026-10-06 (one Docker context and registry page per image)*

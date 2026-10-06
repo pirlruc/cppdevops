@@ -65,7 +65,7 @@ jobs:
       - name: shellcheck
         run: find scripts -name '*.sh' -print0 | xargs -0 shellcheck
       - name: hadolint
-        run: hadolint docker/ci-cpp/Dockerfile
+        run: hadolint docker/ci-cpp/Dockerfile docker/ci-cpp/Dockerfile.alpine docker/ci-cpp-ubuntu/Dockerfile docker/ci-cpp-vcpkg/Dockerfile docker/ci-cpp-opencv/Dockerfile
       - name: zizmor
         run: zizmor --min-severity=low -c .github/config/zizmor.yml .github/workflows
 
@@ -95,7 +95,7 @@ jobs:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       working_directory: .
       shell_scripts: scripts/*.sh
-      dockerfiles: docker/ci-cpp/Dockerfile
+      dockerfiles: docker/ci-cpp/Dockerfile docker/ci-cpp/Dockerfile.alpine docker/ci-cpp-ubuntu/Dockerfile docker/ci-cpp-vcpkg/Dockerfile docker/ci-cpp-opencv/Dockerfile
       scripts_ref: 9e28757e47375bbe02f1150e3612cdf69723dd29
     secrets:
       checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}

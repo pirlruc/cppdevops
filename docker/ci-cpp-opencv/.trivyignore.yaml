@@ -1,0 +1,13 @@
+# Time-boxed Trivy ignores for ci-cpp (DOCKER-SEC-001 / vuln_ignore_max_days).
+# Review: 2026-11-12
+#
+# pip is not installed in the image (it vendored msgpack 1.1.2). Installed
+# msgpack is 1.2.3 and setuptools is 84.0.0. Trivy's python-pkg aggregate can
+# still report CVE-2025-47273 against vendor metadata inside the setuptools
+# wheel even though the installed distribution is past the 78.1.1 fix.
+vulnerabilities:
+  - id: CVE-2025-47273
+    statement: >-
+      Installed setuptools is 84.0.0 (fix is 78.1.1). Trivy attributes
+      CVE-2025-47273 to vendored dist-info inside that wheel. Revisit if Trivy
+      stops flagging vendor metadata.

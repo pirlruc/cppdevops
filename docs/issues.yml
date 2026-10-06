@@ -1092,7 +1092,7 @@ milestones:
         files:
         - docker/ci-cpp/Dockerfile
         - docker/ci-cpp/Dockerfile.alpine
-        - docker/ci-cpp/Dockerfile.ubuntu
+        - docker/ci-cpp-ubuntu/Dockerfile
       verification:
       - docker build -f docker/ci-cpp/Dockerfile docker/ci-cpp
       guardrail_refs:
@@ -1105,6 +1105,8 @@ milestones:
     instructions:
       files:
       - docker/ci-cpp/Dockerfile
+      - docker/ci-cpp-ubuntu/Dockerfile
+      - docker/ci-cpp-opencv/Dockerfile
     verification:
       - >-
         Do not cut an ops release only to scan. On the next published ci-cpp,
@@ -1259,13 +1261,13 @@ milestones:
       pin ghcr.io/pirlruc/ci-cpp@sha256:3406477bb7fc730c53df4a28dffa07a9dce5ee6f6830102df1bedc8727973b67.
       Hub 5.1.2 Debian is sha256:4cf9a6f1372e2652d329c4257e6380f5fde846dccf92f45f744f8bfb4b9b417d.
     architecture:
-      target: docker/ci-cpp/Dockerfile.opencv
+      target: docker/ci-cpp-opencv/Dockerfile
       modules:
-      - docker/ci-cpp
+      - docker/ci-cpp-opencv
       - .github/workflows/ci-cpp-image.yml
       - .github/workflows/cpp-quality.yml
-      - docs/docker-hub.md
-      - docs/github-packages.md
+      - docs/docker-hub-ci-cpp-opencv.md
+      - docs/github-packages-ci-cpp-opencv.md
     acceptance_criteria:
     - ci-cpp-opencv is on Docker Hub and GHCR and the digest is in the registry docs
     - The default analysis image and ci-cpp-vcpkg still do not install OpenCV
@@ -1283,14 +1285,14 @@ milestones:
       title: Land the OpenCV image, structure test, and registry pages
       instructions:
         files:
-        - docker/ci-cpp/Dockerfile.opencv
-        - docker/ci-cpp/container-structure-test.opencv.yml
+        - docker/ci-cpp-opencv/Dockerfile
+        - docker/ci-cpp-opencv/container-structure-test.yml
         - .github/workflows/ci-cpp-image.yml
-        - docs/docker-hub.md
-        - docs/github-packages.md
+        - docs/docker-hub-ci-cpp-opencv.md
+        - docs/github-packages-ci-cpp-opencv.md
         - docs/continuous-improvement.md
       verification:
-      - docker build -f docker/ci-cpp/Dockerfile.opencv -t ci-cpp-opencv:local docker/ci-cpp
+      - docker build -f docker/ci-cpp-opencv/Dockerfile -t ci-cpp-opencv:local docker/ci-cpp-opencv
       - pkg-config --modversion opencv4 reports 4.14.0
       guardrail_refs:
       - DOCKER-BUILD-003
@@ -1299,8 +1301,8 @@ milestones:
       title: Publish ci-cpp-opencv and write its digest into the registry docs
       instructions:
         files:
-        - docs/docker-hub.md
-        - docs/github-packages.md
+        - docs/docker-hub-ci-cpp-opencv.md
+        - docs/github-packages-ci-cpp-opencv.md
       verification:
       - docker pull pirlruc/ci-cpp-opencv at the release tag
       guardrail_refs:

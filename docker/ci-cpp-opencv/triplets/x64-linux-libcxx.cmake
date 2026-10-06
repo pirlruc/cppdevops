@@ -1,4 +1,5 @@
-# libc++ triplet for the ci-cpp images. Library CI compiles with
+# libc++ triplet for ci-cpp-opencv. The same file lives in
+# docker/ci-cpp-vcpkg/triplets/. Library CI compiles with
 # -stdlib=libc++, so every vcpkg port must use the same standard library.
 set(VCPKG_TARGET_ARCHITECTURE x64)
 set(VCPKG_CRT_LINKAGE dynamic)
