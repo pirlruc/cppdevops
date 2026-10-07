@@ -44,6 +44,7 @@ on:
 # CI-025: workflow permissions are the union of the job permissions.
 permissions:
   contents: read
+  packages: read
 
 concurrency:
   group: >-
@@ -60,11 +61,15 @@ jobs:
     if: inputs.run_fuzz
     runs-on: ubuntu-24.04
     container:
-      image: docker.io/pirlruc/ci-cpp@sha256:28db91b4a240ec459e90afedf07d9ed5030e3733933c82944127a156bca711d3
+      image: ghcr.io/pirlruc/ci-cpp@sha256:28db91b4a240ec459e90afedf07d9ed5030e3733933c82944127a156bca711d3
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
       options: --user root
     timeout-minutes: 30
     permissions:
       contents: read
+      packages: read
     defaults:
       run:
         working-directory: ${{ inputs.library_path }}

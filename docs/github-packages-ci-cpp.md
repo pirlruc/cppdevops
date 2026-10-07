@@ -45,14 +45,21 @@ The PAT needs `read:packages`.
 jobs:
   quality:
     runs-on: ubuntu-24.04
+    permissions:
+      packages: read
     container:
-      image: docker.io/pirlruc/ci-cpp@sha256:28db91b4a240ec459e90afedf07d9ed5030e3733933c82944127a156bca711d3
+      image: ghcr.io/pirlruc/ci-cpp@sha256:28db91b4a240ec459e90afedf07d9ed5030e3733933c82944127a156bca711d3
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
       options: --user root
 ```
 
-Pin the Hub image manifest (CI-026). The GHCR package is private, and the
-tag index is not a pullable container. `--user root` lets the runner write
-the workspace. Do not float on `:latest`.
+Pin the `linux/amd64` image manifest (CI-026). The package is private, so
+the job needs `packages: read` and `container.credentials`, the same pull
+pydevops uses for `ci-lint`. The calling repository must have Actions read
+on the package. `--user root` lets the runner write the workspace. Do not
+float on `:latest`.
 
 ## What is inside
 
