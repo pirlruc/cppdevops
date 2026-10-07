@@ -126,7 +126,7 @@ Task ids: `<EPIC-ID>-T1`, …
 
 | Area | Intent |
 |------|--------|
-| `.github/workflows/` | Reusable `cpp-*` workflows. `container:` pins are the Docker Hub image manifest, not the GHCR package (private) and not the multi-arch tag index. Jobs set `--user root` so the runner can write |
+| `.github/workflows/` | Reusable `cpp-*` workflows. `container:` pins are `ghcr.io/pirlruc/ci-cpp` at the linux/amd64 manifest. Jobs set `packages: read` and `container.credentials` with `GITHUB_TOKEN`, the same private-package pull as pydevops, and `--user root` so the runner can write |
 | `scripts/` | Coverage, Metrix++ (`std.code.mi:simple`), sync-library tooling. Quality cpplint honors `.cpplint` |
 | `templates/` | Library bootstrap configs |
 | `docker/<image>/` | One build context per published image name. `ci-cpp` keeps Debian and Alpine together. `ci-cpp-ubuntu`, `ci-cpp-vcpkg`, and `ci-cpp-opencv` are separate contexts |

@@ -44,7 +44,7 @@ Contract reference: [`docs/workflows.md`](workflows.md).
 | `docs/guardrails` | tag **1.10.0** → `e2db476f…` |
 | `.github/scaffold` | tag **1.8.0** → `ac9059fd…` |
 | methodologies (links only; not a submodule) | tag **1.8.0** |
-| `ghcr.io/pirlruc/ci-cpp` (debian, unsuffixed) | Tag index `sha256:94667c57…`. The GHCR package is private. Actions pulls `docker.io/pirlruc/ci-cpp@sha256:28db91b4a240ec459e90afedf07d9ed5030e3733933c82944127a156bca711d3` |
+| `ghcr.io/pirlruc/ci-cpp` (debian, unsuffixed) | Actions pulls `ghcr.io/pirlruc/ci-cpp@sha256:28db91b4a240ec459e90afedf07d9ed5030e3733933c82944127a156bca711d3` with `packages: read` and `container.credentials`. The package is private |
 | `ghcr.io/pirlruc/ci-cpp` (alpine) | `5.2.0-alpine` `sha256:f7d2f1f22eff2ed9640a4c12c76bfb459d4ecff487dcfa8820bda605850475c1` |
 | `ghcr.io/pirlruc/ci-cpp-ubuntu` | `5.2.0` `sha256:cf2464213f9460585846b3fd8e5beb8d77fa8c2774f5f03b0a5e852e4e9de77e` |
 | `ci-cpp-vcpkg` | `5.2.0` `sha256:76b9587f04834322dadd318e3ce5d17349e68df990a9575647f7dc6fb7553cde`. vcpkg `434307da09bc05b2c86996dccc8b2351fc0d5d37`. OpenCV is not in this image |
@@ -246,4 +246,4 @@ gitconfig under `RUNNER_TEMP`.
   `ci-cpp-vcpkg`. `Dockerfile.opencv` builds OpenCV 4.14.0 plus Eigen 3.4.
   That image is local only until the next image release.
 
-*Last updated: 2026-10-07 (tag 5.2.5 covers the image split and the cppcheck header list)*
+*Last updated: 2026-10-07 (private GHCR pull matches pydevops: packages read and GITHUB_TOKEN credentials)*

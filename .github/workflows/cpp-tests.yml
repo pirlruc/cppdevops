@@ -23,7 +23,7 @@ on:
         description: Image for the tests job. Default is ci-cpp. Pass ci-cpp-vcpkg for manifest builds.
         required: false
         type: string
-        default: docker.io/pirlruc/ci-cpp@sha256:28db91b4a240ec459e90afedf07d9ed5030e3733933c82944127a156bca711d3
+        default: ghcr.io/pirlruc/ci-cpp@sha256:28db91b4a240ec459e90afedf07d9ed5030e3733933c82944127a156bca711d3
       use_vcpkg:
         description: Run vcpkg manifest mode with a files binary cache. The image must set VCPKG_ROOT.
         required: false
@@ -43,6 +43,7 @@ on:
 permissions:
   actions: write
   contents: read
+  packages: read
 
 env:
   ADVISORY: ${{ inputs.blocking == false }}
@@ -54,11 +55,15 @@ jobs:
     # zizmor: ignore[unpinned-images]
     container:
       image: ${{ inputs.container_image }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
       options: --user root
     timeout-minutes: 45
     permissions:
       actions: write
       contents: read
+      packages: read
     env:
       USE_VCPKG: ${{ inputs.use_vcpkg }}
       VCPKG_TRIPLET: ${{ inputs.vcpkg_triplet }}
@@ -162,10 +167,14 @@ jobs:
     runs-on: ubuntu-24.04
     container:
       image: ghcr.io/pirlruc/ci-cpp-ubuntu@sha256:08580497f49d79012a03023377216a3ef2e274a7b7616d4f2a155d2d6551ed68
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
       options: --user root
     timeout-minutes: 30
     permissions:
       contents: read
+      packages: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
