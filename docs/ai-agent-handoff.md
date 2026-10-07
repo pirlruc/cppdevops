@@ -246,4 +246,4 @@ gitconfig under `RUNNER_TEMP`.
   `ci-cpp-vcpkg`. `Dockerfile.opencv` builds OpenCV 4.14.0 plus Eigen 3.4.
   That image is local only until the next image release.
 
-*Last updated: 2026-10-07 (private GHCR pull matches pydevops: packages read and GITHUB_TOKEN credentials)*
+*Last updated: 2026-10-07 (phase-3 review issues appended to docs/issues.yml)*
