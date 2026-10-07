@@ -3,6 +3,15 @@
 All notable changes to this repository are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased]
+
+### Fixed
+
+- C++ jobs pull private `ghcr.io/pirlruc/ci-cpp` with `packages: read` and
+  `container.credentials`, the same way pydevops pulls `ci-lint`.
+- Caller `run_sbom` defaults to true. A pull request has no `inputs`
+  context, so the flag is true unless a manual run sets it false.
+
 ## [5.2.5] - 2026-10-07
 
 ### Changed

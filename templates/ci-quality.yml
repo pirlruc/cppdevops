@@ -21,9 +21,9 @@ on:
         type: boolean
         default: false
       run_sbom:
-        description: "CPP-SEC-003: enable Syft/Grype/Trivy on release/merge dispatches"
+        description: Run Syft/Grype/Trivy. Pull requests and pushes assume true.
         type: boolean
-        default: false
+        default: true
   push:
     branches: [main]
     paths:
@@ -47,6 +47,7 @@ concurrency:
 permissions:
   actions: write
   contents: read
+  packages: read
   security-events: write
 
 jobs:
@@ -94,7 +95,7 @@ jobs:
       library_path: .
       scripts_ref: CPPDEVOPS_PIN
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
-      run_sbom: ${{ github.event_name == 'workflow_dispatch' && inputs.run_sbom }}
+      run_sbom: ${{ github.event_name != 'workflow_dispatch' || inputs.run_sbom }}
     secrets:
       checkout_token: ${{ secrets.CPP_READ_TOKEN }}
   codeql:
