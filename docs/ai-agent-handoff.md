@@ -143,6 +143,7 @@ python3 .github/scaffold/scripts/issues-sync.py \
 4. The weekly token audit passes the three read tokens. `SCORECARD_TOKEN` is not set. Expiries were confirmed on 2026-10-23.
 5. v6.0.1 records the 6.0.0 digests. Do not publish a GitHub Release for that tag. A release event republishes the images.
 6. Hub Overviews for the four images update on a push to `main` when `docs/docker-hub*.md` changes, and on `workflow_dispatch`. That calls [container-hub-description](https://github.com/pirlruc/containerdevops/blob/6.3.0/.github/workflows/container-hub-description.yml) and does not republish images.
+7. CPPD-PRIV-001 is done. The reusable C++ jobs already set `container.credentials`. Scorecard alerts 298, 308, and 300 were dismissed under CI-042 (review 2026-12-31). Alerts on jobs that also hold `packages: write`, `actions: write`, or `id-token: write` stay open.
 
 ## ci-cpp-vcpkg
 
@@ -253,4 +254,4 @@ gitconfig under `RUNNER_TEMP`.
   `ci-cpp-vcpkg`. `Dockerfile.opencv` builds OpenCV 4.14.0 plus Eigen 3.4.
   That image is local only until the next image release.
 
-*Last updated: 2026-10-23 (guardrails 1.13.1, Hub Overview push, tag v6.0.2)*
+*Last updated: 2026-10-23 (CPPD-PRIV-001 closed, CI-042 dismissals 298, 308, 300)*

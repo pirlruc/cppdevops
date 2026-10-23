@@ -1324,7 +1324,7 @@ milestones:
       - CI-026
 
   - id: CPPD-PRIV-001
-    status: open
+    status: done
     title: Keep the private GHCR pull on the C++ job containers
     overview:
       problem: >-
@@ -1343,7 +1343,7 @@ milestones:
     - The default image is ghcr.io/pirlruc/ci-cpp at the linux/amd64 manifest
     tasks:
     - id: CPPD-PRIV-001-T1
-      status: open
+      status: done
       title: Confirm the credential pull stays on the reusable workflows
       instructions:
         files:
@@ -1351,7 +1351,7 @@ milestones:
         - .github/workflows/cpp-tests.yml
         - docs/github-packages-ci-cpp.md
       verification:
-      - rg -n 'credentials:' .github/workflows/cpp-quality.yml
+      - "rg -n 'credentials:' .github/workflows/cpp-quality.yml"
       - rg -n 'ghcr.io/pirlruc/ci-cpp@' .github/workflows/cpp-quality.yml
 
   - id: CPPD-DOC-002
