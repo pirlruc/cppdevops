@@ -9,7 +9,6 @@
 # Base tag in a comment for DOCKER-BUILD-003: ubuntu:24.04
 # Digest created 2026-09-30 (same index as ci-cpp-ubuntu).
 # ubuntu:24.04 still serves this digest. The 30-day age gate fails about 2026-10-30.
-# base_image_max_age_days (30) fails about 2026-11-01.
 
 FROM docker.io/library/ubuntu:24.04@sha256:68ee22004a9109b44973313b02ff7b1de250f1de0f5ecb628d73f579aaff33ac AS opencv-build
 

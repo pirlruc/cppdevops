@@ -5,6 +5,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Changed
+
+- Hub and GHCR docs use absolute image links. CVE-2025-47273 ignores
+  expire 2026-11-12. Dependabot will not move ci-cpp onto Python 3.14.
+- Dependabot skips the scaffold job that needs a private-repo token.
+- CodeQL is 4.39.0. Ubuntu, vcpkg, and OpenCV have advisory posture scans.
+- `scripts/refresh-apt-pins.sh` re-queries apt inside Docker. ubuntu:24.04
+  still serves the 2026-09-30 digest.
+
 ## [6.0.2] - 2026-10-23
 
 ### Changed
