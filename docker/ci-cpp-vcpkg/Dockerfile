@@ -20,10 +20,10 @@ ARG VCPKG_COMMIT=434307da09bc05b2c86996dccc8b2351fc0d5d37
 USER root
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
-      curl=8.14.1-2+deb13u5+dhi0 \
+      curl=8.14.1-2+deb13u7+dhi0 \
       gzip=1.13-1+dhi1 \
-      zip=3.0-15+dhi0 \
-      unzip=6.0-29+dhi1 \
+      zip=3.0-15+deb13u1+dhi1 \
+      unzip=6.0-29+deb13u1+dhi1 \
       pkg-config=1.8.1-4+dhi1 \
       nasm=2.16.03-1 \
  && curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors -o /tmp/vcpkg.tar.gz \
