@@ -7,10 +7,10 @@
 # the build stage only.
 # No HEALTHCHECK. kics-scan disable=b03a748a-542d-44f4-bb86-9199ab4fd2d5
 # Base tag in a comment for DOCKER-BUILD-003: ubuntu:24.04
-# Digest Created 2026-09-17 (same index as ci-cpp-ubuntu).
-# base_image_max_age_days (30) fails on 2026-10-18 until Canonical publishes a newer image.
+# Digest created 2026-10-02 (same index as ci-cpp-ubuntu).
+# base_image_max_age_days (30) fails about 2026-11-01.
 
-FROM docker.io/library/ubuntu:24.04@sha256:534baea6a22c03a63003dbc8dbe78fe34bc0d7e595d9a9dc9834884ff530eb55 AS opencv-build
+FROM docker.io/library/ubuntu:24.04@sha256:68ee22004a9109b44973313b02ff7b1de250f1de0f5ecb628d73f579aaff33ac AS opencv-build
 
 ENV DEBIAN_FRONTEND=noninteractive \
     OPENCV_VERSION=4.14.0 \
@@ -18,23 +18,23 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
-      ca-certificates=20260601~24.04.1 \
+      ca-certificates=20260816ubuntu0.24.04.1 \
       clang=1:18.0-59~exp2 \
       cmake=3.28.3-1build7 \
-      curl=8.5.0-2ubuntu10.15 \
-      git=1:2.43.0-1ubuntu7.3 \
+      curl=8.5.0-2ubuntu10.16 \
+      git=1:2.43.0-1ubuntu7.4 \
       gzip=1.12-1ubuntu3.2 \
       libc++-dev=1:18.0-59~exp2 \
       libc++abi-dev=1:18.0-59~exp2 \
       libeigen3-dev=3.4.0-4build0.1 \
       libjpeg-turbo8-dev=2.1.5-2ubuntu2 \
-      libpng-dev=1.6.43-5ubuntu0.6 \
+      libpng-dev=1.6.43-5ubuntu0.7 \
       nasm=2.16.01-1build1 \
       ninja-build=1.11.1-2 \
       pkg-config=1.8.1-2build1 \
       unzip=6.0-28ubuntu4.1 \
       zip=3.0-13ubuntu0.2 \
-      zlib1g-dev=1:1.3.dfsg-3.1ubuntu2.2 \
+      zlib1g-dev=1:1.3.dfsg-3.1ubuntu2.3 \
  && rm -rf /var/lib/apt/lists/*
 
 RUN curl --retry 5 --retry-delay 2 --retry-all-errors -fsSL \
@@ -78,7 +78,7 @@ RUN curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors -o /tmp/vcpkg.tar.gz
  && mv "/opt/vcpkg-${VCPKG_COMMIT}" /opt/vcpkg \
  && /opt/vcpkg/bootstrap-vcpkg.sh -disableMetrics
 
-FROM docker.io/library/ubuntu:24.04@sha256:534baea6a22c03a63003dbc8dbe78fe34bc0d7e595d9a9dc9834884ff530eb55
+FROM docker.io/library/ubuntu:24.04@sha256:68ee22004a9109b44973313b02ff7b1de250f1de0f5ecb628d73f579aaff33ac
 
 LABEL org.opencontainers.image.title="ci-cpp-opencv" \
       org.opencontainers.image.description="Compile image: Clang 18, libc++, CMake, Ninja, vcpkg, OpenCV 4.14.0, Eigen 3.4. Ubuntu 24.04. Non-root 1000:1000, linux/amd64." \
@@ -97,22 +97,22 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
-      ca-certificates=20260601~24.04.1 \
+      ca-certificates=20260816ubuntu0.24.04.1 \
       clang=1:18.0-59~exp2 \
       cmake=3.28.3-1build7 \
-      git=1:2.43.0-1ubuntu7.3 \
+      git=1:2.43.0-1ubuntu7.4 \
       gzip=1.12-1ubuntu3.2 \
       libc++-dev=1:18.0-59~exp2 \
       libc++abi-dev=1:18.0-59~exp2 \
       libeigen3-dev=3.4.0-4build0.1 \
       libjpeg-turbo8-dev=2.1.5-2ubuntu2 \
-      libpng-dev=1.6.43-5ubuntu0.6 \
+      libpng-dev=1.6.43-5ubuntu0.7 \
       nasm=2.16.01-1build1 \
       ninja-build=1.11.1-2 \
       pkg-config=1.8.1-2build1 \
       unzip=6.0-28ubuntu4.1 \
       zip=3.0-13ubuntu0.2 \
-      zlib1g-dev=1:1.3.dfsg-3.1ubuntu2.2 \
+      zlib1g-dev=1:1.3.dfsg-3.1ubuntu2.3 \
  && rm -rf /var/lib/apt/lists/*
 
 COPY --from=opencv-build /usr/local /usr/local
