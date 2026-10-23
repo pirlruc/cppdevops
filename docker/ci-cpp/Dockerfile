@@ -46,7 +46,7 @@ RUN apt-get update \
       valgrind=1:3.24.0-3 \
       doxygen=1.9.8+ds-2.1 \
       git=1:2.47.3-0+deb13u1+dhi2 \
-      ca-certificates=20250419+dhi2 \
+      ca-certificates=20250419+deb13u1+dhi0 \
  && apt-get download libclang-rt-18-dev=1:18.1.8-18+b1 \
  && dpkg-deb -x libclang-rt-18-dev_*.deb /tmp/rt \
  && cp -a /tmp/rt/usr/. /usr/ \
