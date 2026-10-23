@@ -13,8 +13,8 @@ COPY requirements.txt /tmp/requirements.txt
 RUN /usr/local/bin/uv venv /opt/venv --python /usr/bin/python3 \
  && /usr/local/bin/uv pip install --python /opt/venv/bin/python --no-cache --require-hashes \
       -r /tmp/requirements.txt \
- && rm -f /tmp/requirements.txt \
- && find /opt/venv -type d -name '__pycache__' -exec rm -rf {} + 2>/dev/null || true
+ && rm -f /tmp/requirements.txt
+RUN find /opt/venv -type d -name '__pycache__' -exec rm -rf {} +
 
 FROM dhi.io/python:3.13-debian13-dev@sha256:e06c1af7512805e1822259b7e9fe6ab27462a09c71c9520bc47b5c5388e3fce6
 
