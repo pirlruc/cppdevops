@@ -5,6 +5,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Fixed
+
+- C++ jobs pull private `ghcr.io/pirlruc/ci-cpp` with `packages: read` and
+  `container.credentials`, the same way pydevops pulls `ci-lint`.
+- Caller `run_sbom` defaults to true. A pull request has no `inputs`
+  context, so the flag is true unless a manual run sets it false.
+
 ### Changed
 
 - The scheduled token audit passes `GUARDRAILS_READ_TOKEN`,

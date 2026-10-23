@@ -1322,3 +1322,34 @@ milestones:
       - rg 3406477bb7fc730c53df4a28dffa07a9dce5ee6f6830102df1bedc8727973b67 .github/workflows returns nothing
       guardrail_refs:
       - CI-026
+
+  - id: CPPD-PRIV-001
+    status: open
+    title: Keep the private GHCR pull on the C++ job containers
+    overview:
+      problem: >-
+        ci-cpp and ci-cpp-ubuntu are private. Analysis jobs used to pin Docker
+        Hub because the GHCR package was private. The packages stay private,
+        so the pull has to authenticate.
+      goal: >-
+        Reusable C++ jobs pull ghcr.io/pirlruc/ci-cpp with packages read and
+        container.credentials, matching pydevops.
+    decision: >-
+      In the context of C++ CI, facing private GitHub packages, we decided to
+      pull ghcr.io with the job token, to achieve the ops-repo pull, accepting
+      that every caller workflow must grant packages read.
+    acceptance_criteria:
+    - cpp-quality, cpp-tests, cpp-docs, cpp-dynamic, and cpp-codeql set credentials
+    - The default image is ghcr.io/pirlruc/ci-cpp at the linux/amd64 manifest
+    tasks:
+    - id: CPPD-PRIV-001-T1
+      status: open
+      title: Confirm the credential pull stays on the reusable workflows
+      instructions:
+        files:
+        - .github/workflows/cpp-quality.yml
+        - .github/workflows/cpp-tests.yml
+        - docs/github-packages-ci-cpp.md
+      verification:
+      - rg -n 'credentials:' .github/workflows/cpp-quality.yml
+      - rg -n 'ghcr.io/pirlruc/ci-cpp@' .github/workflows/cpp-quality.yml
