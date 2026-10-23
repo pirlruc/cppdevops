@@ -5,6 +5,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [6.0.0] - 2026-10-23
+
 ### Breaking
 
 - Doc coverage counts public declarations with the Clang AST
