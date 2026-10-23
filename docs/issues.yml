@@ -1100,7 +1100,7 @@ milestones:
 
   tasks:
   - id: CPPD-SCAN-001
-    status: open
+    status: done
     title: Confirm ci-cpp OS fixes and refresh the Ubuntu digest before it ages out
     instructions:
       files:

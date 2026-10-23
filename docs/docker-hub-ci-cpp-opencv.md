@@ -7,12 +7,8 @@ and Eigen 3.4 from `libeigen3-dev`. The same image ships vcpkg, the
 no `HEALTHCHECK`.
 
 vcpkg is bootstrapped in the build stage. curl is not in the final image.
-Analysis tools stay on [ci-cpp](docker-hub-ci-cpp.md). A vcpkg image without
-OpenCV is [ci-cpp-vcpkg](docker-hub-ci-cpp-vcpkg.md).
-
-The Hub Overview step is advisory: the publish token can push but cannot
-write repository descriptions, so the first 5.2.0 publish left this
-repository's Overview empty. This page is the description.
+Analysis tools stay on [ci-cpp](https://hub.docker.com/r/pirlruc/ci-cpp). A vcpkg image without
+OpenCV is [ci-cpp-vcpkg](https://hub.docker.com/r/pirlruc/ci-cpp-vcpkg).
 
 ## Image
 

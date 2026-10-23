@@ -3,7 +3,8 @@
 # Debian and Alpine images. No DHI Ubuntu image exists.
 # No HEALTHCHECK. kics-scan disable=b03a748a-542d-44f4-bb86-9199ab4fd2d5
 # Base tag in a comment for DOCKER-BUILD-003: ubuntu:24.04
-# Digest created 2026-10-02. base_image_max_age_days (30) fails about 2026-11-01.
+# Digest created 2026-09-30. ubuntu:24.04 still serves this index.
+# base_image_max_age_days (30) fails about 2026-10-30.
 
 FROM docker.io/library/ubuntu:24.04@sha256:68ee22004a9109b44973313b02ff7b1de250f1de0f5ecb628d73f579aaff33ac
 

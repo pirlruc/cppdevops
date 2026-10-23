@@ -53,6 +53,10 @@ updates:
       - dhi
     cooldown:
       default-days: 7
+    ignore:
+      # PY-RUN-003 keeps CPython 3.13 until the 2027-04 re-evaluation.
+      - dependency-name: "python"
+        versions: [">= 3.14"]
 
   - package-ecosystem: docker
     directory: /docker/ci-cpp-ubuntu

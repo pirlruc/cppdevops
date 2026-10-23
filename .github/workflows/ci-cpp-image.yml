@@ -338,6 +338,28 @@ jobs:
     secrets:
       scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
 
+  scan-posture-ubuntu:
+    needs: build-ubuntu
+    if: >-
+      github.event.pull_request.user.login != 'dependabot[bot]' &&
+      (github.event_name != 'pull_request' ||
+       github.event.pull_request.head.repo.full_name == github.repository)
+    permissions:
+      contents: read
+      security-events: write
+      packages: read
+    uses: pirlruc/containerdevops/.github/workflows/container-scan.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    with:
+      image: ${{ format('ghcr.io/{0}/{1}@{2}', github.repository_owner, needs.build-ubuntu.outputs.handoff_package, needs.build-ubuntu.outputs.digest) }}
+      results_artifact: container-scan-posture-ci-cpp-ubuntu
+      sarif_category: trivy-posture-ci-cpp-ubuntu
+      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      pkg_types: os,library
+      ignorefile: none
+      blocking: false
+    secrets:
+      scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
+
   publish-ubuntu:
     needs: [build-ubuntu]
     if: >-
@@ -445,6 +467,28 @@ jobs:
     secrets:
       scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
 
+  scan-posture-vcpkg:
+    needs: build-vcpkg
+    if: >-
+      github.event.pull_request.user.login != 'dependabot[bot]' &&
+      (github.event_name != 'pull_request' ||
+       github.event.pull_request.head.repo.full_name == github.repository)
+    permissions:
+      contents: read
+      security-events: write
+      packages: read
+    uses: pirlruc/containerdevops/.github/workflows/container-scan.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    with:
+      image: ${{ format('ghcr.io/{0}/{1}@{2}', github.repository_owner, needs.build-vcpkg.outputs.handoff_package, needs.build-vcpkg.outputs.digest) }}
+      results_artifact: container-scan-posture-ci-cpp-vcpkg
+      sarif_category: trivy-posture-ci-cpp-vcpkg
+      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      pkg_types: os,library
+      ignorefile: none
+      blocking: false
+    secrets:
+      scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
+
   publish-vcpkg:
     needs: [build-vcpkg, scan-vcpkg]
     if: >-
@@ -549,6 +593,28 @@ jobs:
       pkg_types: library
       ignorefile: docker/ci-cpp-opencv/.trivyignore.yaml
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
+    secrets:
+      scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
+
+  scan-posture-opencv:
+    needs: build-opencv
+    if: >-
+      github.event.pull_request.user.login != 'dependabot[bot]' &&
+      (github.event_name != 'pull_request' ||
+       github.event.pull_request.head.repo.full_name == github.repository)
+    permissions:
+      contents: read
+      security-events: write
+      packages: read
+    uses: pirlruc/containerdevops/.github/workflows/container-scan.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    with:
+      image: ${{ format('ghcr.io/{0}/{1}@{2}', github.repository_owner, needs.build-opencv.outputs.handoff_package, needs.build-opencv.outputs.digest) }}
+      results_artifact: container-scan-posture-ci-cpp-opencv
+      sarif_category: trivy-posture-ci-cpp-opencv
+      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      pkg_types: os,library
+      ignorefile: none
+      blocking: false
     secrets:
       scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
 

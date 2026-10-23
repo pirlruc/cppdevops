@@ -1,7 +1,7 @@
 # ci-cpp-opencv (GitHub Packages)
 
 Ubuntu compile image with OpenCV 4.14.0, Eigen 3.4, and a libc++ vcpkg.
-Same contents as [docker-hub-ci-cpp-opencv.md](docker-hub-ci-cpp-opencv.md).
+Same contents as [docker-hub-ci-cpp-opencv.md](https://hub.docker.com/r/pirlruc/ci-cpp-opencv).
 Not a product runtime — no `HEALTHCHECK`.
 
 ## Image

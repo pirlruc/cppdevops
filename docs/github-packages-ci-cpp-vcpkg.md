@@ -1,7 +1,7 @@
 # ci-cpp-vcpkg (GitHub Packages)
 
 Debian analysis image plus pinned vcpkg. Same contents as
-[docker-hub-ci-cpp-vcpkg.md](docker-hub-ci-cpp-vcpkg.md). Not a product
+[docker-hub-ci-cpp-vcpkg.md](https://hub.docker.com/r/pirlruc/ci-cpp-vcpkg). Not a product
 runtime — no `HEALTHCHECK`.
 
 ## Image

@@ -1,7 +1,7 @@
 # ci-cpp-ubuntu (GitHub Packages)
 
 Compile-only Ubuntu 24.04 image. Same contents as
-[docker-hub-ci-cpp-ubuntu.md](docker-hub-ci-cpp-ubuntu.md). Not a product
+[docker-hub-ci-cpp-ubuntu.md](https://hub.docker.com/r/pirlruc/ci-cpp-ubuntu). Not a product
 runtime — no `HEALTHCHECK`.
 
 ## Image

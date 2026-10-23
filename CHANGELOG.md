@@ -3,7 +3,20 @@
 All notable changes to this repository are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
-## [Unreleased]
+## [6.1.0] - 2026-10-23
+
+### Changed
+
+- Hub and GHCR docs use absolute image links. CVE-2025-47273 ignores
+  expire 2026-11-12. Dependabot will not move ci-cpp onto Python 3.14.
+- Dependabot skips the scaffold job that needs a private-repo token.
+- CodeQL is 4.39.0. Ubuntu, vcpkg, and OpenCV have advisory posture scans.
+- `scripts/refresh-apt-pins.sh` re-queries apt inside Docker. ubuntu:24.04
+  still serves the 2026-09-30 digest.
+- commondevops callers pin 5.4.4 (`4a7c8c43`).
+- ci-cpp DHI Python bases are current. The Alpine digest was past the
+  30-day age gate. Apt and apk pins were already the candidates. The venv
+  cache cleanup is its own layer so the shell chain stays valid.
 
 ## [6.0.2] - 2026-10-23
 

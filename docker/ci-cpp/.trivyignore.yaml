@@ -7,6 +7,7 @@
 # wheel even though the installed distribution is past the 78.1.1 fix.
 vulnerabilities:
   - id: CVE-2025-47273
+    expired_at: 2026-11-12
     statement: >-
       Installed setuptools is 84.0.0 (fix is 78.1.1). Trivy attributes
       CVE-2025-47273 to vendored dist-info inside that wheel. Revisit if Trivy
