@@ -5,7 +5,7 @@
 # Base tag in a comment for DOCKER-BUILD-003: ubuntu:24.04
 # Digest created 2026-10-02. base_image_max_age_days (30) fails about 2026-11-01.
 
-FROM docker.io/library/ubuntu:24.04@sha256:68ee22004a9109b44973313b02ff7b1de250f1de0f5ecb628d73f579aaff33ac
+FROM docker.io/library/ubuntu:25.10@sha256:7cc5e35f6567ee8c66d2abb4aab0fd866669e6207c237c3a8f0947a5c7f17092
 
 LABEL org.opencontainers.image.title="ci-cpp-ubuntu" \
       org.opencontainers.image.description="Compile-only C++ toolchain: Clang 18, libc++, CMake, Ninja, git. Ubuntu 24.04. Non-root 1000:1000, linux/amd64." \

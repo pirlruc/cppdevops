@@ -40,7 +40,7 @@ jobs:
   scaffold:
     permissions:
       contents: read
-    uses: pirlruc/commondevops/.github/workflows/common-scaffold-verify.yml@9e28757e47375bbe02f1150e3612cdf69723dd29
+    uses: pirlruc/commondevops/.github/workflows/common-scaffold-verify.yml@98549af765da30ca714a35de66842166f3a1488b
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       scripts_ref: 9e28757e47375bbe02f1150e3612cdf69723dd29
@@ -77,7 +77,7 @@ jobs:
     if: github.event.pull_request.user.login != 'dependabot[bot]'
     permissions:
       contents: read
-    uses: pirlruc/commondevops/.github/workflows/common-doc-verify.yml@9e28757e47375bbe02f1150e3612cdf69723dd29
+    uses: pirlruc/commondevops/.github/workflows/common-doc-verify.yml@98549af765da30ca714a35de66842166f3a1488b
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       shell_scripts: scripts/*.sh
@@ -93,7 +93,7 @@ jobs:
     if: github.event.pull_request.user.login != 'dependabot[bot]'
     permissions:
       contents: read
-    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@9e28757e47375bbe02f1150e3612cdf69723dd29
+    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@98549af765da30ca714a35de66842166f3a1488b
     with:
       # Push/PR are blocking; workflow_dispatch honours the input.
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}

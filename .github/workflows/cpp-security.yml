@@ -57,7 +57,7 @@ jobs:
     if: github.event.pull_request.user.login != 'dependabot[bot]'
     permissions:
       contents: read
-    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@9e28757e47375bbe02f1150e3612cdf69723dd29
+    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@98549af765da30ca714a35de66842166f3a1488b
     with:
       blocking: ${{ inputs.blocking }}
       working_directory: ${{ inputs.library_path }}
@@ -71,7 +71,7 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@9e28757e47375bbe02f1150e3612cdf69723dd29
+    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@98549af765da30ca714a35de66842166f3a1488b
     with:
       blocking: ${{ inputs.blocking }}
       working_directory: ${{ inputs.library_path }}
