@@ -48,9 +48,11 @@ commandTests:
     command: "metrix++"
     args: ["--help"]
     exitCode: 0
-  - name: coverxygen
+  - name: libclang bindings
     command: "python3"
-    args: ["-m", "coverxygen", "--help"]
+    args:
+      - "-c"
+      - "import glob; from clang import cindex; cindex.Config.set_library_file(sorted(p for p in glob.glob('/usr/lib/llvm*/lib/libclang.so*') if p.endswith('/libclang.so'))[0]); cindex.Index.create()"
     exitCode: 0
   - name: cpplint
     command: "cpplint"

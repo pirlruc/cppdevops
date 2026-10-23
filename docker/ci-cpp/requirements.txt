@@ -4,6 +4,10 @@ chardet==6.0.0.post1 \
     --hash=sha256:6b78048c3c97c7b2ed1fbad7a18f76f5a6547f7d34dbab536cc13887c9a92fa4 \
     --hash=sha256:c894a36800549adf7bb5f2af47033281b75fdfcd2aa0f0243be0ad22a52e2dcb
     # via mbstrdecoder
+clang==18.1.8 \
+    --hash=sha256:26d11859bab6da8d1fcdb85a244957f6c129a0cd15da2abca3059b054b87635f \
+    --hash=sha256:2f6a00126743ee23d8fcd2a2338b42ef4d29897f293ee3a1bc4d5925d8ee875c
+    # via -r docker/ci-cpp/requirements.in
 clang-format==23.1.0 \
     --hash=sha256:0e7a424dc53bba459d4fd61ed7e108534127f7c906ea6a12548e8cbf8f07f35d \
     --hash=sha256:152d66ebaf333b920cd5a13b678976885d673cccfc647ee4e144dce97ad4b452 \
@@ -28,10 +32,6 @@ colorlog==6.12.0 \
     --hash=sha256:2a7924c1dadf18b22a0eb8b06d1c7b01d5341707ec1641eb6fcc4fde0c3e8e5f \
     --hash=sha256:30d392604e9110045a2c2aeefc27d7a017abbab63f3a8aee594eac0801df784e
     # via gcovr
-coverxygen==1.8.2 \
-    --hash=sha256:3ce04029589c150aee13c7eada2779f2b3c15385b4f102cdf7a71909c9cc6626 \
-    --hash=sha256:85cc1408ce9af906990acfc1168489f6b25811d439e4b8d27a1df4498230c5ac
-    # via -r docker/ci-cpp/requirements.in
 cpplint==2.0.2 \
     --hash=sha256:7ec188b5a08e604294ae7e7f88ec3ece2699de857f0533b305620c8cf237cad5 \
     --hash=sha256:8a5971e4b5490133e425284f0c566c7ade0b959e61018d2c9af3ff7f357ddc57

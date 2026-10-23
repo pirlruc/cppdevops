@@ -1,6 +1,6 @@
 clang-format==23.1.0
+clang==18.1.8
 pygments==2.21.0
-coverxygen==1.8.2
 cpplint==2.0.2
 gcovr==8.6
 lizard==1.17.10

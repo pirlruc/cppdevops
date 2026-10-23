@@ -20,6 +20,11 @@ on:
         required: false
         type: string
         default: ""
+      extra_clang_args:
+        description: Extra Clang arguments for the documentation translation unit, such as -I paths. No spaces in paths.
+        required: false
+        type: string
+        default: ""
 
     secrets:
       checkout_token:
@@ -96,14 +101,17 @@ jobs:
           fi
           doxygen Doxyfile
 
-      - name: Doc coverage gate (coverxygen)
+      - name: Doc coverage gate (Clang AST)
         id: coverage
         continue-on-error: true
         env:
           LIBRARY_PATH: ${{ inputs.library_path }}
+          EXTRA_CLANG_ARGS: ${{ inputs.extra_clang_args }}
         run: |
           set -euo pipefail
-          bash _cppdevops/scripts/check-doc-coverage.sh "${LIBRARY_PATH}"
+          # Word-split on purpose so callers can pass several -I flags.
+          # shellcheck disable=SC2086
+          bash _cppdevops/scripts/check-doc-coverage.sh "${LIBRARY_PATH}" ${EXTRA_CLANG_ARGS}
 
       - name: Gate — docs
         if: always()

@@ -80,7 +80,7 @@ jobs:
       image_title: ci-cpp
       image_description: >-
         Short-lived C++ CI toolchain: Clang/libc++, CMake, Ninja, cppcheck,
-        clang-tidy/format, Doxygen, gcovr, lizard, Metrix++, coverxygen, cloc,
+        clang-tidy/format, Doxygen, gcovr, lizard, Metrix++, libclang, cloc,
         valgrind. Debian 13. Non-root 1000:1000, linux/amd64.
       dhi_login: true
     secrets:
@@ -157,7 +157,7 @@ jobs:
       image_title: ci-cpp
       image_description: >-
         Short-lived C++ CI toolchain: Clang/libc++, CMake, Ninja, cppcheck,
-        clang-tidy/format, Doxygen, gcovr, lizard, Metrix++, coverxygen,
+        clang-tidy/format, Doxygen, gcovr, lizard, Metrix++, libclang,
         valgrind. Debian 13. Non-root 1000:1000, linux/amd64.
       image_documentation: https://hub.docker.com/r/pirlruc/ci-cpp
       image_url: https://hub.docker.com/r/pirlruc/ci-cpp

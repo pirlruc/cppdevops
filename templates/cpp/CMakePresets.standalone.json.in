@@ -17,7 +17,7 @@
       "displayName": "CI Linux (Clang + libc++)",
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "clang++-18",
-        "CMAKE_CXX_FLAGS": "-stdlib=libc++",
+        "CMAKE_CXX_FLAGS": "-stdlib=libc++ -Wdocumentation -Wdocumentation-unknown-command -Werror=documentation -Werror=documentation-unknown-command",
         "PIRLRUC_WITH_TESTS": "ON"
       }
     },

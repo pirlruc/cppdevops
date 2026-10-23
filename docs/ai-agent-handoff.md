@@ -4,9 +4,9 @@
 
 | Field | Value |
 |-------|-------|
-| **Folder** | `ops/cppdevops/` |
+| **Folder** | cppdevops |
 | **Remote** | https://github.com/pirlruc/cppdevops |
-| **Branch** | `feature-image-layout` splits image contexts and registry pages. `main` is **5.2.4** (workflow fixes). Images last published at **5.2.0**. |
+| **Branch** | `feature-cpp-600` replaces coverxygen with the Clang AST and drops the CPP-BUILD-004 deviation. `main` is **5.2.5** plus the unreleased token-audit and private-pull fixes. |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
@@ -41,9 +41,9 @@ Contract reference: [`docs/workflows.md`](workflows.md).
 
 | Submodule / artifact | Pin |
 |----------------------|-----|
-| `docs/guardrails` | tag **1.10.0** → `e2db476f…` |
-| `.github/scaffold` | tag **1.8.0** → `ac9059fd…` |
-| methodologies (links only; not a submodule) | tag **1.8.0** |
+| `docs/guardrails` | tag **1.12.0** → `f4baf6198006c6b898eee9cec451b66b87129bd3` |
+| `.github/scaffold` | tag **1.10.0** → `1d9901f7e7e5785abb7cac6f5d46e0e8e2023ff8` |
+| methodologies (links only; not a submodule) | tag **1.9.1** |
 | `ghcr.io/pirlruc/ci-cpp` (debian, unsuffixed) | Actions pulls `ghcr.io/pirlruc/ci-cpp@sha256:28db91b4a240ec459e90afedf07d9ed5030e3733933c82944127a156bca711d3` with `packages: read` and `container.credentials`. The package is private |
 | `ghcr.io/pirlruc/ci-cpp` (alpine) | `5.2.0-alpine` `sha256:f7d2f1f22eff2ed9640a4c12c76bfb459d4ecff487dcfa8820bda605850475c1` |
 | `ghcr.io/pirlruc/ci-cpp-ubuntu` | `5.2.0` `sha256:cf2464213f9460585846b3fd8e5beb8d77fa8c2774f5f03b0a5e852e4e9de77e` |
@@ -66,7 +66,7 @@ Contract reference: [`docs/workflows.md`](workflows.md).
 | CPPD-ECO-001 | Done in yaml (checklist shipped; library pin bumps are still those repos) |
 | CPPD-WF-003 | Done — digest docs, fail-closed memcheck (CI-035), security digest pin (`2.1.0`) |
 | CPPD-PIN-001 | Done (this wave) |
-| Deviations remaining | SC-SIGN-001 and SC-PROV-001 (Free-plan private-repo pattern) |
+| Deviations remaining | SC-SIGN-001, CI-032, REL-PUB-004. CPP-BUILD-004 dropped with guardrails 1.12.0 |
 
 ## Mobile toolchain pins (`CPP-BUILD-012`)
 
@@ -140,7 +140,8 @@ python3 .github/scaffold/scripts/issues-sync.py \
 1. CPPD-SCAN-001 stays open. `ubuntu:24.04` index `sha256:534baea6…` is still created 2026-09-17, so the 30-day age gate falls on 2026-10-18. There is no newer noble index to pin. The pin is in `docker/ci-cpp-ubuntu/Dockerfile` and `docker/ci-cpp-opencv/Dockerfile`.
 2. Callers that need vcpkg must pin a `linux/amd64` image manifest of `ci-cpp-vcpkg`, not the tag index `sha256:76b9587f…`. The same rule applies to `ci-cpp-opencv` (`sha256:561316dd…` is the tag index).
 3. Library callers pass `run_ios: false`. iOS is a recorded `CPP-BUILD-010` deviation.
-4. Confirm PAT expiries before the weekly token audit. The audit passes the three read tokens this repo has and does not pass `SCORECARD_TOKEN`.
+4. The weekly token audit passes the three read tokens. `SCORECARD_TOKEN` is not set. Expiries were confirmed on 2026-10-23.
+5. After v6.0.0 publishes ci-cpp, record the new digest in a tag-only follow-up. A GitHub Release republishes the images.
 
 ## ci-cpp-vcpkg
 
@@ -171,6 +172,7 @@ gitconfig under `RUNNER_TEMP`.
 
 ## Recent history
 
+- 2026-10-23: doc coverage is the Clang AST. coverxygen is removed. `-Wdocumentation` fails quality and test builds. Ubuntu Dependabot ignores `>= 24.10`. CPP-BUILD-004 deviation dropped against guardrails 1.12.0.
 - 2026-10-02: spike. Hello-world `-stdlib=libc++ -fsanitize=address,undefined`
   passes on Debian Clang 18.1.8 and Alpine Clang 20.1.8. Ubuntu compile image
   passes without sanitizers. Alpine Clang 18 cannot compile libc++ 22.
@@ -247,4 +249,4 @@ gitconfig under `RUNNER_TEMP`.
   `ci-cpp-vcpkg`. `Dockerfile.opencv` builds OpenCV 4.14.0 plus Eigen 3.4.
   That image is local only until the next image release.
 
-*Last updated: 2026-10-23 (phase-3 review issues; token audit uses the read PATs)*
+*Last updated: 2026-10-23 (Clang AST doc coverage; CPP-BUILD-004 dropped)*
