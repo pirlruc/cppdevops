@@ -14,6 +14,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 - `scripts/refresh-apt-pins.sh` re-queries apt inside Docker. ubuntu:24.04
   still serves the 2026-09-30 digest.
 - commondevops callers pin 5.4.4 (`4a7c8c43`).
+- ci-cpp DHI Python bases are current. The Alpine digest was past the
+  30-day age gate. Apt and apk pins were already the candidates.
 
 ## [6.0.2] - 2026-10-23
 
