@@ -1,9 +1,15 @@
 # Push C++ image Docker Hub Overviews without rebuilding the images.
 # The called workflow is containerdevops 6.3.0.
+# Push to main when a Hub page changes. A release event republishes images.
 
 name: Hub description
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/docker-hub*.md"
+      - ".github/workflows/hub-description.yml"
   workflow_dispatch:
 
 permissions:
