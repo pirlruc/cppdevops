@@ -72,7 +72,7 @@ the pinned `docs/guardrails/cpp/profile.thresholds.yml` profile; CPPD-WF-001).
 CI drift-checks the copy against the submodule (`scripts/check-threshold-drift.sh`).
 
 Reusable `cpp-*` jobs run in
-`container: ghcr.io/pirlruc/ci-cpp@sha256:28db91b4a240ec459e90afedf07d9ed5030e3733933c82944127a156bca711d3` with `packages: read` and `container.credentials`.
+`container: ghcr.io/pirlruc/ci-cpp@sha256:32d74a33b346770271e26a640cf7261751285bf4f2095d56fa6658a7f4b61ef1` with `packages: read` and `container.credentials`.
 
 ## Library bootstrap (templates + scripts)
 

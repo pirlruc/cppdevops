@@ -5,6 +5,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [6.0.1] - 2026-10-23
+
+### Changed
+
+- Record the published 6.0.0 ci-cpp digests. Workflow `container:` pins use
+  the `linux/amd64` image manifests. Debian owns the unsuffixed tag. This
+  tag does not publish a GitHub Release, so the images are not rebuilt.
+
 ## [6.0.0] - 2026-10-23
 
 ### Breaking

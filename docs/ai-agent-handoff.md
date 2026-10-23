@@ -6,7 +6,7 @@
 |-------|-------|
 | **Folder** | cppdevops |
 | **Remote** | https://github.com/pirlruc/cppdevops |
-| **Branch** | `feature-cpp-600` replaces coverxygen with the Clang AST and drops the CPP-BUILD-004 deviation. `main` is **5.2.5** plus the unreleased token-audit and private-pull fixes. |
+| **Branch** | `feature-record-600-digests` records the published **6.0.0** image manifests. `main` is **v6.0.0** (`498ed851`). |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
@@ -26,7 +26,7 @@ image: `docker/ci-cpp/`, `docker/ci-cpp-ubuntu/`, `docker/ci-cpp-vcpkg/`,
 
 Standalone library callers should pin `pirlruc/cppdevops@<sha>` (`CI-018`)
 and pass the same value as `scripts_ref`. The published analysis image is
-ci-cpp 5.0.0 Debian.
+ci-cpp 6.0.0 Debian.
 Hub/Packages, one page per image:
 [`docs/docker-hub-ci-cpp.md`](docker-hub-ci-cpp.md),
 [`docs/docker-hub-ci-cpp-ubuntu.md`](docker-hub-ci-cpp-ubuntu.md),
@@ -37,19 +37,19 @@ Never `@main`. Checklist: [`docs/consumer-checklist.md`](consumer-checklist.md).
 
 Contract reference: [`docs/workflows.md`](workflows.md).
 
-## Pins (2026-10-01)
+## Pins (2026-10-23)
 
 | Submodule / artifact | Pin |
 |----------------------|-----|
 | `docs/guardrails` | tag **1.12.0** → `f4baf6198006c6b898eee9cec451b66b87129bd3` |
 | `.github/scaffold` | tag **1.10.0** → `1d9901f7e7e5785abb7cac6f5d46e0e8e2023ff8` |
 | methodologies (links only; not a submodule) | tag **1.9.1** |
-| `ghcr.io/pirlruc/ci-cpp` (debian, unsuffixed) | Actions pulls `ghcr.io/pirlruc/ci-cpp@sha256:28db91b4a240ec459e90afedf07d9ed5030e3733933c82944127a156bca711d3` with `packages: read` and `container.credentials`. The package is private |
-| `ghcr.io/pirlruc/ci-cpp` (alpine) | `5.2.0-alpine` `sha256:f7d2f1f22eff2ed9640a4c12c76bfb459d4ecff487dcfa8820bda605850475c1` |
-| `ghcr.io/pirlruc/ci-cpp-ubuntu` | `5.2.0` `sha256:cf2464213f9460585846b3fd8e5beb8d77fa8c2774f5f03b0a5e852e4e9de77e` |
-| `ci-cpp-vcpkg` | `5.2.0` `sha256:76b9587f04834322dadd318e3ce5d17349e68df990a9575647f7dc6fb7553cde`. vcpkg `434307da09bc05b2c86996dccc8b2351fc0d5d37`. OpenCV is not in this image |
-| `ci-cpp-opencv` | `5.2.0` `sha256:561316dd5a31b8765f3d6569833ad5fff05bdba42d184a92d11cd4c0c738c42b`. OpenCV 4.14.0, Eigen 3.4, libc++ triplet |
-| commondevops `uses:` | tag **5.3.0** → `803bfe60ff30d5bbcefe7fe6e38070999a66531d` |
+| `ghcr.io/pirlruc/ci-cpp` (debian, unsuffixed) | `6.0.0` `linux/amd64` `sha256:32d74a33b346770271e26a640cf7261751285bf4f2095d56fa6658a7f4b61ef1`. Tag index `sha256:b560e30b94c2b50538f61673bcbd8267403d021b8e4059fecf15817c9f3e4b26`. Private package: `packages: read` and `container.credentials` |
+| `ghcr.io/pirlruc/ci-cpp` (alpine) | `6.0.0-alpine` `linux/amd64` `sha256:ee55ee3368f9c629a650cd89bb44c73e118aa522fe197896e3328e639b61e83f`. Tag index `sha256:24e40b95d1ddc8d66886e58282799bff197fea723d669f77cd6b70026f8ccea9` |
+| `ghcr.io/pirlruc/ci-cpp-ubuntu` | `6.0.0` `linux/amd64` `sha256:6334cc671263521da28f2fd032824de84c86e4242e6166fca35174dbd04ed66a`. Tag index `sha256:05b8d4a8df645fcdf6ce14e9aefbaf0f213666483d5a12d705b098854d661a1e` |
+| `ci-cpp-vcpkg` | `6.0.0` `linux/amd64` `sha256:b8da2259addfb1efcfc60dec396ad2e496a6f5be500016a8341ddc129a37c583`. Tag index `sha256:b92e65c8144e14922bdc37728fa53fa2d0251dc2fa887b38f03cbc312fced337`. vcpkg `434307da09bc05b2c86996dccc8b2351fc0d5d37`. Built FROM ci-cpp `sha256:3406477b…`. OpenCV is not in this image |
+| `ci-cpp-opencv` | `6.0.0` `linux/amd64` `sha256:c167f4b2c3cd19d522992f406ceebabf19922e6bbb05cfa6aec77c9d4416ed23`. Tag index `sha256:79089fae85e7dd80bf5eb58c337fa84b81d6e5a2d6d28a3a1ea61407b1fb1fe2`. OpenCV 4.14.0, Eigen 3.4, libc++ triplet |
+| commondevops `uses:` | `9e28757e47375bbe02f1150e3612cdf69723dd29` (included in tag **5.3.3** and later). Token audit is **5.4.1** `d03953476f3d5fa1081a0834d9882007ff26dd91` |
 | containerdevops `uses:` | `2ad052e69d2587cdaf8ccac59b9dae5c60f5560b` (included in tag **6.2.0**) |
 
 ## Delivery status
@@ -110,7 +110,7 @@ python3 .github/scaffold/scripts/issues-sync.py \
   (`efficiencyScore` 0.971077…) vs org floor 95%. Host `dive` was missing;
   used `wagoodman/dive:v0.13.1`. Do not lower the gate.
 - Reusable workflows and published rescan pin
-  `container: ghcr.io/pirlruc/ci-cpp@sha256:3406477b…` (CI-018). Do not float `:latest`.
+  `container: ghcr.io/pirlruc/ci-cpp@sha256:32d74a33…` (CI-018). Do not float `:latest`.
 - Leftover `container-image-ci-cpp` Actions artifacts were deleted after the
   3.1.0 image publish. Do **not** delete published GHCR/Hub tags. Image builds
   inherit containerdevops BuildKit `cache-to: type=gha,mode=min`.
@@ -137,11 +137,11 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Suggested next work
 
-1. CPPD-SCAN-001 stays open. `ubuntu:24.04` index `sha256:534baea6…` is still created 2026-09-17, so the 30-day age gate falls on 2026-10-18. There is no newer noble index to pin. The pin is in `docker/ci-cpp-ubuntu/Dockerfile` and `docker/ci-cpp-opencv/Dockerfile`.
-2. Callers that need vcpkg must pin a `linux/amd64` image manifest of `ci-cpp-vcpkg`, not the tag index `sha256:76b9587f…`. The same rule applies to `ci-cpp-opencv` (`sha256:561316dd…` is the tag index).
+1. CPPD-SCAN-001 stays open. `ubuntu:24.04` index `sha256:68ee2200…` is still the current noble tag (created 2026-09-30), so the 30-day age gate falls on 2026-10-30. There is no newer index. Do not leave 24.04. The pin is in `docker/ci-cpp-ubuntu/Dockerfile` and `docker/ci-cpp-opencv/Dockerfile`.
+2. Callers that need vcpkg must pin the `linux/amd64` image manifest `sha256:b8da2259…`, not the tag index `sha256:b92e65c8…`. The same rule applies to `ci-cpp-opencv` (image `sha256:c167f4b2…`, index `sha256:79089fae…`).
 3. Library callers pass `run_ios: false`. iOS is a recorded `CPP-BUILD-010` deviation.
 4. The weekly token audit passes the three read tokens. `SCORECARD_TOKEN` is not set. Expiries were confirmed on 2026-10-23.
-5. After v6.0.0 publishes ci-cpp, record the new digest in a tag-only follow-up. A GitHub Release republishes the images.
+5. v6.0.1 records the 6.0.0 digests. Do not publish a GitHub Release for that tag. A release event republishes the images.
 
 ## ci-cpp-vcpkg
 
@@ -172,6 +172,7 @@ gitconfig under `RUNNER_TEMP`.
 
 ## Recent history
 
+- 2026-10-23: v6.0.1 records the 6.0.0 `linux/amd64` manifests. No GitHub Release. Publish run https://github.com/pirlruc/cppdevops/actions/runs/39919054101. CPPD-SCAN-001 stays open.
 - 2026-10-23: doc coverage is the Clang AST. coverxygen is removed. `-Wdocumentation` fails quality and test builds. Ubuntu Dependabot ignores `>= 24.10`. CPP-BUILD-004 deviation dropped against guardrails 1.12.0.
 - 2026-10-02: spike. Hello-world `-stdlib=libc++ -fsanitize=address,undefined`
   passes on Debian Clang 18.1.8 and Alpine Clang 20.1.8. Ubuntu compile image
@@ -249,4 +250,4 @@ gitconfig under `RUNNER_TEMP`.
   `ci-cpp-vcpkg`. `Dockerfile.opencv` builds OpenCV 4.14.0 plus Eigen 3.4.
   That image is local only until the next image release.
 
-*Last updated: 2026-10-23 (Clang AST doc coverage; CPP-BUILD-004 dropped)*
+*Last updated: 2026-10-23 (6.0.0 image digests; v6.0.1 tag only)*
