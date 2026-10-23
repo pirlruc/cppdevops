@@ -13,6 +13,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 - CodeQL is 4.39.0. Ubuntu, vcpkg, and OpenCV have advisory posture scans.
 - `scripts/refresh-apt-pins.sh` re-queries apt inside Docker. ubuntu:24.04
   still serves the 2026-09-30 digest.
+- commondevops callers pin 5.4.4 (`4a7c8c43`).
 
 ## [6.0.2] - 2026-10-23
 
