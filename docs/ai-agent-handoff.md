@@ -6,7 +6,7 @@
 |-------|-------|
 | **Folder** | cppdevops |
 | **Remote** | https://github.com/pirlruc/cppdevops |
-| **Branch** | `feature-record-600-digests` records the published **6.0.0** image manifests. `main` is **v6.0.0** (`498ed851`). |
+| **Branch** | `main`. **v6.0.2** is an annotated tag only (guardrails 1.13.1). **v6.0.0** (`498ed851`) remains the caller pin. **v6.0.1** records digests and has no GitHub Release. |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
@@ -41,7 +41,7 @@ Contract reference: [`docs/workflows.md`](workflows.md).
 
 | Submodule / artifact | Pin |
 |----------------------|-----|
-| `docs/guardrails` | tag **1.12.0** → `f4baf6198006c6b898eee9cec451b66b87129bd3` |
+| `docs/guardrails` | tag **1.13.1** → `1945211ac851c3c0f83694bd4ea53571fdced4ab` |
 | `.github/scaffold` | tag **1.10.0** → `1d9901f7e7e5785abb7cac6f5d46e0e8e2023ff8` |
 | methodologies (links only; not a submodule) | tag **1.9.1** |
 | `ghcr.io/pirlruc/ci-cpp` (debian, unsuffixed) | `6.0.0` `linux/amd64` `sha256:32d74a33b346770271e26a640cf7261751285bf4f2095d56fa6658a7f4b61ef1`. Tag index `sha256:b560e30b94c2b50538f61673bcbd8267403d021b8e4059fecf15817c9f3e4b26`. Private package: `packages: read` and `container.credentials` |
@@ -142,7 +142,7 @@ python3 .github/scaffold/scripts/issues-sync.py \
 3. Library callers pass `run_ios: false`. iOS is a recorded `CPP-BUILD-010` deviation.
 4. The weekly token audit passes the three read tokens. `SCORECARD_TOKEN` is not set. Expiries were confirmed on 2026-10-23.
 5. v6.0.1 records the 6.0.0 digests. Do not publish a GitHub Release for that tag. A release event republishes the images.
-6. Hub Overviews for the four images are `workflow_dispatch` on `.github/workflows/hub-description.yml`. That calls [container-hub-description](https://github.com/pirlruc/containerdevops/blob/6.3.0/.github/workflows/container-hub-description.yml) and does not republish images.
+6. Hub Overviews for the four images update on a push to `main` when `docs/docker-hub*.md` changes, and on `workflow_dispatch`. That calls [container-hub-description](https://github.com/pirlruc/containerdevops/blob/6.3.0/.github/workflows/container-hub-description.yml) and does not republish images.
 
 ## ci-cpp-vcpkg
 
@@ -173,6 +173,7 @@ gitconfig under `RUNNER_TEMP`.
 
 ## Recent history
 
+- 2026-10-23: **v6.0.2** — guardrails 1.13.1. Hub Overview push when `docs/docker-hub*.md` changes. Tag only. No GitHub Release.
 - 2026-10-23: Hub Overview dispatch for `ci-cpp`, `ci-cpp-ubuntu`, `ci-cpp-vcpkg`, and `ci-cpp-opencv`. It does not republish images.
 - 2026-10-23: v6.0.1 records the 6.0.0 `linux/amd64` manifests. No GitHub Release. Publish run https://github.com/pirlruc/cppdevops/actions/runs/39919054101. CPPD-SCAN-001 stays open.
 - 2026-10-23: doc coverage is the Clang AST. coverxygen is removed. `-Wdocumentation` fails quality and test builds. Ubuntu Dependabot ignores `>= 24.10`. CPP-BUILD-004 deviation dropped against guardrails 1.12.0.
@@ -252,4 +253,4 @@ gitconfig under `RUNNER_TEMP`.
   `ci-cpp-vcpkg`. `Dockerfile.opencv` builds OpenCV 4.14.0 plus Eigen 3.4.
   That image is local only until the next image release.
 
-*Last updated: 2026-10-23 (Hub Overview dispatch for the four C++ images)*
+*Last updated: 2026-10-23 (guardrails 1.13.1, Hub Overview push, tag v6.0.2)*
