@@ -15,16 +15,19 @@ Short-lived C++ analysis image. Same Debian and Alpine contents as
 
 ### Tags
 
-Same 5.2.0 manifests as [docker-hub-ci-cpp.md](docker-hub-ci-cpp.md). This
+Same 6.0.0 manifests as [docker-hub-ci-cpp.md](docker-hub-ci-cpp.md). This
 package is private, so an anonymous manifest read returns 403. Actions pulls
-`docker.io/pirlruc/ci-cpp` at the `linux/amd64` image manifest
-`sha256:28db91b4a240ec459e90afedf07d9ed5030e3733933c82944127a156bca711d3`,
-not the tag index `sha256:94667c57…`.
+`ghcr.io/pirlruc/ci-cpp` at the `linux/amd64` image manifest
+`sha256:32d74a33b346770271e26a640cf7261751285bf4f2095d56fa6658a7f4b61ef1`,
+not the tag index `sha256:b560e30b…`.
 
 | Tag | Digest |
 |-----|--------|
-| `5.2.0` / `5.2.0-debian` / `latest` / `latest-debian` | `sha256:94667c573a1fe4a08aa333cd4083a53553d394c34a8d854d12912831b5536cde` (tag index) |
-| `5.2.0-alpine` / `latest-alpine` | `sha256:f7d2f1f22eff2ed9640a4c12c76bfb459d4ecff487dcfa8820bda605850475c1` |
+| `6.0.0` / `6.0.0-debian` / `latest` / `latest-debian` | `sha256:b560e30b94c2b50538f61673bcbd8267403d021b8e4059fecf15817c9f3e4b26` (tag index) |
+| `6.0.0` `linux/amd64` (Actions) | `sha256:32d74a33b346770271e26a640cf7261751285bf4f2095d56fa6658a7f4b61ef1` |
+| `6.0.0-alpine` / `latest-alpine` | `sha256:24e40b95d1ddc8d66886e58282799bff197fea723d669f77cd6b70026f8ccea9` (tag index) |
+| `6.0.0-alpine` `linux/amd64` | `sha256:ee55ee3368f9c629a650cd89bb44c73e118aa522fe197896e3328e639b61e83f` |
+| `5.2.0` / `5.2.0-debian` | Previous Debian analysis. `sha256:94667c573a1fe4a08aa333cd4083a53553d394c34a8d854d12912831b5536cde` (tag index) |
 | `5.0.0` | Previous Debian analysis. `sha256:3406477bb7fc730c53df4a28dffa07a9dce5ee6f6830102df1bedc8727973b67` |
 | `5.0.0-alpine` | Previous Alpine analysis. `sha256:78103428af883fe259241796d359edd3cfbaefe34e11878760a97c1a9efc2986` |
 
@@ -34,7 +37,7 @@ Debian owns the unsuffixed tags. Prefer a digest in production.
 
 ```bash
 echo "$CR_PAT" | docker login ghcr.io -u USERNAME --password-stdin
-docker pull ghcr.io/pirlruc/ci-cpp:5.2.0
+docker pull ghcr.io/pirlruc/ci-cpp:6.0.0
 ```
 
 The PAT needs `read:packages`.
@@ -48,7 +51,7 @@ jobs:
     permissions:
       packages: read
     container:
-      image: ghcr.io/pirlruc/ci-cpp@sha256:28db91b4a240ec459e90afedf07d9ed5030e3733933c82944127a156bca711d3
+      image: ghcr.io/pirlruc/ci-cpp@sha256:32d74a33b346770271e26a640cf7261751285bf4f2095d56fa6658a7f4b61ef1
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}

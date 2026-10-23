@@ -20,15 +20,16 @@ differ. Jobs that compile on Ubuntu pin the image manifest.
 
 | Tag | Digest |
 |-----|--------|
-| `5.2.0` / `latest` | `sha256:cf2464213f9460585846b3fd8e5beb8d77fa8c2774f5f03b0a5e852e4e9de77e` (tag index) |
-| `5.2.0` `linux/amd64` | `sha256:08580497f49d79012a03023377216a3ef2e274a7b7616d4f2a155d2d6551ed68` |
+| `6.0.0` / `latest` | `sha256:05b8d4a8df645fcdf6ce14e9aefbaf0f213666483d5a12d705b098854d661a1e` (tag index) |
+| `6.0.0` `linux/amd64` | `sha256:6334cc671263521da28f2fd032824de84c86e4242e6166fca35174dbd04ed66a` |
+| `5.2.0` | Previous compile image. `sha256:cf2464213f9460585846b3fd8e5beb8d77fa8c2774f5f03b0a5e852e4e9de77e` (tag index) |
 
 ## Authentication
 
 Anonymous pulls work:
 
 ```bash
-docker pull ghcr.io/pirlruc/ci-cpp-ubuntu@sha256:08580497f49d79012a03023377216a3ef2e274a7b7616d4f2a155d2d6551ed68
+docker pull ghcr.io/pirlruc/ci-cpp-ubuntu@sha256:6334cc671263521da28f2fd032824de84c86e4242e6166fca35174dbd04ed66a
 ```
 
 ## Use as a GitHub Actions job container
@@ -38,7 +39,7 @@ jobs:
   ubuntu-compile:
     runs-on: ubuntu-24.04
     container:
-      image: ghcr.io/pirlruc/ci-cpp-ubuntu@sha256:08580497f49d79012a03023377216a3ef2e274a7b7616d4f2a155d2d6551ed68
+      image: ghcr.io/pirlruc/ci-cpp-ubuntu@sha256:6334cc671263521da28f2fd032824de84c86e4242e6166fca35174dbd04ed66a
       options: --user root
 ```
 
