@@ -3,6 +3,14 @@
 All notable changes to this repository are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased]
+
+### Changed
+
+- The scheduled token audit passes `GUARDRAILS_READ_TOKEN`,
+  `CONTAINERDEVOPS_READ_TOKEN`, and `COMMONDEVOPS_READ_TOKEN`. It does not
+  pass a Scorecard token. `scripts_ref` matches commondevops **5.4.1**.
+
 ## [5.2.5] - 2026-10-07
 
 ### Changed
