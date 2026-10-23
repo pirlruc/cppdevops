@@ -1,0 +1,60 @@
+# Push C++ image Docker Hub Overviews without rebuilding the images.
+# The called workflow is containerdevops 6.3.0.
+
+name: Hub description
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ci-cpp:
+    permissions:
+      contents: read
+    uses: pirlruc/containerdevops/.github/workflows/container-hub-description.yml@dd884203c9ffe30e4d4da838cc9e88a888a484a1
+    with:
+      dockerhub_image: pirlruc/ci-cpp
+      dockerhub_readme: docs/docker-hub-ci-cpp.md
+      dockerhub_short_description: >-
+        C++ CI toolchain: Clang/libc++, CMake, Ninja, quality and coverage tools
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_DESCRIPTION_TOKEN: ${{ secrets.DOCKERHUB_DESCRIPTION_TOKEN }}
+
+  ci-cpp-ubuntu:
+    permissions:
+      contents: read
+    uses: pirlruc/containerdevops/.github/workflows/container-hub-description.yml@dd884203c9ffe30e4d4da838cc9e88a888a484a1
+    with:
+      dockerhub_image: pirlruc/ci-cpp-ubuntu
+      dockerhub_readme: docs/docker-hub-ci-cpp-ubuntu.md
+      dockerhub_short_description: Compile-only C++ toolchain on Ubuntu 24.04
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_DESCRIPTION_TOKEN: ${{ secrets.DOCKERHUB_DESCRIPTION_TOKEN }}
+
+  ci-cpp-vcpkg:
+    permissions:
+      contents: read
+    uses: pirlruc/containerdevops/.github/workflows/container-hub-description.yml@dd884203c9ffe30e4d4da838cc9e88a888a484a1
+    with:
+      dockerhub_image: pirlruc/ci-cpp-vcpkg
+      dockerhub_readme: docs/docker-hub-ci-cpp-vcpkg.md
+      dockerhub_short_description: C++ CI toolchain with vcpkg, OpenCV via binary cache
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_DESCRIPTION_TOKEN: ${{ secrets.DOCKERHUB_DESCRIPTION_TOKEN }}
+
+  ci-cpp-opencv:
+    permissions:
+      contents: read
+    uses: pirlruc/containerdevops/.github/workflows/container-hub-description.yml@dd884203c9ffe30e4d4da838cc9e88a888a484a1
+    with:
+      dockerhub_image: pirlruc/ci-cpp-opencv
+      dockerhub_readme: docs/docker-hub-ci-cpp-opencv.md
+      dockerhub_short_description: C++ compile image with OpenCV 4.14 and Eigen 3.4
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_DESCRIPTION_TOKEN: ${{ secrets.DOCKERHUB_DESCRIPTION_TOKEN }}
