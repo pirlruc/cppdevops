@@ -42,6 +42,7 @@ jobs:
     if: github.event.pull_request.user.login != 'dependabot[bot]'
     permissions:
       contents: read
+      issues: read
     uses: pirlruc/commondevops/.github/workflows/common-scaffold-verify.yml@4a7c8c431090f32bb0febcd42f5ac8ef2d405e0e
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
