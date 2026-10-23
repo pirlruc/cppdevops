@@ -2,7 +2,8 @@ name: Cppdevops CI (self)
 
 # Deterministic infra lint + threshold drift. Time-varying security stays on
 # cppdevops-security.yml (schedule). Secret jobs skip Dependabot by pull
-# request author (CI-024). pins, scaffold, and lint-dependabot stay token-free.
+# request author (CI-024). pins and lint-dependabot stay token-free.
+# scaffold needs COMMONDEVOPS_READ_TOKEN, so Dependabot skips it.
 
 on:
   push:
@@ -38,6 +39,7 @@ jobs:
         run: sh scripts/check-submodule-pins.sh
 
   scaffold:
+    if: github.event.pull_request.user.login != 'dependabot[bot]'
     permissions:
       contents: read
     uses: pirlruc/commondevops/.github/workflows/common-scaffold-verify.yml@9e28757e47375bbe02f1150e3612cdf69723dd29
