@@ -6,7 +6,7 @@
 # kics-scan disable=b03a748a-542d-44f4-bb86-9199ab4fd2d5
 # Base tag in a comment for DOCKER-BUILD-003: ghcr.io/pirlruc/ci-cpp:5.0.0
 
-FROM ghcr.io/pirlruc/ci-cpp@sha256:3406477bb7fc730c53df4a28dffa07a9dce5ee6f6830102df1bedc8727973b67
+FROM ghcr.io/pirlruc/ci-cpp@sha256:b560e30b94c2b50538f61673bcbd8267403d021b8e4059fecf15817c9f3e4b26
 
 LABEL org.opencontainers.image.title="ci-cpp-vcpkg" \
       org.opencontainers.image.description="C++ CI toolchain with a pinned vcpkg. OpenCV is not baked in; use the files binary cache. Non-root 1000:1000, linux/amd64." \
