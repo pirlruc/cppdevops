@@ -19,7 +19,7 @@ RUN /usr/local/bin/uv venv /opt/venv --python /usr/bin/python3 \
 FROM dhi.io/python:3.13-debian13-dev@sha256:9f749050e3565136aa368b8f2314b88070522eac1778a0a149d3186bb0923af4
 
 LABEL org.opencontainers.image.title="ci-cpp" \
-      org.opencontainers.image.description="C++ analysis toolchain: Clang 18, libc++, CMake, Ninja, cppcheck, clang-tidy, Doxygen, gcovr, lizard, Metrix++, coverxygen, valgrind. Debian 13. Non-root 1000:1000, linux/amd64." \
+      org.opencontainers.image.description="C++ analysis toolchain: Clang 18, libclang, libc++, CMake, Ninja, cppcheck, clang-tidy, Doxygen, gcovr, lizard, Metrix++, valgrind. Debian 13. Non-root 1000:1000, linux/amd64." \
       org.opencontainers.image.source="https://github.com/pirlruc/cppdevops" \
       org.opencontainers.image.vendor="pirlruc" \
       org.opencontainers.image.licenses="MIT"
@@ -40,6 +40,7 @@ RUN apt-get update \
       libc++abi-18-dev=1:18.1.8-18+b1 \
       libfuzzer-18-dev=1:18.1.8-18+b1 \
       llvm-18=1:18.1.8-18+b1 \
+      libclang-18-dev=1:18.1.8-18+b1 \
       cmake=3.31.6-2 \
       ninja-build=1.12.1-1 \
       cppcheck=2.17.1-2 \

@@ -5,6 +5,21 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [6.0.0] - 2026-10-23
+
+### Breaking
+
+- Doc coverage counts public declarations with the Clang AST
+  (`scripts/check-doc-coverage.py`). coverxygen is no longer installed.
+  Quality and test builds fail on `-Wdocumentation` and
+  `-Wdocumentation-unknown-command`. On Clang 18 the script measured
+  runa-cpp at 26/26. mjolnir-cpp stops until `bor/exception.hpp` is on the
+  include path (`extra_clang_args`). runa-cpp still fails two `@tparam`
+  comments, in `include/runa/type_traits.hpp` and `include/runa/concepts.hpp`.
+- Dependabot holds Ubuntu at 24.04 (`>= 24.10` ignored, review 2027-01-31).
+  The CPP-BUILD-004 deviation is dropped. Guardrails 1.12.0 allows the
+  Debian and Alpine analysis images.
+
 ### Fixed
 
 - C++ jobs pull private `ghcr.io/pirlruc/ci-cpp` with `packages: read` and

@@ -2,7 +2,7 @@
 
 Short-lived C++ analysis image. Debian 13 owns the unsuffixed tags (Clang 18,
 libc++, CMake, Ninja, cppcheck, clang-tidy/format, Doxygen, gcovr, lizard,
-Metrix++, coverxygen, valgrind). Alpine 3.24 is the `-alpine` variant (Clang 20,
+Metrix++, valgrind). Alpine 3.24 is the `-alpine` variant (Clang 20,
 because Alpine libc++ is LLVM 22). Not a product runtime — no `HEALTHCHECK`.
 graphviz and cloc are not installed.
 
@@ -77,7 +77,7 @@ docker run --rm \
 | cmake / ninja | Configure and build |
 | clang-format 23.1.0 / clang-tidy / cppcheck | Lint |
 | gcovr / llvm-cov | Coverage |
-| lizard / Metrix++ / coverxygen / Doxygen | Complexity and docs |
+| lizard / Metrix++ / Doxygen / libclang | Complexity and API doc coverage |
 | valgrind | Dynamic analysis |
 
 Not included: vcpkg, OpenCV, Eigen. Those live on `ci-cpp-vcpkg` and

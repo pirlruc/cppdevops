@@ -125,12 +125,12 @@ jobs:
           sh "${GITHUB_WORKSPACE}/_cppdevops/scripts/cmake-ci.sh" --preset "${CMAKE_PRESET}" \
             -DPIRLRUC_WITH_TESTS=ON \
             -DPIRLRUC_WITH_COVERAGE=ON \
-            -DCMAKE_CXX_FLAGS="-stdlib=libc++ --coverage" \
+            -DCMAKE_CXX_FLAGS="-stdlib=libc++ --coverage -Wdocumentation -Wdocumentation-unknown-command -Werror=documentation -Werror=documentation-unknown-command" \
             || sh "${GITHUB_WORKSPACE}/_cppdevops/scripts/cmake-ci.sh" -B build \
               -DPIRLRUC_WITH_TESTS=ON \
               -DPIRLRUC_WITH_COVERAGE=ON \
               -DCMAKE_CXX_COMPILER=clang++ \
-              -DCMAKE_CXX_FLAGS="-stdlib=libc++ --coverage"
+              -DCMAKE_CXX_FLAGS="-stdlib=libc++ --coverage -Wdocumentation -Wdocumentation-unknown-command -Werror=documentation -Werror=documentation-unknown-command"
           cmake --build build -j
 
       - name: Run tests
@@ -186,10 +186,10 @@ jobs:
         run: |
           cmake --preset "${CMAKE_PRESET}" \
             -DPIRLRUC_WITH_TESTS=ON \
-            -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
+            -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wdocumentation -Wdocumentation-unknown-command -Werror=documentation -Werror=documentation-unknown-command" \
             || cmake -B build \
               -DPIRLRUC_WITH_TESTS=ON \
               -DCMAKE_CXX_COMPILER=clang++ \
-              -DCMAKE_CXX_FLAGS="-stdlib=libc++"
+              -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wdocumentation -Wdocumentation-unknown-command -Werror=documentation -Werror=documentation-unknown-command"
           cmake --build build -j
           ctest --test-dir build --output-on-failure

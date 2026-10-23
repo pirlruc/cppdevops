@@ -17,13 +17,6 @@ ci_lizard_available() {
   command -v lizard >/dev/null 2>&1 || [[ -x "$(ci_venv_bin "${root_dir}")/lizard" ]]
 }
 
-ci_coverxygen_available() {
-  local root_dir="$1"
-  command -v coverxygen >/dev/null 2>&1 \
-    || python3 -c "import coverxygen" 2>/dev/null \
-    || [[ -x "$(ci_venv_bin "${root_dir}")/coverxygen" ]]
-}
-
 ci_doxygen_available() {
   command -v doxygen >/dev/null 2>&1
 }

@@ -29,6 +29,7 @@ ENV PATH="/opt/venv/bin:/usr/local/bin:${PATH}" \
 USER root
 RUN apk add --no-cache \
       clang20=20.1.8-r3 \
+      clang20-libclang=20.1.8-r3 \
       clang20-extra-tools=20.1.8-r3 \
       clang20-rtlib=0.1.0-r3 \
       llvm20=20.1.8-r1 \

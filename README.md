@@ -10,7 +10,7 @@ image and library bootstrap templates.
 |----------|---------|
 | `cpp-quality.yml` | clang-format, clang-tidy, cppcheck, cpplint, lizard, Metrix++ |
 | `cpp-tests.yml` | CMake build + CTest + coverage gate |
-| `cpp-docs.yml` | Doxygen + coverxygen doc coverage |
+| `cpp-docs.yml` | Doxygen HTML and Clang AST doc coverage |
 | `cpp-security.yml` | Forwards to commondevops secrets-sast + supply-chain (CodeQL in `cpp-codeql.yml`) |
 | `cpp-codeql.yml` | CodeQL SAST (in addition to semgrep) |
 | `cpp-dynamic.yml` | ASan/UBSan + valgrind memcheck |

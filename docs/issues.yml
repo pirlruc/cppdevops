@@ -1353,3 +1353,70 @@ milestones:
       verification:
       - rg -n 'credentials:' .github/workflows/cpp-quality.yml
       - rg -n 'ghcr.io/pirlruc/ci-cpp@' .github/workflows/cpp-quality.yml
+
+  - id: CPPD-DOC-002
+    status: done
+    title: Measure public API docs with the Clang AST
+    overview:
+      problem: >-
+        coverxygen measures Doxygen XML. Guardrails 1.12.0 requires the Clang
+        AST for public declarations, and the same translation units must fail
+        on -Wdocumentation.
+      goal: >-
+        ci-cpp ships libclang, the docs job counts documented public
+        declarations, and quality and test builds fail on documentation warnings.
+    decision: >-
+      In the context of public C++ API documentation, facing coverxygen
+      measuring Doxygen XML rather than the compiler view of the headers, we
+      decided to count documented public declarations with the Clang AST and
+      to fail the build on -Wdocumentation, to achieve the CPP-DOC-001 and
+      CPP-DOC-004 measurement, accepting that runa-cpp fails two @tparam
+      comments until those headers are fixed.
+    description: >-
+      On Clang 18 the script measured runa-cpp at 26/26. mjolnir-cpp stops
+      until bor/exception.hpp is on the include path. An earlier walk that
+      continued after that diagnostic saw 32 documented declarations and
+      then a missing fmt/format.h. runa-cpp -Wdocumentation failed at
+      include/runa/type_traits.hpp line 19 and include/runa/concepts.hpp
+      line 61. The walker ignores unknown libclang cursor kinds and still
+      walks their children. Doxygen remains the HTML renderer.
+    acceptance_criteria:
+    - scripts/check-doc-coverage.py is the coverage gate
+    - Debian and Alpine images import clang.cindex against their libclang
+    - Quality and test configures pass -Wdocumentation and -Wdocumentation-unknown-command as errors
+    - The CPP-BUILD-004 deviation is gone and Dependabot ignores Ubuntu tags at or above 24.10
+    guardrail_refs:
+    - CPP-DOC-001
+    - CPP-DOC-004
+    - CPP-BUILD-004
+    tasks:
+    - id: CPPD-DOC-002-T1
+      status: done
+      title: Replace coverxygen with the Clang AST coverage script
+      instructions:
+        files:
+        - scripts/check-doc-coverage.py
+        - scripts/check-doc-coverage.sh
+        - docker/ci-cpp/Dockerfile
+        - docker/ci-cpp/Dockerfile.alpine
+        - docker/ci-cpp/requirements.in
+        - docker/ci-cpp/requirements-alpine.in
+      verification:
+      - python3 scripts/check-doc-coverage.py --help
+      guardrail_refs:
+      - CPP-DOC-001
+    - id: CPPD-DOC-002-T2
+      status: done
+      title: Fail quality and test builds on Clang documentation warnings
+      instructions:
+        files:
+        - .github/workflows/cpp-quality.yml
+        - .github/workflows/cpp-tests.yml
+        - templates/cpp/CMakePresets.standalone.json.in
+        - .github/dependabot.yml
+        - docs/guardrail-deviations.yml
+      verification:
+      - rg -n 'Werror=documentation' .github/workflows/cpp-quality.yml
+      guardrail_refs:
+      - CPP-DOC-004
+      - CPP-BUILD-004

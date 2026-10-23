@@ -2,7 +2,7 @@
 # Cadence: docs/guardrails/supply-chain/profile.thresholds.yml
 # Multi-ecosystem docs:
 # https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/configuring-multi-ecosystem-updates
-# Process: https://github.com/pirlruc/methodologies/blob/1.8.0/github-issue-adr/docs/process/dependency-updates.md
+# Process: https://github.com/pirlruc/methodologies/blob/1.9.1/github-issue-adr/docs/process/dependency-updates.md
 #
 # Personal-account private access (Dependabot secrets — not Actions):
 #   DEPENDABOT_GITHUB_TOKEN — Contents: Read on this repo, private submodules,
@@ -63,6 +63,11 @@ updates:
       - dhi
     cooldown:
       default-days: 7
+    ignore:
+      # CPP-BUILD-004: Ubuntu 24.04 is the compile-and-ctest reference OS.
+      # Review 2027-01-31.
+      - dependency-name: "ubuntu"
+        versions: [">= 24.10"]
 
   - package-ecosystem: docker
     directory: /docker/ci-cpp-vcpkg
@@ -78,6 +83,11 @@ updates:
     directory: /docker/ci-cpp-opencv
     patterns: ["*"]
     multi-ecosystem-group: all-dependencies
+    ignore:
+      # CPP-BUILD-004: Ubuntu 24.04 is the compile-and-ctest reference OS.
+      # Review 2027-01-31.
+      - dependency-name: "ubuntu"
+        versions: [">= 24.10"]
     registries:
       - github-private
       - dhi

@@ -152,8 +152,8 @@ jobs:
         id: cmake
         continue-on-error: true
         run: |
-          sh "${GITHUB_WORKSPACE}/_cppdevops/scripts/cmake-ci.sh" --preset ci-linux -DPIRLRUC_WITH_TESTS=OFF -DCMAKE_EXPORT_COMPILE_COMMANDS=ON || \
-            sh "${GITHUB_WORKSPACE}/_cppdevops/scripts/cmake-ci.sh" -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_CXX_FLAGS='-stdlib=libc++'
+          sh "${GITHUB_WORKSPACE}/_cppdevops/scripts/cmake-ci.sh" --preset ci-linux -DPIRLRUC_WITH_TESTS=OFF -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_CXX_FLAGS='-stdlib=libc++ -Wdocumentation -Wdocumentation-unknown-command -Werror=documentation -Werror=documentation-unknown-command' || \
+            sh "${GITHUB_WORKSPACE}/_cppdevops/scripts/cmake-ci.sh" -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_CXX_FLAGS='-stdlib=libc++ -Wdocumentation -Wdocumentation-unknown-command -Werror=documentation -Werror=documentation-unknown-command'
           cmake --build build -j
 
       - name: clang-tidy

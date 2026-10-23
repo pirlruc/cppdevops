@@ -62,13 +62,14 @@ CMake configure/build, CTest, coverage gate (`scripts/check-coverage.sh`).
 
 ## `cpp-docs.yml`
 
-Doxygen + coverxygen via `scripts/check-doc-coverage.sh` (reads `doc_coverage`
+Doxygen HTML, plus Clang AST coverage via `scripts/check-doc-coverage.sh` (reads `doc_coverage`
 from vendored thresholds; does not mutate the tracked Doxyfile).
 
 | Input | Default |
 |-------|---------|
 | `library_path` | required |
 | `blocking` | `false` |
+| `extra_clang_args` | empty. Extra Clang arguments, such as `-I` paths, with no spaces in a path |
 
 ---
 
