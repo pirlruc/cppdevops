@@ -140,6 +140,7 @@ python3 .github/scaffold/scripts/issues-sync.py \
 1. CPPD-SCAN-001 stays open. `ubuntu:24.04` index `sha256:534baea6…` is still created 2026-09-17, so the 30-day age gate falls on 2026-10-18. There is no newer noble index to pin. The pin is in `docker/ci-cpp-ubuntu/Dockerfile` and `docker/ci-cpp-opencv/Dockerfile`.
 2. Callers that need vcpkg must pin a `linux/amd64` image manifest of `ci-cpp-vcpkg`, not the tag index `sha256:76b9587f…`. The same rule applies to `ci-cpp-opencv` (`sha256:561316dd…` is the tag index).
 3. Library callers pass `run_ios: false`. iOS is a recorded `CPP-BUILD-010` deviation.
+4. Confirm PAT expiries before the weekly token audit. The audit passes the three read tokens this repo has and does not pass `SCORECARD_TOKEN`.
 
 ## ci-cpp-vcpkg
 
@@ -246,4 +247,4 @@ gitconfig under `RUNNER_TEMP`.
   `ci-cpp-vcpkg`. `Dockerfile.opencv` builds OpenCV 4.14.0 plus Eigen 3.4.
   That image is local only until the next image release.
 
-*Last updated: 2026-10-07 (phase-3 review issues appended to docs/issues.yml)*
+*Last updated: 2026-10-23 (phase-3 review issues; token audit uses the read PATs)*
