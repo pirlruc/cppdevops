@@ -1,7 +1,7 @@
 # ci-cpp-ubuntu
 
 Compile-only C++ image: Clang 18, libc++, CMake, Ninja, and git on Ubuntu
-24.04. Analysis tools stay on [ci-cpp](docker-hub-ci-cpp.md). Not a product
+24.04. Analysis tools stay on [ci-cpp](https://hub.docker.com/r/pirlruc/ci-cpp). Not a product
 runtime — no `HEALTHCHECK`.
 
 ## Image

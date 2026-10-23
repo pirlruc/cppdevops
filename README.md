@@ -105,7 +105,6 @@ Deviations: [`docs/guardrail-deviations.yml`](docs/guardrail-deviations.yml) onl
 
 ## Documentation
 
-- Agent handoff: [`docs/ai-agent-handoff.md`](docs/ai-agent-handoff.md)
 - Workflow contracts: [`docs/workflows.md`](docs/workflows.md)
 - Consumer pin / draupnir retirement: [`docs/consumer-checklist.md`](docs/consumer-checklist.md)
 - Authored backlog: [`docs/issues.yml`](docs/issues.yml)

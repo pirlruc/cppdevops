@@ -7,9 +7,9 @@ because Alpine libc++ is LLVM 22). Not a product runtime — no `HEALTHCHECK`.
 graphviz and cloc are not installed.
 
 Compile-only and dependency images are separate names:
-[ci-cpp-ubuntu](docker-hub-ci-cpp-ubuntu.md),
-[ci-cpp-vcpkg](docker-hub-ci-cpp-vcpkg.md),
-[ci-cpp-opencv](docker-hub-ci-cpp-opencv.md).
+[ci-cpp-ubuntu](https://hub.docker.com/r/pirlruc/ci-cpp-ubuntu),
+[ci-cpp-vcpkg](https://hub.docker.com/r/pirlruc/ci-cpp-vcpkg),
+[ci-cpp-opencv](https://hub.docker.com/r/pirlruc/ci-cpp-opencv).
 
 ## Image
 

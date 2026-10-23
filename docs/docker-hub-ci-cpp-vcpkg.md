@@ -7,8 +7,8 @@ Builds use `VCPKG_DEFAULT_BINARY_CACHE`. The image sets
 standard library the libraries compile with. Not a product runtime — no
 `HEALTHCHECK`.
 
-Analysis tools are documented on [ci-cpp](docker-hub-ci-cpp.md). OpenCV and
-Eigen from the image are [ci-cpp-opencv](docker-hub-ci-cpp-opencv.md).
+Analysis tools are documented on [ci-cpp](https://hub.docker.com/r/pirlruc/ci-cpp). OpenCV and
+Eigen from the image are [ci-cpp-opencv](https://hub.docker.com/r/pirlruc/ci-cpp-opencv).
 
 ## Image
 

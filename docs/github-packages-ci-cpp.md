@@ -1,7 +1,7 @@
 # ci-cpp (GitHub Packages)
 
 Short-lived C++ analysis image. Same Debian and Alpine contents as
-[docker-hub-ci-cpp.md](docker-hub-ci-cpp.md). Not a product runtime — no
+[docker-hub-ci-cpp.md](https://hub.docker.com/r/pirlruc/ci-cpp). Not a product runtime — no
 `HEALTHCHECK`.
 
 ## Image
@@ -15,7 +15,7 @@ Short-lived C++ analysis image. Same Debian and Alpine contents as
 
 ### Tags
 
-Same 6.0.0 manifests as [docker-hub-ci-cpp.md](docker-hub-ci-cpp.md). This
+Same 6.0.0 manifests as [docker-hub-ci-cpp.md](https://hub.docker.com/r/pirlruc/ci-cpp). This
 package is private, so an anonymous manifest read returns 403. Actions pulls
 `ghcr.io/pirlruc/ci-cpp` at the `linux/amd64` image manifest
 `sha256:32d74a33b346770271e26a640cf7261751285bf4f2095d56fa6658a7f4b61ef1`,
@@ -66,7 +66,7 @@ float on `:latest`.
 
 ## What is inside
 
-Same toolchain as [docker-hub-ci-cpp.md](docker-hub-ci-cpp.md). clang-format
+Same toolchain as [docker-hub-ci-cpp.md](https://hub.docker.com/r/pirlruc/ci-cpp). clang-format
 is 23.1.0.
 
 ## License
