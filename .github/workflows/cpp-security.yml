@@ -52,11 +52,12 @@ concurrency:
 
 jobs:
   secrets-sast:
-    # CI-024. This callee only declares contents: read. Requesting
-    # security-events here makes the call fail at startup.
+    # CI-024. The callee declares contents and packages. Extra scopes fail
+    # the call at startup.
     if: github.event.pull_request.user.login != 'dependabot[bot]'
     permissions:
       contents: read
+      packages: read
     uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@4a7c8c431090f32bb0febcd42f5ac8ef2d405e0e
     with:
       blocking: ${{ inputs.blocking }}
@@ -70,6 +71,8 @@ jobs:
     if: github.event.pull_request.user.login != 'dependabot[bot]' && inputs.run_sbom
     permissions:
       contents: read
+      actions: read
+      packages: read
       security-events: write
     uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@4a7c8c431090f32bb0febcd42f5ac8ef2d405e0e
     with:
