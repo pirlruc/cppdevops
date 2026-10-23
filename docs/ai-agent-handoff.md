@@ -142,6 +142,7 @@ python3 .github/scaffold/scripts/issues-sync.py \
 3. Library callers pass `run_ios: false`. iOS is a recorded `CPP-BUILD-010` deviation.
 4. The weekly token audit passes the three read tokens. `SCORECARD_TOKEN` is not set. Expiries were confirmed on 2026-10-23.
 5. v6.0.1 records the 6.0.0 digests. Do not publish a GitHub Release for that tag. A release event republishes the images.
+6. Hub Overviews for the four images are `workflow_dispatch` on `.github/workflows/hub-description.yml`. That calls [container-hub-description](https://github.com/pirlruc/containerdevops/blob/6.3.0/.github/workflows/container-hub-description.yml) and does not republish images.
 
 ## ci-cpp-vcpkg
 
@@ -172,6 +173,7 @@ gitconfig under `RUNNER_TEMP`.
 
 ## Recent history
 
+- 2026-10-23: Hub Overview dispatch for `ci-cpp`, `ci-cpp-ubuntu`, `ci-cpp-vcpkg`, and `ci-cpp-opencv`. It does not republish images.
 - 2026-10-23: v6.0.1 records the 6.0.0 `linux/amd64` manifests. No GitHub Release. Publish run https://github.com/pirlruc/cppdevops/actions/runs/39919054101. CPPD-SCAN-001 stays open.
 - 2026-10-23: doc coverage is the Clang AST. coverxygen is removed. `-Wdocumentation` fails quality and test builds. Ubuntu Dependabot ignores `>= 24.10`. CPP-BUILD-004 deviation dropped against guardrails 1.12.0.
 - 2026-10-02: spike. Hello-world `-stdlib=libc++ -fsanitize=address,undefined`
@@ -250,4 +252,4 @@ gitconfig under `RUNNER_TEMP`.
   `ci-cpp-vcpkg`. `Dockerfile.opencv` builds OpenCV 4.14.0 plus Eigen 3.4.
   That image is local only until the next image release.
 
-*Last updated: 2026-10-23 (6.0.0 image digests; v6.0.1 tag only)*
+*Last updated: 2026-10-23 (Hub Overview dispatch for the four C++ images)*
