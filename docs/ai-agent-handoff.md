@@ -6,7 +6,7 @@
 |-------|-------|
 | **Folder** | cppdevops |
 | **Remote** | https://github.com/pirlruc/cppdevops |
-| **Branch** | `main`. **v6.0.2** is an annotated tag only (guardrails 1.13.1). **v6.0.0** (`498ed851`) remains the caller pin. **v6.0.1** records digests and has no GitHub Release. |
+| **Branch** | `main` at `3c1fdb60`. GitHub Release **v6.1.0** published the images as tag `6.1.0` (not `v6.1.0`). Hub pages still show 6.0.0. Digests are in the release body. Do not rewrite Hub pages to chase 6.1.0. The repo is public; the owner can set it private. |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
@@ -141,7 +141,7 @@ python3 .github/scaffold/scripts/issues-sync.py \
 2. Callers that need vcpkg must pin the `linux/amd64` image manifest `sha256:b8da2259…`, not the tag index `sha256:b92e65c8…`. The same rule applies to `ci-cpp-opencv` (image `sha256:c167f4b2…`, index `sha256:79089fae…`).
 3. Library callers pass `run_ios: false`. iOS is a recorded `CPP-BUILD-010` deviation.
 4. The weekly token audit passes the three read tokens. `SCORECARD_TOKEN` is not set. Expiries were confirmed on 2026-10-23.
-5. v6.0.1 records the 6.0.0 digests. Do not publish a GitHub Release for that tag. A release event republishes the images.
+5. v6.1.0 is the image release. Digests are in that GitHub Release. Do not publish another Release only to reprint Hub pages. v6.0.1 stays a tag with no Release.
 6. Hub Overviews for the four images update on a push to `main` when `docs/docker-hub*.md` changes, and on `workflow_dispatch`. That calls [container-hub-description](https://github.com/pirlruc/containerdevops/blob/6.3.0/.github/workflows/container-hub-description.yml) and does not republish images.
 7. CPPD-PRIV-001 is done. The reusable C++ jobs already set `container.credentials`. Scorecard alerts 298, 308, and 300 were dismissed under CI-042 (review 2026-12-31). Alerts on jobs that also hold `packages: write`, `actions: write`, or `id-token: write` stay open.
 
@@ -174,6 +174,7 @@ gitconfig under `RUNNER_TEMP`.
 
 ## Recent history
 
+- 2026-10-24: **v6.1.0** on `3c1fdb60` (PR 150). Image tags are `6.1.0`. Issue #87 is closed. Hub pages still name 6.0.0. Debian owns the unsuffixed `ci-cpp` tags.
 - 2026-10-23: **v6.0.2** — guardrails 1.13.1. Hub Overview push when `docs/docker-hub*.md` changes. Tag only. No GitHub Release.
 - 2026-10-23: Hub Overview dispatch for `ci-cpp`, `ci-cpp-ubuntu`, `ci-cpp-vcpkg`, and `ci-cpp-opencv`. It does not republish images.
 - 2026-10-23: v6.0.1 records the 6.0.0 `linux/amd64` manifests. No GitHub Release. Publish run https://github.com/pirlruc/cppdevops/actions/runs/39919054101. CPPD-SCAN-001 stays open.
@@ -254,4 +255,4 @@ gitconfig under `RUNNER_TEMP`.
   `ci-cpp-vcpkg`. `Dockerfile.opencv` builds OpenCV 4.14.0 plus Eigen 3.4.
   That image is local only until the next image release.
 
-*Last updated: 2026-10-23 (CPPD-PRIV-001 closed, CI-042 dismissals 298, 308, 300)*
+*Last updated: 2026-10-24 (v6.1.0 image release, Hub pages still 6.0.0)*
