@@ -151,6 +151,7 @@ Do not recommend removing these without **requires user decision**:
 6. Mobile matrix compiles a header-including smoke TU (MOBILE-MECH-001). It does not build Kotlin or Swift
 7. Cross-repo callers pass `scripts_ref` matching the `uses:` pin (CI-034)
 8. Do not delete published GHCR or Docker Hub tags as quota cleanup
+9. Image tags are the semver without a leading `v`. Hub pages may name the previous tag. The release body carries the new digests. Do not republish only to reprint Hub
 
 ## Automation configuration
 
