@@ -3,6 +3,23 @@
 All notable changes to this repository are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [6.2.0] - 2026-10-27
+
+### Changed
+
+- ubuntu:24.04 digest is `sha256:24737cef…` (created 2026-10-25), before
+  the 30-day age gate. ci-cpp-vcpkg is built on ci-cpp 6.1.0.
+- Dependabot ignores `library/ubuntu` >= 24.10, including the OpenCV
+  image. The caller template pre-commit revs are clang-format 23.1.3
+  and semgrep 1.181.0.
+- github-scaffold is 1.10.2. `SECURITY.md` names private vulnerability
+  reporting.
+- C++ reusable workflows default to `permissions: {}`. Cache jobs no
+  longer request `actions: write` (CI-025).
+- Image scan and published-rescan pin containerdevops 6.3.4 and grant
+  `actions: read`.
+- SC-SIGN-001 matches the public-now, private-later decision.
+
 ## [6.1.0] - 2026-10-23
 
 ### Changed

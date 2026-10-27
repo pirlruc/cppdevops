@@ -43,11 +43,8 @@ on:
       checkout_token:
         required: false
 
-# CI-025: workflow permissions are the union of the job permissions.
-permissions:
-  actions: write
-  contents: read
-  packages: read
+# CI-025: default deny. Each job grants only what it uses.
+permissions: {}
 
 env:
   ADVISORY: ${{ inputs.blocking == false }}
@@ -66,7 +63,6 @@ jobs:
       options: --user root
     timeout-minutes: 45
     permissions:
-      actions: write
       contents: read
       packages: read
     env:
@@ -165,7 +161,6 @@ jobs:
       options: --user root
     timeout-minutes: 60
     permissions:
-      actions: write
       contents: read
       packages: read
     env:
