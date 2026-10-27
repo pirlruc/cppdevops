@@ -90,8 +90,9 @@ Not included: vcpkg, OpenCV, Eigen. Those live on `ci-cpp-vcpkg` and
 docker pull pirlruc/ci-cpp@sha256:32d74a33b346770271e26a640cf7261751285bf4f2095d56fa6658a7f4b61ef1
 ```
 
-Signing is skipped while the repo is private on the Free plan (`SC-SIGN-001`).
-The registry still stores BuildKit provenance (`mode=max`) and an SBOM.
+Signing runs while the repository is public. It stops if the repository
+returns to private on the Free plan (`SC-SIGN-001`). The registry still
+stores BuildKit provenance (`mode=max`) and an SBOM.
 
 ## Vulnerabilities
 

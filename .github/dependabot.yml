@@ -70,7 +70,7 @@ updates:
     ignore:
       # CPP-BUILD-004: Ubuntu 24.04 is the compile-and-ctest reference OS.
       # Review 2027-01-31.
-      - dependency-name: "ubuntu"
+      - dependency-name: "library/ubuntu"
         versions: [">= 24.10"]
 
   - package-ecosystem: docker
@@ -90,7 +90,7 @@ updates:
     ignore:
       # CPP-BUILD-004: Ubuntu 24.04 is the compile-and-ctest reference OS.
       # Review 2027-01-31.
-      - dependency-name: "ubuntu"
+      - dependency-name: "library/ubuntu"
         versions: [">= 24.10"]
     registries:
       - github-private

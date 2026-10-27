@@ -44,11 +44,11 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/containerdevops/.github/workflows/container-lint.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    uses: pirlruc/containerdevops/.github/workflows/container-lint.yml@8d4164a11dc0b45c006a94127691d1d13ca8b16f
     with:
       dockerfile: docker/ci-cpp/Dockerfile
       working_directory: .
-      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      scripts_ref: 8d4164a11dc0b45c006a94127691d1d13ca8b16f
       runner_image: ""
       run_infra_lint: false
       run_secrets_scan: true
@@ -66,7 +66,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    uses: pirlruc/containerdevops/.github/workflows/container-build.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    uses: pirlruc/containerdevops/.github/workflows/container-build.yml@8d4164a11dc0b45c006a94127691d1d13ca8b16f
     with:
       context: docker/ci-cpp
       dockerfile: docker/ci-cpp/Dockerfile
@@ -74,7 +74,7 @@ jobs:
       artifact_name: container-image-ci-cpp
       handoff_package: ci-cpp
       structure_test_config: docker/ci-cpp/container-structure-test.yml
-      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      scripts_ref: 8d4164a11dc0b45c006a94127691d1d13ca8b16f
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
       size_class: ci_toolchain
       image_title: ci-cpp
@@ -95,15 +95,16 @@ jobs:
       (github.event_name != 'pull_request' ||
        github.event.pull_request.head.repo.full_name == github.repository)
     permissions:
+      actions: read
       contents: read
       security-events: write
       packages: read
-    uses: pirlruc/containerdevops/.github/workflows/container-scan.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    uses: pirlruc/containerdevops/.github/workflows/container-scan.yml@8d4164a11dc0b45c006a94127691d1d13ca8b16f
     with:
       image: ${{ format('ghcr.io/{0}/{1}@{2}', github.repository_owner, needs.build.outputs.handoff_package, needs.build.outputs.digest) }}
       results_artifact: container-scan-results-ci-cpp
       sarif_category: trivy-image-ci-cpp
-      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      scripts_ref: 8d4164a11dc0b45c006a94127691d1d13ca8b16f
       pkg_types: library
       ignorefile: docker/ci-cpp/.trivyignore.yaml
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
@@ -117,15 +118,16 @@ jobs:
       (github.event_name != 'pull_request' ||
        github.event.pull_request.head.repo.full_name == github.repository)
     permissions:
+      actions: read
       contents: read
       security-events: write
       packages: read
-    uses: pirlruc/containerdevops/.github/workflows/container-scan.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    uses: pirlruc/containerdevops/.github/workflows/container-scan.yml@8d4164a11dc0b45c006a94127691d1d13ca8b16f
     with:
       image: ${{ format('ghcr.io/{0}/{1}@{2}', github.repository_owner, needs.build.outputs.handoff_package, needs.build.outputs.digest) }}
       results_artifact: container-scan-posture-ci-cpp
       sarif_category: trivy-posture-ci-cpp
-      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      scripts_ref: 8d4164a11dc0b45c006a94127691d1d13ca8b16f
       pkg_types: os,library
       ignorefile: none
       blocking: false
@@ -144,13 +146,13 @@ jobs:
       packages: write
       id-token: write
       attestations: write
-    uses: pirlruc/containerdevops/.github/workflows/container-publish.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    uses: pirlruc/containerdevops/.github/workflows/container-publish.yml@8d4164a11dc0b45c006a94127691d1d13ca8b16f
     with:
       context: docker/ci-cpp
       dockerfile: docker/ci-cpp/Dockerfile
       image_name: ci-cpp
       dockerhub_image: pirlruc/ci-cpp
-      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      scripts_ref: 8d4164a11dc0b45c006a94127691d1d13ca8b16f
       platforms: linux/amd64
       tag_suffix: -debian
       tag_alias_unsuffixed: true
@@ -182,7 +184,7 @@ jobs:
     if: always() && needs.build.outputs.handoff_tag != '' && needs.publish.result != 'success'
     permissions:
       packages: write
-    uses: pirlruc/containerdevops/.github/workflows/container-handoff-cleanup.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    uses: pirlruc/containerdevops/.github/workflows/container-handoff-cleanup.yml@8d4164a11dc0b45c006a94127691d1d13ca8b16f
     with:
       package: ${{ needs.build.outputs.handoff_package }}
       tag: ${{ needs.build.outputs.handoff_tag }}
@@ -195,11 +197,11 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/containerdevops/.github/workflows/container-lint.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    uses: pirlruc/containerdevops/.github/workflows/container-lint.yml@8d4164a11dc0b45c006a94127691d1d13ca8b16f
     with:
       dockerfile: docker/ci-cpp/Dockerfile.alpine
       working_directory: .
-      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      scripts_ref: 8d4164a11dc0b45c006a94127691d1d13ca8b16f
       runner_image: ""
       run_infra_lint: false
       run_secrets_scan: true
@@ -217,7 +219,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    uses: pirlruc/containerdevops/.github/workflows/container-build.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    uses: pirlruc/containerdevops/.github/workflows/container-build.yml@8d4164a11dc0b45c006a94127691d1d13ca8b16f
     with:
       context: docker/ci-cpp
       dockerfile: docker/ci-cpp/Dockerfile.alpine
@@ -225,7 +227,7 @@ jobs:
       artifact_name: container-image-ci-cpp-alpine
       handoff_package: ci-cpp
       structure_test_config: docker/ci-cpp/container-structure-test.yml
-      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      scripts_ref: 8d4164a11dc0b45c006a94127691d1d13ca8b16f
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
       size_class: ci_toolchain
       dhi_login: true
@@ -241,15 +243,16 @@ jobs:
       (github.event_name != 'pull_request' ||
        github.event.pull_request.head.repo.full_name == github.repository)
     permissions:
+      actions: read
       contents: read
       security-events: write
       packages: read
-    uses: pirlruc/containerdevops/.github/workflows/container-scan.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    uses: pirlruc/containerdevops/.github/workflows/container-scan.yml@8d4164a11dc0b45c006a94127691d1d13ca8b16f
     with:
       image: ${{ format('ghcr.io/{0}/{1}@{2}', github.repository_owner, needs.build-alpine.outputs.handoff_package, needs.build-alpine.outputs.digest) }}
       results_artifact: container-scan-results-ci-cpp-alpine
       sarif_category: trivy-image-ci-cpp-alpine
-      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      scripts_ref: 8d4164a11dc0b45c006a94127691d1d13ca8b16f
       pkg_types: library
       ignorefile: docker/ci-cpp/.trivyignore.yaml
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
@@ -268,13 +271,13 @@ jobs:
       packages: write
       id-token: write
       attestations: write
-    uses: pirlruc/containerdevops/.github/workflows/container-publish.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    uses: pirlruc/containerdevops/.github/workflows/container-publish.yml@8d4164a11dc0b45c006a94127691d1d13ca8b16f
     with:
       context: docker/ci-cpp
       dockerfile: docker/ci-cpp/Dockerfile.alpine
       image_name: ci-cpp
       dockerhub_image: pirlruc/ci-cpp
-      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      scripts_ref: 8d4164a11dc0b45c006a94127691d1d13ca8b16f
       platforms: linux/amd64
       tag_suffix: -alpine
       tag_alias_unsuffixed: false
@@ -301,11 +304,11 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/containerdevops/.github/workflows/container-lint.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    uses: pirlruc/containerdevops/.github/workflows/container-lint.yml@8d4164a11dc0b45c006a94127691d1d13ca8b16f
     with:
       dockerfile: docker/ci-cpp-ubuntu/Dockerfile
       working_directory: .
-      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      scripts_ref: 8d4164a11dc0b45c006a94127691d1d13ca8b16f
       runner_image: ""
       run_infra_lint: false
       run_secrets_scan: true
@@ -323,7 +326,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    uses: pirlruc/containerdevops/.github/workflows/container-build.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    uses: pirlruc/containerdevops/.github/workflows/container-build.yml@8d4164a11dc0b45c006a94127691d1d13ca8b16f
     with:
       context: docker/ci-cpp-ubuntu
       dockerfile: docker/ci-cpp-ubuntu/Dockerfile
@@ -331,7 +334,7 @@ jobs:
       artifact_name: container-image-ci-cpp-ubuntu
       handoff_package: ci-cpp-ubuntu
       structure_test_config: docker/ci-cpp-ubuntu/container-structure-test.yml
-      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      scripts_ref: 8d4164a11dc0b45c006a94127691d1d13ca8b16f
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
       size_class: ci_toolchain
       dhi_login: false
@@ -345,15 +348,16 @@ jobs:
       (github.event_name != 'pull_request' ||
        github.event.pull_request.head.repo.full_name == github.repository)
     permissions:
+      actions: read
       contents: read
       security-events: write
       packages: read
-    uses: pirlruc/containerdevops/.github/workflows/container-scan.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    uses: pirlruc/containerdevops/.github/workflows/container-scan.yml@8d4164a11dc0b45c006a94127691d1d13ca8b16f
     with:
       image: ${{ format('ghcr.io/{0}/{1}@{2}', github.repository_owner, needs.build-ubuntu.outputs.handoff_package, needs.build-ubuntu.outputs.digest) }}
       results_artifact: container-scan-posture-ci-cpp-ubuntu
       sarif_category: trivy-posture-ci-cpp-ubuntu
-      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      scripts_ref: 8d4164a11dc0b45c006a94127691d1d13ca8b16f
       pkg_types: os,library
       ignorefile: none
       blocking: false
@@ -372,13 +376,13 @@ jobs:
       packages: write
       id-token: write
       attestations: write
-    uses: pirlruc/containerdevops/.github/workflows/container-publish.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    uses: pirlruc/containerdevops/.github/workflows/container-publish.yml@8d4164a11dc0b45c006a94127691d1d13ca8b16f
     with:
       context: docker/ci-cpp-ubuntu
       dockerfile: docker/ci-cpp-ubuntu/Dockerfile
       image_name: ci-cpp-ubuntu
       dockerhub_image: pirlruc/ci-cpp-ubuntu
-      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      scripts_ref: 8d4164a11dc0b45c006a94127691d1d13ca8b16f
       platforms: linux/amd64
       image_title: ci-cpp-ubuntu
       image_description: >-
@@ -404,11 +408,11 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/containerdevops/.github/workflows/container-lint.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    uses: pirlruc/containerdevops/.github/workflows/container-lint.yml@8d4164a11dc0b45c006a94127691d1d13ca8b16f
     with:
       dockerfile: docker/ci-cpp-vcpkg/Dockerfile
       working_directory: .
-      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      scripts_ref: 8d4164a11dc0b45c006a94127691d1d13ca8b16f
       runner_image: ""
       run_infra_lint: false
       run_secrets_scan: true
@@ -426,7 +430,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    uses: pirlruc/containerdevops/.github/workflows/container-build.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    uses: pirlruc/containerdevops/.github/workflows/container-build.yml@8d4164a11dc0b45c006a94127691d1d13ca8b16f
     with:
       context: docker/ci-cpp-vcpkg
       dockerfile: docker/ci-cpp-vcpkg/Dockerfile
@@ -434,7 +438,7 @@ jobs:
       artifact_name: container-image-ci-cpp-vcpkg
       handoff_package: ci-cpp-vcpkg
       structure_test_config: docker/ci-cpp-vcpkg/container-structure-test.yml
-      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      scripts_ref: 8d4164a11dc0b45c006a94127691d1d13ca8b16f
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
       size_class: ci_toolchain
       image_title: ci-cpp-vcpkg
@@ -452,15 +456,16 @@ jobs:
       (github.event_name != 'pull_request' ||
        github.event.pull_request.head.repo.full_name == github.repository)
     permissions:
+      actions: read
       contents: read
       security-events: write
       packages: read
-    uses: pirlruc/containerdevops/.github/workflows/container-scan.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    uses: pirlruc/containerdevops/.github/workflows/container-scan.yml@8d4164a11dc0b45c006a94127691d1d13ca8b16f
     with:
       image: ${{ format('ghcr.io/{0}/{1}@{2}', github.repository_owner, needs.build-vcpkg.outputs.handoff_package, needs.build-vcpkg.outputs.digest) }}
       results_artifact: container-scan-results-ci-cpp-vcpkg
       sarif_category: trivy-image-ci-cpp-vcpkg
-      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      scripts_ref: 8d4164a11dc0b45c006a94127691d1d13ca8b16f
       pkg_types: library
       ignorefile: docker/ci-cpp-vcpkg/.trivyignore.yaml
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
@@ -474,15 +479,16 @@ jobs:
       (github.event_name != 'pull_request' ||
        github.event.pull_request.head.repo.full_name == github.repository)
     permissions:
+      actions: read
       contents: read
       security-events: write
       packages: read
-    uses: pirlruc/containerdevops/.github/workflows/container-scan.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    uses: pirlruc/containerdevops/.github/workflows/container-scan.yml@8d4164a11dc0b45c006a94127691d1d13ca8b16f
     with:
       image: ${{ format('ghcr.io/{0}/{1}@{2}', github.repository_owner, needs.build-vcpkg.outputs.handoff_package, needs.build-vcpkg.outputs.digest) }}
       results_artifact: container-scan-posture-ci-cpp-vcpkg
       sarif_category: trivy-posture-ci-cpp-vcpkg
-      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      scripts_ref: 8d4164a11dc0b45c006a94127691d1d13ca8b16f
       pkg_types: os,library
       ignorefile: none
       blocking: false
@@ -501,13 +507,13 @@ jobs:
       packages: write
       id-token: write
       attestations: write
-    uses: pirlruc/containerdevops/.github/workflows/container-publish.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    uses: pirlruc/containerdevops/.github/workflows/container-publish.yml@8d4164a11dc0b45c006a94127691d1d13ca8b16f
     with:
       context: docker/ci-cpp-vcpkg
       dockerfile: docker/ci-cpp-vcpkg/Dockerfile
       image_name: ci-cpp-vcpkg
       dockerhub_image: pirlruc/ci-cpp-vcpkg
-      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      scripts_ref: 8d4164a11dc0b45c006a94127691d1d13ca8b16f
       platforms: linux/amd64
       image_title: ci-cpp-vcpkg
       image_description: >-
@@ -533,11 +539,11 @@ jobs:
     permissions:
       contents: read
       security-events: write
-    uses: pirlruc/containerdevops/.github/workflows/container-lint.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    uses: pirlruc/containerdevops/.github/workflows/container-lint.yml@8d4164a11dc0b45c006a94127691d1d13ca8b16f
     with:
       dockerfile: docker/ci-cpp-opencv/Dockerfile
       working_directory: .
-      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      scripts_ref: 8d4164a11dc0b45c006a94127691d1d13ca8b16f
       runner_image: ""
       run_infra_lint: false
       run_secrets_scan: true
@@ -555,7 +561,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    uses: pirlruc/containerdevops/.github/workflows/container-build.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    uses: pirlruc/containerdevops/.github/workflows/container-build.yml@8d4164a11dc0b45c006a94127691d1d13ca8b16f
     with:
       context: docker/ci-cpp-opencv
       dockerfile: docker/ci-cpp-opencv/Dockerfile
@@ -563,7 +569,7 @@ jobs:
       artifact_name: container-image-ci-cpp-opencv
       handoff_package: ci-cpp-opencv
       structure_test_config: docker/ci-cpp-opencv/container-structure-test.yml
-      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      scripts_ref: 8d4164a11dc0b45c006a94127691d1d13ca8b16f
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
       size_class: ci_toolchain
       image_title: ci-cpp-opencv
@@ -581,15 +587,16 @@ jobs:
       (github.event_name != 'pull_request' ||
        github.event.pull_request.head.repo.full_name == github.repository)
     permissions:
+      actions: read
       contents: read
       security-events: write
       packages: read
-    uses: pirlruc/containerdevops/.github/workflows/container-scan.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    uses: pirlruc/containerdevops/.github/workflows/container-scan.yml@8d4164a11dc0b45c006a94127691d1d13ca8b16f
     with:
       image: ${{ format('ghcr.io/{0}/{1}@{2}', github.repository_owner, needs.build-opencv.outputs.handoff_package, needs.build-opencv.outputs.digest) }}
       results_artifact: container-scan-results-ci-cpp-opencv
       sarif_category: trivy-image-ci-cpp-opencv
-      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      scripts_ref: 8d4164a11dc0b45c006a94127691d1d13ca8b16f
       pkg_types: library
       ignorefile: docker/ci-cpp-opencv/.trivyignore.yaml
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
@@ -603,15 +610,16 @@ jobs:
       (github.event_name != 'pull_request' ||
        github.event.pull_request.head.repo.full_name == github.repository)
     permissions:
+      actions: read
       contents: read
       security-events: write
       packages: read
-    uses: pirlruc/containerdevops/.github/workflows/container-scan.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    uses: pirlruc/containerdevops/.github/workflows/container-scan.yml@8d4164a11dc0b45c006a94127691d1d13ca8b16f
     with:
       image: ${{ format('ghcr.io/{0}/{1}@{2}', github.repository_owner, needs.build-opencv.outputs.handoff_package, needs.build-opencv.outputs.digest) }}
       results_artifact: container-scan-posture-ci-cpp-opencv
       sarif_category: trivy-posture-ci-cpp-opencv
-      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      scripts_ref: 8d4164a11dc0b45c006a94127691d1d13ca8b16f
       pkg_types: os,library
       ignorefile: none
       blocking: false
@@ -630,13 +638,13 @@ jobs:
       packages: write
       id-token: write
       attestations: write
-    uses: pirlruc/containerdevops/.github/workflows/container-publish.yml@2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+    uses: pirlruc/containerdevops/.github/workflows/container-publish.yml@8d4164a11dc0b45c006a94127691d1d13ca8b16f
     with:
       context: docker/ci-cpp-opencv
       dockerfile: docker/ci-cpp-opencv/Dockerfile
       image_name: ci-cpp-opencv
       dockerhub_image: pirlruc/ci-cpp-opencv
-      scripts_ref: 2ad052e69d2587cdaf8ccac59b9dae5c60f5560b
+      scripts_ref: 8d4164a11dc0b45c006a94127691d1d13ca8b16f
       platforms: linux/amd64
       image_title: ci-cpp-opencv
       image_description: >-
