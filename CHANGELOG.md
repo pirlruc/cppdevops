@@ -3,6 +3,18 @@
 All notable changes to this repository are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [6.2.2] - 2026-10-27
+
+### Changed
+
+- Job containers and the published rescan use the 6.2.1 linux/amd64
+  digests. v6.2.0 did not publish; v6.2.1 did.
+  ci-cpp `sha256:88fd10cb4cf754f190f565f14667fc5eef8cd933326fe2daa84ed0479709f19a`.
+  ci-cpp-ubuntu `sha256:5daf9d6151cf791cdc277a9a3b17949471baf9003a755db87b5efec8112fd91a`.
+  ci-cpp-vcpkg `sha256:1fa50525672e1b308fe8adbc7113b59d0a3ebad0946bdefd906a8aa69845d016`.
+  ci-cpp-opencv `sha256:4185b1185f9a453712eca90935a0c253090caf008c2a1f0582547589a3c82b86`.
+- commondevops caller pins stay at 5.4.4 until tag 5.5.1 exists.
+
 ## [6.2.1] - 2026-10-27
 
 ### Fixed
