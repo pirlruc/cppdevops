@@ -3,6 +3,16 @@
 All notable changes to this repository are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [6.2.1] - 2026-10-27
+
+### Fixed
+
+- Image callers grant `packages: read`. container-lint's nested
+  secrets and infra jobs request it, and the v6.2.0 release failed
+  at startup without it. Image publish happens on this tag.
+- Caller pins move to containerdevops 6.3.5 so a dispatched scan does
+  not join the caller's concurrency group.
+
 ## [6.2.0] - 2026-10-27
 
 ### Changed
