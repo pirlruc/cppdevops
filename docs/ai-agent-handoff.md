@@ -175,7 +175,7 @@ gitconfig under `RUNNER_TEMP`.
 
 ## Recent history
 
-- 2026-10-28: Dependabot pull requests pass `DEPENDABOT_GITHUB_TOKEN` to scaffold and doc verify. Actions runs pass `COMMONDEVOPS_READ_TOKEN`. `scaffold / verify` is a required check, so skipping it left pull request 154 blocked. Threshold drift still skips Dependabot and still uses `GUARDRAILS_READ_TOKEN`.
+- 2026-10-28: Dependabot pull requests pass `DEPENDABOT_GITHUB_TOKEN` to scaffold and doc verify. Actions runs pass `COMMONDEVOPS_READ_TOKEN`. Pull request 163 proved the Actions path (`scaffold / verify` and `docs / verify`). Pull request 154 then ran `scaffold / verify` on Dependabot, including the private commondevops checkout, and merged as `d72bea6`. The pinned `common-doc-verify` job still skips Dependabot, so `docs / verify` did not start. Threshold drift still skips Dependabot and still uses `GUARDRAILS_READ_TOKEN`.
 - 2026-10-28: commondevops callers pin 5.5.3 (`c8ab717`). `scripts_ref` matches. Job containers pass the 5.5.0 linux/amd64 manifests (`ci-lint` `4d96a023…`, `ci-supply-chain` Debian `b43eb3a9…`) and do not forward `checkout_token`. That PAT is the registry password and cannot see the package. `github.token` can. Library repos stay on `c4309e56` until each one is on those allow lists (CPPD-PKG-001). Do not move v6.1.0 through v6.2.2. No image republish.
 - 2026-10-28: CPPD-PKG-001 records that the nine library repos need `ci-lint` and `ci-supply-chain` pull before they move from `c4309e56` to v6.2.2. Merged as `97e917e`. Do not move v6.2.2.
 - 2026-10-27: **v6.2.1** on `936f4fd` published the images. v6.2.0 did not. linux/amd64 ci-cpp is `sha256:88fd10cb4cf754f190f565f14667fc5eef8cd933326fe2daa84ed0479709f19a`. Digest write-back is pull request 157 and should be an annotated tag v6.2.2 with no release. Do not move `v6.2.0` or `v6.2.1`.
@@ -260,4 +260,4 @@ gitconfig under `RUNNER_TEMP`.
   `ci-cpp-vcpkg`. `Dockerfile.opencv` builds OpenCV 4.14.0 plus Eigen 3.4.
   That image is local only until the next image release.
 
-*Last updated: 2026-10-28 (Dependabot checkout uses DEPENDABOT_GITHUB_TOKEN; v6.1.0–v6.2.2 stay)*
+*Last updated: 2026-10-28 (Dependabot PR 154 merged; v6.1.0–v6.2.2 stay)*
