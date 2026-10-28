@@ -84,7 +84,7 @@ jobs:
     with:
       # Same digest as reusable cpp-* `container:` pins (CI-018). Do not float
       # on :latest; weekly rescan of a digest still picks up new CVEs.
-      image: ghcr.io/pirlruc/ci-cpp@sha256:88fd10cb4cf754f190f565f14667fc5eef8cd933326fe2daa84ed0479709f19a
+      image: ghcr.io/pirlruc/ci-cpp@sha256:88d24172b5b6ab74a4276a60bb341c238b072cb57169c690a21c2d2cfbeafbac
       scripts_ref: b419c24cbaf09f39d73fa0146a71155f1a4fbd54
       pkg_types: library
       ignorefile: docker/ci-cpp/.trivyignore.yaml

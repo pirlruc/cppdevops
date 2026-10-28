@@ -6,7 +6,7 @@
 |-------|-------|
 | **Folder** | cppdevops |
 | **Remote** | https://github.com/pirlruc/cppdevops |
-| **Branch** | `feature-v631`. Target release **v6.3.0**, digest tag **v6.3.1**. commondevops callers pin **5.6.2** (`b85f95bb`). containerdevops callers pin **6.3.6** (`b419c24c`). Do not move v6.1.0 through v6.2.2. |
+| **Branch** | `main`. GitHub Release **v6.3.0** published the images. Tag **v6.3.1** records the 6.3.0 manifests and does not republish. commondevops callers pin **5.6.2** (`b85f95bb`). containerdevops callers pin **6.3.6** (`b419c24c`). Do not move v6.1.0 through v6.3.0. |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
@@ -26,7 +26,7 @@ image: `docker/ci-cpp/`, `docker/ci-cpp-ubuntu/`, `docker/ci-cpp-vcpkg/`,
 
 Standalone library callers should pin `pirlruc/cppdevops@<sha>` (`CI-018`)
 and pass the same value as `scripts_ref`. The published analysis image is
-ci-cpp 6.0.0 Debian.
+ci-cpp 6.3.0 Debian. Actions pins the linux/amd64 manifest.
 Hub/Packages, one page per image:
 [`docs/docker-hub-ci-cpp.md`](docker-hub-ci-cpp.md),
 [`docs/docker-hub-ci-cpp-ubuntu.md`](docker-hub-ci-cpp-ubuntu.md),
@@ -37,18 +37,18 @@ Never `@main`. Checklist: [`docs/consumer-checklist.md`](consumer-checklist.md).
 
 Contract reference: [`docs/workflows.md`](workflows.md).
 
-## Pins (2026-10-23)
+## Pins (2026-10-28)
 
 | Submodule / artifact | Pin |
 |----------------------|-----|
 | `docs/guardrails` | tag **1.13.1** → `1945211ac851c3c0f83694bd4ea53571fdced4ab` |
 | `.github/scaffold` | tag **1.10.0** → `1d9901f7e7e5785abb7cac6f5d46e0e8e2023ff8` |
 | methodologies (links only; not a submodule) | tag **1.9.1** |
-| `ghcr.io/pirlruc/ci-cpp` (debian, unsuffixed) | `6.0.0` `linux/amd64` `sha256:32d74a33b346770271e26a640cf7261751285bf4f2095d56fa6658a7f4b61ef1`. Tag index `sha256:b560e30b94c2b50538f61673bcbd8267403d021b8e4059fecf15817c9f3e4b26`. Private package: `packages: read` and `container.credentials` |
-| `ghcr.io/pirlruc/ci-cpp` (alpine) | `6.0.0-alpine` `linux/amd64` `sha256:ee55ee3368f9c629a650cd89bb44c73e118aa522fe197896e3328e639b61e83f`. Tag index `sha256:24e40b95d1ddc8d66886e58282799bff197fea723d669f77cd6b70026f8ccea9` |
-| `ghcr.io/pirlruc/ci-cpp-ubuntu` | `6.0.0` `linux/amd64` `sha256:6334cc671263521da28f2fd032824de84c86e4242e6166fca35174dbd04ed66a`. Tag index `sha256:05b8d4a8df645fcdf6ce14e9aefbaf0f213666483d5a12d705b098854d661a1e` |
-| `ci-cpp-vcpkg` | `6.0.0` `linux/amd64` `sha256:b8da2259addfb1efcfc60dec396ad2e496a6f5be500016a8341ddc129a37c583`. Tag index `sha256:b92e65c8144e14922bdc37728fa53fa2d0251dc2fa887b38f03cbc312fced337`. vcpkg `434307da09bc05b2c86996dccc8b2351fc0d5d37`. Built FROM ci-cpp `sha256:3406477b…`. OpenCV is not in this image |
-| `ci-cpp-opencv` | `6.0.0` `linux/amd64` `sha256:c167f4b2c3cd19d522992f406ceebabf19922e6bbb05cfa6aec77c9d4416ed23`. Tag index `sha256:79089fae85e7dd80bf5eb58c337fa84b81d6e5a2d6d28a3a1ea61407b1fb1fe2`. OpenCV 4.14.0, Eigen 3.4, libc++ triplet |
+| `ghcr.io/pirlruc/ci-cpp` (debian, unsuffixed) | `6.3.0` `linux/amd64` `sha256:88d24172b5b6ab74a4276a60bb341c238b072cb57169c690a21c2d2cfbeafbac`. Tag index `sha256:26422f6453e04c72d46792fe6ab70574eeb037f55c1ba31c962ab86cb8a71802`. Private package: `packages: read` and `container.credentials` |
+| `ghcr.io/pirlruc/ci-cpp` (alpine) | `6.3.0-alpine` `linux/amd64` `sha256:d686e56e013cf560818d9b7df515db78bf8313495155d66cf4125a99db44717b`. Tag index `sha256:2176dd7427f53691ea0e79710870fee5af31a7ff96c7135367e7b709a27179fb` |
+| `ghcr.io/pirlruc/ci-cpp-ubuntu` | `6.3.0` `linux/amd64` `sha256:2a7622d8299d126f127847c09818de867170a3992efead0d1ecd7edd41c2a3d5`. Tag index `sha256:c5dc493c2059d61c8da58b001aeedff2ccb35ba28736eba73f3c378e814d06f8` |
+| `ci-cpp-vcpkg` | `6.3.0` `linux/amd64` `sha256:e551e5f6f6ec5b65bd571fb13c549916fc0ac4e6156c2185f0a8eb5be2a2fe44`. Tag index `sha256:7df56682882f2472cd0dd13d9d9148ea7a3f0cdd5140f12014abd4be0ba5cda4`. OpenCV is not in this image |
+| `ci-cpp-opencv` | `6.3.0` `linux/amd64` `sha256:42ba66c3c4c1b4f9552d43f11fa6eace05608000434b35e520b79c560dda4773`. Tag index `sha256:5b45c9c5a158b7b861f7933aac01d08b110eb0f2b692e02d778c64a054264368`. OpenCV 4.14.0, Eigen 3.4, libc++ triplet |
 | commondevops `uses:` | `9e28757e47375bbe02f1150e3612cdf69723dd29` (included in tag **5.3.3** and later). Token audit is **5.4.1** `d03953476f3d5fa1081a0834d9882007ff26dd91` |
 | containerdevops `uses:` | `2ad052e69d2587cdaf8ccac59b9dae5c60f5560b` (included in tag **6.2.0**) |
 
@@ -175,7 +175,8 @@ gitconfig under `RUNNER_TEMP`.
 
 ## Recent history
 
-- 2026-10-28: `feature-v631` grants the Scorecard job `actions: read`, pins commondevops 5.6.2 and containerdevops 6.3.6, adds `cpp-pins`, `cpp-threshold-drift`, `cpp-release`, `cpp-token-audit`, `cpp-doc-verify`, and `cpp-devcontainer`, and moves setuptools to 84.1.0. `templates/ci-quality.yml` drops `scripts_ref` on `cpp-infra` and grants `packages: read` plus `actions: read` on security. Public image pages name release 6.2.1. Not released.
+- 2026-10-28: **v6.3.0** on `fadd4e7` published the images (https://github.com/pirlruc/cppdevops/actions/runs/40762360977). Security dispatch https://github.com/pirlruc/cppdevops/actions/runs/40762499368 succeeded. **v6.3.1** records the 6.3.0 index and linux/amd64 manifests in the reusable defaults and the Hub/GHCR pages. No second publish. Do not move v6.1.0 through v6.3.0.
+- 2026-10-28: `feature-v631` grants the Scorecard job `actions: read`, pins commondevops 5.6.2 and containerdevops 6.3.6, adds `cpp-pins`, `cpp-threshold-drift`, `cpp-release`, `cpp-token-audit`, `cpp-doc-verify`, and `cpp-devcontainer`, and moves setuptools to 84.1.0. `templates/ci-quality.yml` drops `scripts_ref` on `cpp-infra` and grants `packages: read` plus `actions: read` on security. Merged as pull request 166.
 - 2026-10-28: Dependabot pull requests pass `DEPENDABOT_GITHUB_TOKEN` to scaffold and doc verify. Actions runs pass `COMMONDEVOPS_READ_TOKEN`. Pull request 163 proved the Actions path (`scaffold / verify` and `docs / verify`). Pull request 154 then ran `scaffold / verify` on Dependabot, including the private commondevops checkout, and merged as `d72bea6`. The pinned `common-doc-verify` job still skips Dependabot, so `docs / verify` did not start. Threshold drift still skips Dependabot and still uses `GUARDRAILS_READ_TOKEN`.
 - 2026-10-28: commondevops callers pin 5.5.3 (`c8ab717`). `scripts_ref` matches. Job containers pass the 5.5.0 linux/amd64 manifests (`ci-lint` `4d96a023…`, `ci-supply-chain` Debian `b43eb3a9…`) and do not forward `checkout_token`. That PAT is the registry password and cannot see the package. `github.token` can. Library repos stay on `c4309e56` until each one is on those allow lists (CPPD-PKG-001). Do not move v6.1.0 through v6.2.2. No image republish.
 - 2026-10-28: CPPD-PKG-001 records that the nine library repos need `ci-lint` and `ci-supply-chain` pull before they move from `c4309e56` to v6.2.2. Merged as `97e917e`. Do not move v6.2.2.
@@ -261,4 +262,4 @@ gitconfig under `RUNNER_TEMP`.
   `ci-cpp-vcpkg`. `Dockerfile.opencv` builds OpenCV 4.14.0 plus Eigen 3.4.
   That image is local only until the next image release.
 
-*Last updated: 2026-10-28 (`feature-v631` wrappers, scorecard actions: read, setuptools 84.1.0; v6.1.0–v6.2.2 stay)*
+*Last updated: 2026-10-28 (v6.3.0 published the images; v6.3.1 records the linux/amd64 digests; tags v6.1.0–v6.3.0 stay)*
