@@ -7,6 +7,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ### Changed
 
+- Dependabot pull requests pass `DEPENDABOT_GITHUB_TOKEN` into scaffold
+  and doc verify. Actions runs keep `COMMONDEVOPS_READ_TOKEN`. The
+  ruleset requires `scaffold / verify`, and skipping that job blocked
+  the grouped dependency pull request.
 - commondevops callers pin 5.5.3 (`c8ab7171a3897bddc58e3fd8c508529ca9803571`).
   `scripts_ref` matches that commit. Dispatch concurrency is per workflow.
   Job containers pass the 5.5.0 linux/amd64 manifests and do not
