@@ -43,10 +43,10 @@ jobs:
     permissions:
       contents: read
       issues: read
-    uses: pirlruc/commondevops/.github/workflows/common-scaffold-verify.yml@c8ab7171a3897bddc58e3fd8c508529ca9803571
+    uses: pirlruc/commondevops/.github/workflows/common-scaffold-verify.yml@71bdc6832998e77d5dd89afda9d9ff98570034b8
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
-      scripts_ref: c8ab7171a3897bddc58e3fd8c508529ca9803571
+      scripts_ref: 71bdc6832998e77d5dd89afda9d9ff98570034b8
     secrets:
       checkout_token: ${{ github.event.pull_request.user.login == 'dependabot[bot]' && secrets.DEPENDABOT_GITHUB_TOKEN || secrets.COMMONDEVOPS_READ_TOKEN }}
 
@@ -79,7 +79,7 @@ jobs:
   docs:
     permissions:
       contents: read
-    uses: pirlruc/commondevops/.github/workflows/common-doc-verify.yml@c8ab7171a3897bddc58e3fd8c508529ca9803571
+    uses: pirlruc/commondevops/.github/workflows/common-doc-verify.yml@71bdc6832998e77d5dd89afda9d9ff98570034b8
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       shell_scripts: scripts/*.sh
@@ -87,7 +87,7 @@ jobs:
       yaml_files: docs/issues.yml docs/guardrail-deviations.yml .github/dependabot.yml
       yaml_globs: .github/workflows/*.yml
       run_link_lint: true
-      scripts_ref: c8ab7171a3897bddc58e3fd8c508529ca9803571
+      scripts_ref: 71bdc6832998e77d5dd89afda9d9ff98570034b8
     secrets:
       checkout_token: ${{ github.event.pull_request.user.login == 'dependabot[bot]' && secrets.DEPENDABOT_GITHUB_TOKEN || secrets.COMMONDEVOPS_READ_TOKEN }}
 
@@ -96,14 +96,14 @@ jobs:
     permissions:
       contents: read
       packages: read
-    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@c8ab7171a3897bddc58e3fd8c508529ca9803571
+    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@71bdc6832998e77d5dd89afda9d9ff98570034b8
     with:
       # Push/PR are blocking; workflow_dispatch honours the input.
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       working_directory: .
       shell_scripts: scripts/*.sh
       dockerfiles: docker/ci-cpp/Dockerfile docker/ci-cpp/Dockerfile.alpine docker/ci-cpp-ubuntu/Dockerfile docker/ci-cpp-vcpkg/Dockerfile docker/ci-cpp-opencv/Dockerfile
-      scripts_ref: c8ab7171a3897bddc58e3fd8c508529ca9803571
+      scripts_ref: 71bdc6832998e77d5dd89afda9d9ff98570034b8
       container_image: ghcr.io/pirlruc/ci-lint@sha256:4d96a0235459c9e2cc724a724f42008dcdc3294940c57edb8b33b11e38efddba
   threshold-drift:
     if: github.event.pull_request.user.login != 'dependabot[bot]'

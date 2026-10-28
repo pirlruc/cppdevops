@@ -145,7 +145,7 @@ Do not recommend removing these without **requires user decision**:
 
 1. Consumers pin reusable workflows by **commit SHA** (CI-018)
 2. Top-level default-deny `permissions:` and `persist-credentials: false` (CI-025)
-3. CI-024 Dependabot skip on jobs needing Actions secrets / private reusable pins
+3. CI-024 Dependabot skip stays on jobs that need Actions secrets other than the checkout token. Scaffold and doc verify pass `DEPENDABOT_GITHUB_TOKEN`
 4. `docs/issues.yml` is the authored backlog
 5. Guardrails stay canonical in `pirlruc/guardrails` — record deviations here only
 6. Mobile matrix compiles a header-including smoke TU (MOBILE-MECH-001). It does not build Kotlin or Swift
