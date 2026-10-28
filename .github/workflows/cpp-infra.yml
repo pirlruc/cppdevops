@@ -36,6 +36,7 @@ on:
 # CI-025: workflow permissions are the union of the job permissions.
 permissions:
   contents: read
+  packages: read
 
 concurrency:
   group: >-
@@ -51,12 +52,12 @@ jobs:
     permissions:
       contents: read
       packages: read
-    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@71bdc6832998e77d5dd89afda9d9ff98570034b8
+    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
     with:
       blocking: ${{ inputs.blocking }}
       working_directory: ${{ inputs.working_directory || '.' }}
       shell_scripts: ${{ inputs.shell_scripts || '' }}
       dockerfiles: ${{ inputs.dockerfiles || '' }}
       # Must match uses: @pin (CI-018).
-      scripts_ref: 71bdc6832998e77d5dd89afda9d9ff98570034b8
-      container_image: ghcr.io/pirlruc/ci-lint@sha256:4d96a0235459c9e2cc724a724f42008dcdc3294940c57edb8b33b11e38efddba
+      scripts_ref: b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+      container_image: ghcr.io/pirlruc/ci-lint@sha256:f9001c4c8726f72107545094237d4fc0592baca023cfa299a532634666d88111

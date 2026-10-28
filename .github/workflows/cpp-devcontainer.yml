@@ -1,0 +1,56 @@
+name: C++ Devcontainer (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      dockerfile:
+        required: false
+        type: string
+        default: .devcontainer/Dockerfile
+      dockerfiles:
+        required: false
+        type: string
+        default: ""
+      working_directory:
+        required: false
+        type: string
+        default: .
+      structure_test_config:
+        required: false
+        type: string
+        default: ""
+      blocking:
+        required: false
+        type: boolean
+        default: false
+      scripts_ref:
+        description: Must match the caller's uses pin of this workflow
+        required: false
+        type: string
+        default: ""
+      runner_image:
+        required: false
+        type: string
+        default: ""
+    secrets:
+      scripts_token:
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  devcontainer:
+    permissions:
+      contents: read
+    uses: pirlruc/containerdevops/.github/workflows/container-devcontainer.yml@b419c24cbaf09f39d73fa0146a71155f1a4fbd54
+    with:
+      dockerfile: ${{ inputs.dockerfile }}
+      dockerfiles: ${{ inputs.dockerfiles }}
+      working_directory: ${{ inputs.working_directory }}
+      structure_test_config: ${{ inputs.structure_test_config }}
+      blocking: ${{ inputs.blocking }}
+      scripts_ref: b419c24cbaf09f39d73fa0146a71155f1a4fbd54
+      runner_image: ${{ inputs.runner_image }}
+    secrets:
+      scripts_token: ${{ secrets.scripts_token }}

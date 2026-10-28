@@ -1,4 +1,3 @@
-# ci-cpp library scan, 2026-10-27.
-# CVE-2025-47273 was not reported against setuptools 84.0.0 or its vendored
-# metadata. No path-scoped ignores remain.
+# ci-cpp library scan, 2026-10-28.
+# setuptools is 84.1.0. No path-scoped ignores remain.
 vulnerabilities: []

@@ -72,7 +72,7 @@ the pinned `docs/guardrails/cpp/profile.thresholds.yml` profile; CPPD-WF-001).
 CI drift-checks the copy against the submodule (`scripts/check-threshold-drift.sh`).
 
 Reusable `cpp-*` jobs run in
-`container: ghcr.io/pirlruc/ci-cpp@sha256:32d74a33b346770271e26a640cf7261751285bf4f2095d56fa6658a7f4b61ef1` with `packages: read` and `container.credentials`.
+`container: ghcr.io/pirlruc/ci-cpp@sha256:88fd10cb4cf754f190f565f14667fc5eef8cd933326fe2daa84ed0479709f19a` with `packages: read` and `container.credentials`.
 
 ## Library bootstrap (templates + scripts)
 
@@ -106,8 +106,7 @@ Deviations: [`docs/guardrail-deviations.yml`](docs/guardrail-deviations.yml) onl
 ## Documentation
 
 - Workflow contracts: [`docs/workflows.md`](docs/workflows.md)
-- Consumer pin / draupnir retirement: [`docs/consumer-checklist.md`](docs/consumer-checklist.md)
-- Authored backlog: [`docs/issues.yml`](docs/issues.yml)
+- Consumer pin: [`docs/consumer-checklist.md`](docs/consumer-checklist.md)
 - Changelog: [`CHANGELOG.md`](CHANGELOG.md)
 
 | Image | Docker Hub | GitHub Packages |

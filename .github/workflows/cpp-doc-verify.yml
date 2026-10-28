@@ -1,0 +1,66 @@
+name: C++ Doc Verify (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      blocking:
+        required: false
+        type: boolean
+        default: false
+      shell_scripts:
+        required: false
+        type: string
+        default: ""
+      ruff_paths:
+        required: false
+        type: string
+        default: ""
+      yaml_files:
+        required: false
+        type: string
+        default: ""
+      yaml_globs:
+        required: false
+        type: string
+        default: ""
+      run_link_lint:
+        required: false
+        type: boolean
+        default: false
+      run_markdownlint:
+        required: false
+        type: boolean
+        default: false
+      run_lychee:
+        required: false
+        type: boolean
+        default: false
+      scripts_ref:
+        description: Must match the caller's uses pin of this workflow
+        required: false
+        type: string
+        default: ""
+    secrets:
+      checkout_token:
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    permissions:
+      contents: read
+    uses: pirlruc/commondevops/.github/workflows/common-doc-verify.yml@b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+    with:
+      blocking: ${{ inputs.blocking }}
+      shell_scripts: ${{ inputs.shell_scripts }}
+      ruff_paths: ${{ inputs.ruff_paths }}
+      yaml_files: ${{ inputs.yaml_files }}
+      yaml_globs: ${{ inputs.yaml_globs }}
+      run_link_lint: ${{ inputs.run_link_lint }}
+      run_markdownlint: ${{ inputs.run_markdownlint }}
+      run_lychee: ${{ inputs.run_lychee }}
+      scripts_ref: b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+    secrets:
+      checkout_token: ${{ secrets.checkout_token }}

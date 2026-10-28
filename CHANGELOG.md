@@ -5,20 +5,28 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Fixed
+
+- The scheduled Scorecard job grants `actions: read`. The SARIF upload
+  job requests that scope, and GitHub rejects the caller at startup
+  when the grant is missing.
+- setuptools in the ci-cpp pip locks is 84.1.0.
+
+### Added
+
+- Reusable wrappers `cpp-pins`, `cpp-threshold-drift`, `cpp-release`,
+  `cpp-token-audit`, `cpp-doc-verify`, and `cpp-devcontainer`. Each
+  forwards to commondevops 5.6.2 or containerdevops 6.3.6.
+
 ### Changed
 
 - Dependabot pull requests pass `DEPENDABOT_GITHUB_TOKEN` into scaffold
-  and doc verify. Actions runs keep `COMMONDEVOPS_READ_TOKEN`. The
-  ruleset requires `scaffold / verify`, and skipping that job blocked
-  the grouped dependency pull request.
-- commondevops callers pin `71bdc6832998e77d5dd89afda9d9ff98570034b8`.
-  `scripts_ref` matches that commit. Tag 5.5.3 stays `c8ab717`.
-  `common-doc-verify` at that commit runs on Dependabot.
-  Dispatch concurrency is per workflow.
-  Job containers pass the 5.5.0 linux/amd64 manifests and do not
-  forward `checkout_token`. That secret is the registry password, and
-  the read PAT cannot see the package. `github.token` can.
-  Tags v6.1.0 through v6.2.2 stay put. No image republish.
+  and doc verify. Actions runs keep `COMMONDEVOPS_READ_TOKEN`.
+- commondevops callers pin tag 5.6.2
+  (`b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12`). Job containers use the
+  5.6.1 linux/amd64 manifests. containerdevops callers pin tag 6.3.6
+  (`b419c24cbaf09f39d73fa0146a71155f1a4fbd54`).
+  Tags v6.1.0 through v6.2.2 stay put.
 
 ## [6.2.2] - 2026-10-27
 
