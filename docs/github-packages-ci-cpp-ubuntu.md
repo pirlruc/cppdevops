@@ -20,8 +20,10 @@ differ. Jobs that compile on Ubuntu pin the image manifest.
 
 | Tag | Digest |
 |-----|--------|
-| `6.2.1` / `latest` | `sha256:6c665e574be2fc82223e3c71f201131188c091b15e4238a15e60a1b1a8adaa23` (tag index) |
-| `6.2.1` `linux/amd64` (Actions) | `sha256:5daf9d6151cf791cdc277a9a3b17949471baf9003a755db87b5efec8112fd91a` |
+| `6.3.0` / `latest` | `sha256:c5dc493c2059d61c8da58b001aeedff2ccb35ba28736eba73f3c378e814d06f8` (tag index) |
+| `6.3.0` `linux/amd64` (Actions) | `sha256:2a7622d8299d126f127847c09818de867170a3992efead0d1ecd7edd41c2a3d5` |
+| `6.2.1` | Previous compile image. `sha256:6c665e574be2fc82223e3c71f201131188c091b15e4238a15e60a1b1a8adaa23` (tag index) |
+| `6.2.1` `linux/amd64` | `sha256:5daf9d6151cf791cdc277a9a3b17949471baf9003a755db87b5efec8112fd91a` |
 | `6.0.0` | Previous compile image. `sha256:05b8d4a8df645fcdf6ce14e9aefbaf0f213666483d5a12d705b098854d661a1e` (tag index) |
 | `6.0.0` `linux/amd64` | `sha256:6334cc671263521da28f2fd032824de84c86e4242e6166fca35174dbd04ed66a` |
 | `5.2.0` | Previous compile image. `sha256:cf2464213f9460585846b3fd8e5beb8d77fa8c2774f5f03b0a5e852e4e9de77e` (tag index) |
@@ -31,7 +33,7 @@ differ. Jobs that compile on Ubuntu pin the image manifest.
 Anonymous pulls work:
 
 ```bash
-docker pull ghcr.io/pirlruc/ci-cpp-ubuntu@sha256:5daf9d6151cf791cdc277a9a3b17949471baf9003a755db87b5efec8112fd91a
+docker pull ghcr.io/pirlruc/ci-cpp-ubuntu@sha256:2a7622d8299d126f127847c09818de867170a3992efead0d1ecd7edd41c2a3d5
 ```
 
 ## Use as a GitHub Actions job container
@@ -41,7 +43,7 @@ jobs:
   ubuntu-compile:
     runs-on: ubuntu-24.04
     container:
-      image: ghcr.io/pirlruc/ci-cpp-ubuntu@sha256:5daf9d6151cf791cdc277a9a3b17949471baf9003a755db87b5efec8112fd91a
+      image: ghcr.io/pirlruc/ci-cpp-ubuntu@sha256:2a7622d8299d126f127847c09818de867170a3992efead0d1ecd7edd41c2a3d5
       options: --user root
 ```
 

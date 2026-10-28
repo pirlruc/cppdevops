@@ -5,6 +5,36 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [6.3.1] - 2026-10-28
+
+### Changed
+
+- Reusable job-container defaults and the public image pages record the
+  6.3.0 manifests. Actions pins are the `linux/amd64` image manifests.
+  ci-cpp Debian index
+  `sha256:26422f6453e04c72d46792fe6ab70574eeb037f55c1ba31c962ab86cb8a71802`,
+  linux/amd64
+  `sha256:88d24172b5b6ab74a4276a60bb341c238b072cb57169c690a21c2d2cfbeafbac`.
+  ci-cpp Alpine index
+  `sha256:2176dd7427f53691ea0e79710870fee5af31a7ff96c7135367e7b709a27179fb`,
+  linux/amd64
+  `sha256:d686e56e013cf560818d9b7df515db78bf8313495155d66cf4125a99db44717b`.
+  ci-cpp-ubuntu index
+  `sha256:c5dc493c2059d61c8da58b001aeedff2ccb35ba28736eba73f3c378e814d06f8`,
+  linux/amd64
+  `sha256:2a7622d8299d126f127847c09818de867170a3992efead0d1ecd7edd41c2a3d5`.
+  ci-cpp-vcpkg index
+  `sha256:7df56682882f2472cd0dd13d9d9148ea7a3f0cdd5140f12014abd4be0ba5cda4`,
+  linux/amd64
+  `sha256:e551e5f6f6ec5b65bd571fb13c549916fc0ac4e6156c2185f0a8eb5be2a2fe44`.
+  ci-cpp-opencv index
+  `sha256:5b45c9c5a158b7b861f7933aac01d08b110eb0f2b692e02d778c64a054264368`,
+  linux/amd64
+  `sha256:42ba66c3c4c1b4f9552d43f11fa6eace05608000434b35e520b79c560dda4773`.
+  No image republish. Tags v6.1.0 through v6.3.0 stay put.
+
+## [6.3.0] - 2026-10-28
+
 ### Fixed
 
 - The scheduled Scorecard job grants `actions: read`. The SARIF upload
