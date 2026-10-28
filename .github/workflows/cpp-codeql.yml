@@ -61,6 +61,7 @@ jobs:
       options: --user root
     timeout-minutes: 60
     permissions:
+      actions: read
       contents: read
       packages: read
       security-events: write
