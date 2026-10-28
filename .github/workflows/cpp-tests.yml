@@ -23,7 +23,7 @@ on:
         description: Image for the tests job. Default is ci-cpp. Pass ci-cpp-vcpkg for manifest builds.
         required: false
         type: string
-        default: ghcr.io/pirlruc/ci-cpp@sha256:32d74a33b346770271e26a640cf7261751285bf4f2095d56fa6658a7f4b61ef1
+        default: ghcr.io/pirlruc/ci-cpp@sha256:88fd10cb4cf754f190f565f14667fc5eef8cd933326fe2daa84ed0479709f19a
       use_vcpkg:
         description: Run vcpkg manifest mode with a files binary cache. The image must set VCPKG_ROOT.
         required: false
@@ -162,7 +162,7 @@ jobs:
   ubuntu-compile:
     runs-on: ubuntu-24.04
     container:
-      image: ghcr.io/pirlruc/ci-cpp-ubuntu@sha256:6334cc671263521da28f2fd032824de84c86e4242e6166fca35174dbd04ed66a
+      image: ghcr.io/pirlruc/ci-cpp-ubuntu@sha256:5daf9d6151cf791cdc277a9a3b17949471baf9003a755db87b5efec8112fd91a
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}

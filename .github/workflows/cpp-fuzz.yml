@@ -61,7 +61,7 @@ jobs:
     if: inputs.run_fuzz
     runs-on: ubuntu-24.04
     container:
-      image: ghcr.io/pirlruc/ci-cpp@sha256:32d74a33b346770271e26a640cf7261751285bf4f2095d56fa6658a7f4b61ef1
+      image: ghcr.io/pirlruc/ci-cpp@sha256:88fd10cb4cf754f190f565f14667fc5eef8cd933326fe2daa84ed0479709f19a
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}

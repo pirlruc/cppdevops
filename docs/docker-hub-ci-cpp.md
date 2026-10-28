@@ -30,8 +30,10 @@ that same `linux/amd64` manifest.
 
 | Tag | Digest |
 |-----|--------|
-| `6.0.0` / `6.0.0-debian` / `latest` / `latest-debian` | `sha256:b560e30b94c2b50538f61673bcbd8267403d021b8e4059fecf15817c9f3e4b26` (tag index) |
-| `6.0.0` `linux/amd64` (Actions) | `sha256:32d74a33b346770271e26a640cf7261751285bf4f2095d56fa6658a7f4b61ef1` |
+| `6.2.1` / `6.2.1-debian` / `latest` / `latest-debian` | `sha256:043eab3763325104619dc252ef003d03aa0690545b443858e0c528c1715be0c1` (tag index) |
+| `6.2.1` `linux/amd64` (Actions) | `sha256:88fd10cb4cf754f190f565f14667fc5eef8cd933326fe2daa84ed0479709f19a` |
+| `6.0.0` / `6.0.0-debian` | Previous Debian. `sha256:b560e30b94c2b50538f61673bcbd8267403d021b8e4059fecf15817c9f3e4b26` (tag index) |
+| `6.0.0` `linux/amd64` | `sha256:32d74a33b346770271e26a640cf7261751285bf4f2095d56fa6658a7f4b61ef1` |
 | `6.0.0-alpine` / `latest-alpine` | `sha256:24e40b95d1ddc8d66886e58282799bff197fea723d669f77cd6b70026f8ccea9` (tag index) |
 | `6.0.0-alpine` `linux/amd64` | `sha256:ee55ee3368f9c629a650cd89bb44c73e118aa522fe197896e3328e639b61e83f` |
 | `5.2.0` / `5.2.0-debian` | Previous Debian analysis. `sha256:94667c573a1fe4a08aa333cd4083a53553d394c34a8d854d12912831b5536cde` (tag index) |
