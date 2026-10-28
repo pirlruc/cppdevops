@@ -1420,3 +1420,40 @@ milestones:
       guardrail_refs:
       - CPP-DOC-004
       - CPP-BUILD-004
+  - id: CPPD-PKG-001
+    status: open
+    title: Grant library repos pull on private ci-lint and ci-supply-chain
+    overview:
+      problem: >-
+        cpp-security and cpp-infra on v6.2.2 call commondevops workflows whose
+        job containers are the private ci-lint and ci-supply-chain packages.
+        That pull uses the calling repository token. The nine libraries still
+        pin cppdevops c4309e56, whose nested commondevops pin does not pull
+        those packages. Moving them to v6.2.2 fails until each library is on
+        both package allow lists.
+      goal: >-
+        bifrost-cpp, bor-cpp, draupnir-cpp, edda-cpp, heimdallcv, mimir-cpp,
+        mjolnir-cpp, nornir-cpp, and runa-cpp can pull ci-lint and
+        ci-supply-chain before any of those callers leave c4309e56.
+    decision: >-
+      In the context of private commondevops images, facing library workflow
+      runs that pull with their own token, we decided to add each library to
+      the ci-lint and ci-supply-chain Actions allow lists before the v6.2.2
+      pin, to achieve a pull that succeeds, accepting that the pin stays on
+      c4309e56 until that access exists.
+    out_of_scope:
+    - ci-iac. No library workflow pulls it.
+    - The ci-cpp package. Those jobs already pull it.
+    - cpp-registry. It does not call these workflows.
+    acceptance_criteria:
+    - The nine library repos are on the ci-lint and ci-supply-chain allow lists
+    - No library workflow pin moves to v6.2.2 before that access exists
+    tasks:
+    - id: CPPD-PKG-001-T1
+      status: open
+      title: Confirm the nine libraries can pull before the v6.2.2 pin
+      instructions:
+        files:
+        - docs/ai-agent-handoff.md
+      verification:
+      - The nine repos are on both package allow lists, and every library ci-quality.yml still pins c4309e56 until then
