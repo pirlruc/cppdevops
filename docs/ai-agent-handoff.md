@@ -6,7 +6,7 @@
 |-------|-------|
 | **Folder** | cppdevops |
 | **Remote** | https://github.com/pirlruc/cppdevops |
-| **Branch** | `main` includes CPPD-PKG-001 (`97e917e`) on v6.2.2 (`8a32325`). commondevops callers pin **5.5.3** (`c8ab717`). Do not move v6.1.0, v6.2.0, v6.2.1, or v6.2.2. The pins table below is the 2026-10-23 snapshot. |
+| **Branch** | `main` includes CPPD-PKG-001 (`97e917e`) on v6.2.2 (`8a32325`). commondevops callers pin `71bdc68`. Tag 5.5.3 stays `c8ab717`. Doc verify runs on Dependabot. Do not move v6.1.0, v6.2.0, v6.2.1, or v6.2.2. The pins table below is the 2026-10-23 snapshot. |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
@@ -260,4 +260,4 @@ gitconfig under `RUNNER_TEMP`.
   `ci-cpp-vcpkg`. `Dockerfile.opencv` builds OpenCV 4.14.0 plus Eigen 3.4.
   That image is local only until the next image release.
 
-*Last updated: 2026-10-28 (Dependabot PR 154 merged; v6.1.0–v6.2.2 stay)*
+*Last updated: 2026-10-28 (commondevops callers pin `71bdc68` so doc verify runs on Dependabot; v6.1.0–v6.2.2 stay)*

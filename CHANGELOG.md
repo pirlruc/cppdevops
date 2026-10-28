@@ -11,8 +11,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
   and doc verify. Actions runs keep `COMMONDEVOPS_READ_TOKEN`. The
   ruleset requires `scaffold / verify`, and skipping that job blocked
   the grouped dependency pull request.
-- commondevops callers pin 5.5.3 (`c8ab7171a3897bddc58e3fd8c508529ca9803571`).
-  `scripts_ref` matches that commit. Dispatch concurrency is per workflow.
+- commondevops callers pin `71bdc6832998e77d5dd89afda9d9ff98570034b8`.
+  `scripts_ref` matches that commit. Tag 5.5.3 stays `c8ab717`.
+  `common-doc-verify` at that commit runs on Dependabot.
+  Dispatch concurrency is per workflow.
   Job containers pass the 5.5.0 linux/amd64 manifests and do not
   forward `checkout_token`. That secret is the registry password, and
   the read PAT cannot see the package. `github.token` can.
