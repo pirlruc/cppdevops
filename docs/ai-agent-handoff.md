@@ -6,7 +6,7 @@
 |-------|-------|
 | **Folder** | cppdevops |
 | **Remote** | https://github.com/pirlruc/cppdevops |
-| **Branch** | `main` at `8a32325` (annotated tag v6.2.2, digest pin). v6.2.1 (`936f4fd`) is the release that published the images. Do not move v6.1.0, v6.2.0, v6.2.1, or v6.2.2. The pins table below is the 2026-10-23 snapshot. |
+| **Branch** | `main` includes CPPD-PKG-001 (`97e917e`) on v6.2.2 (`8a32325`). commondevops callers pin **5.5.3** (`c8ab717`). Do not move v6.1.0, v6.2.0, v6.2.1, or v6.2.2. The pins table below is the 2026-10-23 snapshot. |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
@@ -175,7 +175,8 @@ gitconfig under `RUNNER_TEMP`.
 
 ## Recent history
 
-- 2026-10-28: CPPD-PKG-001 records that the nine library repos need `ci-lint` and `ci-supply-chain` pull before they move from `c4309e56` to v6.2.2. `main` is v6.2.2 (`8a32325`). Do not move that tag.
+- 2026-10-28: commondevops callers pin 5.5.3 (`c8ab717`). `scripts_ref` matches. Job containers pass the 5.5.0 linux/amd64 manifests (`ci-lint` `4d96a023…`, `ci-supply-chain` Debian `b43eb3a9…`) and do not forward `checkout_token`. That PAT is the registry password and cannot see the package. `github.token` can. Library repos stay on `c4309e56` until each one is on those allow lists (CPPD-PKG-001). Do not move v6.1.0 through v6.2.2. No image republish.
+- 2026-10-28: CPPD-PKG-001 records that the nine library repos need `ci-lint` and `ci-supply-chain` pull before they move from `c4309e56` to v6.2.2. Merged as `97e917e`. Do not move v6.2.2.
 - 2026-10-27: **v6.2.1** on `936f4fd` published the images. v6.2.0 did not. linux/amd64 ci-cpp is `sha256:88fd10cb4cf754f190f565f14667fc5eef8cd933326fe2daa84ed0479709f19a`. Digest write-back is pull request 157 and should be an annotated tag v6.2.2 with no release. Do not move `v6.2.0` or `v6.2.1`.
 - 2026-10-24: **v6.1.0** on `3c1fdb60` (PR 150). Image tags are `6.1.0`. Issue #87 is closed. Hub pages still name 6.0.0. Debian owns the unsuffixed `ci-cpp` tags.
 - 2026-10-23: **v6.0.2** — guardrails 1.13.1. Hub Overview push when `docs/docker-hub*.md` changes. Tag only. No GitHub Release.
@@ -258,4 +259,4 @@ gitconfig under `RUNNER_TEMP`.
   `ci-cpp-vcpkg`. `Dockerfile.opencv` builds OpenCV 4.14.0 plus Eigen 3.4.
   That image is local only until the next image release.
 
-*Last updated: 2026-10-28 (CPPD-PKG-001; main is v6.2.2 at 8a32325)*
+*Last updated: 2026-10-28 (commondevops callers pin 5.5.3 `c8ab717`; v6.1.0–v6.2.2 stay)*

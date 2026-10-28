@@ -3,6 +3,17 @@
 All notable changes to this repository are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased]
+
+### Changed
+
+- commondevops callers pin 5.5.3 (`c8ab7171a3897bddc58e3fd8c508529ca9803571`).
+  `scripts_ref` matches that commit. Dispatch concurrency is per workflow.
+  Job containers pass the 5.5.0 linux/amd64 manifests and do not
+  forward `checkout_token`. That secret is the registry password, and
+  the read PAT cannot see the package. `github.token` can.
+  Tags v6.1.0 through v6.2.2 stay put. No image republish.
+
 ## [6.2.2] - 2026-10-27
 
 ### Changed
