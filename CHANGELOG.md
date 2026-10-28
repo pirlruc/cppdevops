@@ -5,6 +5,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [6.3.2] - 2026-10-28
+
+### Fixed
+
+- The CodeQL job grants `actions: read`. `codeql-action/analyze` reads the
+  workflow run for its status report, and that call was failing the gate on
+  private library callers. No image republish. Tags v6.1.0 through v6.3.1
+  stay put.
+
 ## [6.3.1] - 2026-10-28
 
 ### Changed
