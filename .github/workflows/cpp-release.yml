@@ -1,0 +1,41 @@
+name: C++ Release (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        required: true
+        type: string
+      attach_sbom:
+        required: false
+        type: boolean
+        default: false
+      sign:
+        required: false
+        type: boolean
+        default: false
+      sbom_artifact:
+        required: false
+        type: string
+        default: common-supply-chain-results
+    secrets:
+      release_token:
+        required: false
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  release:
+    permissions:
+      contents: write
+      id-token: write
+    uses: pirlruc/commondevops/.github/workflows/common-release.yml@b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+    with:
+      tag: ${{ inputs.tag }}
+      attach_sbom: ${{ inputs.attach_sbom }}
+      sign: ${{ inputs.sign }}
+      sbom_artifact: ${{ inputs.sbom_artifact }}
+    secrets:
+      release_token: ${{ secrets.release_token }}

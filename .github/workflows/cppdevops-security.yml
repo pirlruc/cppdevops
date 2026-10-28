@@ -27,12 +27,12 @@ jobs:
     permissions:
       contents: read
       packages: read
-    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@71bdc6832998e77d5dd89afda9d9ff98570034b8
+    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       working_directory: .
-      scripts_ref: 71bdc6832998e77d5dd89afda9d9ff98570034b8
-      container_image: ghcr.io/pirlruc/ci-lint@sha256:4d96a0235459c9e2cc724a724f42008dcdc3294940c57edb8b33b11e38efddba
+      scripts_ref: b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+      container_image: ghcr.io/pirlruc/ci-lint@sha256:f9001c4c8726f72107545094237d4fc0592baca023cfa299a532634666d88111
   supply-chain:
     if: github.event.pull_request.user.login != 'dependabot[bot]'
     permissions:
@@ -40,21 +40,22 @@ jobs:
       actions: read
       packages: read
       security-events: write
-    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@71bdc6832998e77d5dd89afda9d9ff98570034b8
+    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       working_directory: .
-      scripts_ref: 71bdc6832998e77d5dd89afda9d9ff98570034b8
-      container_image: ghcr.io/pirlruc/ci-supply-chain@sha256:b43eb3a99bc4c2003eb64ef5d6d0cdcbbc22d78904aa6b24d76ad0426035a7f6
+      scripts_ref: b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+      container_image: ghcr.io/pirlruc/ci-supply-chain@sha256:dc83deb4465d5989a03b14ccabef46c3f3426231048b962c69b8e434a7200d48
   scorecard:
     if: >-
       github.event.pull_request.user.login != 'dependabot[bot]' &&
       github.event.repository.fork == false
     permissions:
+      actions: read
       contents: read
       security-events: write
       id-token: write
-    uses: pirlruc/commondevops/.github/workflows/common-scorecard.yml@71bdc6832998e77d5dd89afda9d9ff98570034b8
+    uses: pirlruc/commondevops/.github/workflows/common-scorecard.yml@b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
     with:
       blocking: false
       publish_results: false
@@ -64,9 +65,9 @@ jobs:
   token-audit:
     if: github.event.pull_request.user.login != 'dependabot[bot]'
     permissions: {}
-    uses: pirlruc/commondevops/.github/workflows/common-token-audit.yml@71bdc6832998e77d5dd89afda9d9ff98570034b8
+    uses: pirlruc/commondevops/.github/workflows/common-token-audit.yml@b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
     with:
-      scripts_ref: 71bdc6832998e77d5dd89afda9d9ff98570034b8
+      scripts_ref: b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
     secrets:
       guardrails_token: ${{ secrets.GUARDRAILS_READ_TOKEN }}
       containerdevops_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
@@ -79,12 +80,12 @@ jobs:
       contents: read
       security-events: write
       packages: read
-    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@c92c83bd4ccb9f0040f11ca9e99bc1b4f50b652e
+    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@b419c24cbaf09f39d73fa0146a71155f1a4fbd54
     with:
       # Same digest as reusable cpp-* `container:` pins (CI-018). Do not float
       # on :latest; weekly rescan of a digest still picks up new CVEs.
       image: ghcr.io/pirlruc/ci-cpp@sha256:88fd10cb4cf754f190f565f14667fc5eef8cd933326fe2daa84ed0479709f19a
-      scripts_ref: c92c83bd4ccb9f0040f11ca9e99bc1b4f50b652e
+      scripts_ref: b419c24cbaf09f39d73fa0146a71155f1a4fbd54
       pkg_types: library
       ignorefile: docker/ci-cpp/.trivyignore.yaml
       results_artifact: published-ci-cpp-scan

@@ -43,7 +43,7 @@ clang-format, cpplint, clang-tidy, cppcheck, lizard, Metrix++.
 
 Numeric gates (CCN, coverage) come from `scripts/cpp.profile.thresholds.yml`
 (CI-021/022). Job runs in
-`container: ghcr.io/pirlruc/ci-cpp@sha256:32d74a33b346770271e26a640cf7261751285bf4f2095d56fa6658a7f4b61ef1`
+`container: ghcr.io/pirlruc/ci-cpp@sha256:88fd10cb4cf754f190f565f14667fc5eef8cd933326fe2daa84ed0479709f19a`
 (same digest on `cpp-tests`, `cpp-docs`, `cpp-dynamic`, `cpp-codeql`,
 `cpp-fuzz`, and the published rescan). The package is private, so those
 jobs set `packages: read` and `container.credentials`.
@@ -206,7 +206,7 @@ jobs skip Dependabot (CI-024). The token-free `pins` job still runs.
 Weekly Wednesday 06:17 UTC (staggered vs commondevops Mon / containerdevops Tue)
 plus `workflow_dispatch`. Secrets/SAST + supply-chain via commondevops; published
 `ci-cpp` rescan via containerdevops at the same digest as reusable workflow
-`container:` pins (`ghcr.io/pirlruc/ci-cpp@sha256:32d74a33…`, not `:latest`).
+`container:` pins (`ghcr.io/pirlruc/ci-cpp@sha256:88fd10cb…`, not `:latest`).
 
 ---
 

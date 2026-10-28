@@ -1,0 +1,33 @@
+name: C++ Token Audit (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      scripts_ref:
+        description: Must match the caller's uses pin of this workflow
+        required: false
+        type: string
+        default: ""
+    secrets:
+      scorecard_token:
+        required: false
+      guardrails_token:
+        required: false
+      containerdevops_token:
+        required: false
+      checkout_token:
+        required: false
+
+permissions: {}
+
+jobs:
+  audit:
+    permissions: {}
+    uses: pirlruc/commondevops/.github/workflows/common-token-audit.yml@b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+    with:
+      scripts_ref: b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+    secrets:
+      scorecard_token: ${{ secrets.scorecard_token }}
+      guardrails_token: ${{ secrets.guardrails_token }}
+      containerdevops_token: ${{ secrets.containerdevops_token }}
+      checkout_token: ${{ secrets.checkout_token }}

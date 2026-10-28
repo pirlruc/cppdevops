@@ -1,0 +1,30 @@
+name: C++ Pins (reusable)
+
+# Forwards to commondevops common-pins-verify. scripts_ref on this workflow
+# is the cppdevops pin the library passes. The nested checkout uses the
+# commondevops pin below.
+
+on:
+  workflow_call:
+    inputs:
+      pin_script:
+        required: false
+        type: string
+        default: scripts/check-submodule-pins.sh
+      scripts_ref:
+        description: Must match the caller's uses pin of this workflow
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  pins:
+    permissions:
+      contents: read
+    uses: pirlruc/commondevops/.github/workflows/common-pins-verify.yml@b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+    with:
+      pin_script: ${{ inputs.pin_script }}
+      scripts_ref: b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12

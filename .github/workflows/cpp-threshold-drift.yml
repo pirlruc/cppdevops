@@ -1,0 +1,31 @@
+name: C++ Threshold Drift (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      drift_script:
+        required: false
+        type: string
+        default: scripts/check-threshold-drift.sh
+      scripts_ref:
+        description: Must match the caller's uses pin of this workflow
+        required: false
+        type: string
+        default: ""
+    secrets:
+      checkout_token:
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  drift:
+    permissions:
+      contents: read
+    uses: pirlruc/commondevops/.github/workflows/common-threshold-drift.yml@b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+    with:
+      drift_script: ${{ inputs.drift_script }}
+      scripts_ref: b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+    secrets:
+      checkout_token: ${{ secrets.checkout_token }}

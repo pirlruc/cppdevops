@@ -54,6 +54,7 @@ jobs:
   quality:
     permissions:
       contents: read
+      packages: read
     uses: pirlruc/cppdevops/.github/workflows/cpp-quality.yml@CPPDEVOPS_PIN
     with:
       library_path: .
@@ -66,6 +67,7 @@ jobs:
   tests:
     permissions:
       contents: read
+      packages: read
     uses: pirlruc/cppdevops/.github/workflows/cpp-tests.yml@CPPDEVOPS_PIN
     with:
       library_path: .
@@ -78,6 +80,7 @@ jobs:
   docs:
     permissions:
       contents: read
+      packages: read
     uses: pirlruc/cppdevops/.github/workflows/cpp-docs.yml@CPPDEVOPS_PIN
     with:
       library_path: .
@@ -88,7 +91,9 @@ jobs:
       checkout_token: ${{ secrets.CPP_READ_TOKEN }}
   security:
     permissions:
+      actions: read
       contents: read
+      packages: read
       security-events: write
     uses: pirlruc/cppdevops/.github/workflows/cpp-security.yml@CPPDEVOPS_PIN
     with:
@@ -101,6 +106,7 @@ jobs:
   codeql:
     permissions:
       contents: read
+      packages: read
       security-events: write
     uses: pirlruc/cppdevops/.github/workflows/cpp-codeql.yml@CPPDEVOPS_PIN
     with:
@@ -114,6 +120,7 @@ jobs:
   dynamic:
     permissions:
       contents: read
+      packages: read
     uses: pirlruc/cppdevops/.github/workflows/cpp-dynamic.yml@CPPDEVOPS_PIN
     with:
       library_path: .
@@ -139,9 +146,9 @@ jobs:
   infra:
     permissions:
       contents: read
+      packages: read
     uses: pirlruc/cppdevops/.github/workflows/cpp-infra.yml@CPPDEVOPS_PIN
     with:
-      scripts_ref: CPPDEVOPS_PIN
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
     secrets:
       checkout_token: ${{ secrets.CPP_READ_TOKEN }}
