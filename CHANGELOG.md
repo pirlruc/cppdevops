@@ -7,7 +7,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ### Changed
 
-- commondevops callers pin 5.5.1 (`c866096b836f288415b3c1040621ca9bbb372982`), which includes the
+- commondevops callers pin 5.5.2 (`83d4b87eb8eef920ca86d7ad63bf13145a025957`), which includes the
   dispatch concurrency fix. scripts_ref matches that commit.
 
 ## [6.2.2] - 2026-10-27
@@ -20,7 +20,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
   ci-cpp-ubuntu `sha256:5daf9d6151cf791cdc277a9a3b17949471baf9003a755db87b5efec8112fd91a`.
   ci-cpp-vcpkg `sha256:1fa50525672e1b308fe8adbc7113b59d0a3ebad0946bdefd906a8aa69845d016`.
   ci-cpp-opencv `sha256:4185b1185f9a453712eca90935a0c253090caf008c2a1f0582547589a3c82b86`.
-- commondevops caller pins stay at 5.4.4 until tag 5.5.1 exists.
+- commondevops caller pins stay at 5.4.4 until tag 5.5.2 exists.
 
 ## [6.2.1] - 2026-10-27
 
