@@ -1,8 +1,9 @@
 # cppdevops
 
-[pirlruc/cppdevops](https://github.com/pirlruc/cppdevops) — reusable GitHub Actions
-workflows (`workflow_call`) for pirlruc C++ libraries, plus the `ci-cpp` toolchain
-image and library bootstrap templates.
+Reusable GitHub Actions CI and toolchain image for pirlruc C++ libraries.
+
+Workflows are `workflow_call`. The toolchain image is `ci-cpp`. Library
+bootstrap templates live in this repository.
 
 ## Workflows
 
@@ -98,7 +99,7 @@ Issue/PR templates remain in [pirlruc/github-scaffold](https://github.com/pirlru
 
 ## Methodology
 
-[GitHub Issue-native ADR](https://github.com/pirlruc/methodologies/tree/1.8.0/github-issue-adr)
+[GitHub Issue-native ADR](https://github.com/pirlruc/methodologies/tree/1.9.2/github-issue-adr)
 — Epic = decision record. Templates: [pirlruc/github-scaffold](https://github.com/pirlruc/github-scaffold).
 Quality: pin [pirlruc/guardrails](https://github.com/pirlruc/guardrails) at `docs/guardrails/`.
 Deviations: [`docs/guardrail-deviations.yml`](docs/guardrail-deviations.yml) only.
