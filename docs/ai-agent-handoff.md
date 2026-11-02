@@ -263,6 +263,6 @@ gitconfig under `RUNNER_TEMP`.
   `ci-cpp-vcpkg`. `Dockerfile.opencv` builds OpenCV 4.14.0 plus Eigen 3.4.
   That image is local only until the next image release.
 
-- 2026-11-02: `cpp-tests.yml` input `run_ubuntu_compile` defaults to true. Callers that need OpenCV set it false because `ci-cpp-ubuntu` does not ship that library. Quality, tests, docs, dynamic, and CodeQL set `defaults.run.shell` to bash after `on:`, because a default placed above `on:` was ignored and `ci-cpp-opencv` has dash as `/bin/sh`. Doc coverage follows directory symlinks under `include/`.
+- 2026-11-02: `cpp-tests.yml` input `run_ubuntu_compile` defaults to true. Callers that need OpenCV set it false because `ci-cpp-ubuntu` does not ship that library. Quality, tests, docs, dynamic, and CodeQL set `defaults.run.shell` to bash after `on:`, because a default placed above `on:` was ignored and `ci-cpp-opencv` has dash as `/bin/sh`. Doc coverage follows directory symlinks under `include/`. The quality job also sets `shell: bash` in its own `defaults.run`, because that block replaced the workflow shell.
 
 *Last updated: 2026-11-02.*
