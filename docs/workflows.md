@@ -59,6 +59,7 @@ CMake configure/build, CTest, coverage gate (`scripts/check-coverage.sh`).
 | `library_path` | required |
 | `cmake_preset` | `ci-linux` |
 | `blocking` | `false` |
+| `run_ubuntu_compile` | `true`. Set `false` when `ci-cpp-ubuntu` does not have a library the build links, such as OpenCV |
 
 ---
 
