@@ -1,5 +1,10 @@
 name: C++ Dynamic analysis (reusable)
 
+# ci-cpp-opencv ships dash as /bin/sh. Steps use pipefail.
+defaults:
+  run:
+    shell: bash
+
 on:
   workflow_call:
     inputs:

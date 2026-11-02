@@ -1,5 +1,10 @@
 name: C++ Tests (reusable)
 
+# ci-cpp-opencv ships dash as /bin/sh. Steps use pipefail.
+defaults:
+  run:
+    shell: bash
+
 on:
   workflow_call:
     inputs:
@@ -34,6 +39,11 @@ on:
         required: false
         type: string
         default: ""
+      run_ubuntu_compile:
+        description: Also compile on ci-cpp-ubuntu without vcpkg. Turn off when that image lacks a required library.
+        required: false
+        type: boolean
+        default: true
 
     secrets:
       checkout_token:
@@ -160,6 +170,7 @@ jobs:
             coverage="${COVERAGE}"
 
   ubuntu-compile:
+    if: inputs.run_ubuntu_compile
     runs-on: ubuntu-24.04
     container:
       image: ghcr.io/pirlruc/ci-cpp-ubuntu@sha256:2a7622d8299d126f127847c09818de867170a3992efead0d1ecd7edd41c2a3d5
