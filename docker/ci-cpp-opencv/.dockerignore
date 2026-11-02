@@ -1,5 +1,6 @@
 *
 !Dockerfile
+!requirements.txt
 !container-structure-test.yml
 !triplets
 !triplets/**
