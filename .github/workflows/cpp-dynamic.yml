@@ -38,6 +38,11 @@ on:
         required: false
         type: string
         default: ""
+      asan_options:
+        description: ASAN_OPTIONS for the ASan test step.
+        required: false
+        type: string
+        default: detect_leaks=1:halt_on_error=1
 
     secrets:
       checkout_token:
@@ -135,7 +140,7 @@ jobs:
         continue-on-error: true
         working-directory: ${{ inputs.library_path }}
         env:
-          ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+          ASAN_OPTIONS: ${{ inputs.asan_options }}
           UBSAN_OPTIONS: halt_on_error=1
         run: |
           set -euo pipefail

@@ -95,6 +95,7 @@ python3 .github/scaffold/scripts/issues-sync.py \
 ## Known pitfalls
 
 - Doc coverage lists headers with `os.walk(followlinks=True)` and must keep the path Clang opened. `Path.resolve()` follows an `include/` directory symlink into `modules/` and then every declaration looks private. `header_relative()` tries the opened path before the resolved path.
+- `cpp-dynamic.yml` input `asan_options` defaults to `detect_leaks=1:halt_on_error=1`. Callers that link the image's libstdc++ OpenCV from a libc++ test can add `alloc_dealloc_mismatch=0`.
 
 - **Wave 3 GitHub status drift:** MOBILE-MECH-001, AIREV-MECH-001, and
   DEP-MECH-001 are `done` in `docs/issues.yml`. GitHub issues
