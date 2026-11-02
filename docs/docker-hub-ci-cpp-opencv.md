@@ -7,8 +7,11 @@ and Eigen 3.4 from `libeigen3-dev`. The same image ships vcpkg, the
 no `HEALTHCHECK`.
 
 vcpkg is bootstrapped in the build stage. curl is not in the final image.
-Analysis tools stay on [ci-cpp](https://hub.docker.com/r/pirlruc/ci-cpp). A vcpkg image without
-OpenCV is [ci-cpp-vcpkg](https://hub.docker.com/r/pirlruc/ci-cpp-vcpkg).
+The image also has `libclang-rt` (so `--coverage` can link), gcovr, clang-format,
+clang-tidy, cppcheck, cpplint, lizard, Metrix++, and valgrind. Vision libraries
+run the reusable quality and test jobs in this image. A vcpkg image without
+OpenCV is [ci-cpp-vcpkg](https://hub.docker.com/r/pirlruc/ci-cpp-vcpkg). The
+analysis image without OpenCV is [ci-cpp](https://hub.docker.com/r/pirlruc/ci-cpp).
 
 ## Image
 

@@ -81,13 +81,13 @@ RUN curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors -o /tmp/vcpkg.tar.gz
 FROM docker.io/library/ubuntu:24.04@sha256:24737cef17f4e22b1977df7d9a05e77c4e28b7da5b8911f8d8ccda136bf3573c
 
 LABEL org.opencontainers.image.title="ci-cpp-opencv" \
-      org.opencontainers.image.description="Compile image: Clang 18, libc++, CMake, Ninja, vcpkg, OpenCV 4.14.0, Eigen 3.4. Ubuntu 24.04. Non-root 1000:1000, linux/amd64." \
+      org.opencontainers.image.description="Compile image: Clang 18, libc++, CMake, Ninja, vcpkg, OpenCV 4.14.0, Eigen 3.4, coverage runtime, gcovr, and the quality tools. Ubuntu 24.04. Non-root 1000:1000, linux/amd64." \
       org.opencontainers.image.source="https://github.com/pirlruc/cppdevops" \
       org.opencontainers.image.vendor="pirlruc" \
       org.opencontainers.image.licenses="MIT"
 
 ENV DEBIAN_FRONTEND=noninteractive \
-    PATH="/opt/vcpkg:/usr/local/bin:${PATH}" \
+    PATH="/opt/venv/bin:/opt/vcpkg:/usr/local/bin:${PATH}" \
     VCPKG_ROOT=/opt/vcpkg \
     VCPKG_DISABLE_METRICS=1 \
     VCPKG_DEFAULT_BINARY_CACHE=/vcpkg-cache \
@@ -113,7 +113,22 @@ RUN apt-get update \
       unzip=6.0-28ubuntu4.1 \
       zip=3.0-13ubuntu0.2 \
       zlib1g-dev=1:1.3.dfsg-3.1ubuntu2.3 \
+      clang-format=1:18.0-59~exp2 \
+      clang-tidy=1:18.0-59~exp2 \
+      cppcheck=2.13.0-2ubuntu3 \
+      gcovr=7.0-1 \
+      libclang-rt-18-dev=1:18.1.3-1ubuntu1 \
+      python3=3.12.3-0ubuntu2.1 \
+      python3-pip=24.0+dfsg-1ubuntu1.3 \
+      python3-venv=3.12.3-0ubuntu2.1 \
+      python3-yaml=6.0.1-2build2 \
+      valgrind=1:3.22.0-0ubuntu3 \
  && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt /tmp/requirements.txt
+RUN python3 -m venv /opt/venv \
+ && /opt/venv/bin/pip install --no-cache-dir --require-hashes -r /tmp/requirements.txt \
+ && rm -f /tmp/requirements.txt
 
 COPY --from=opencv-build /usr/local /usr/local
 COPY --from=opencv-build --chown=1000:1000 /opt/vcpkg /opt/vcpkg
@@ -125,7 +140,7 @@ RUN ldconfig \
       useradd --uid 1000 --create-home --shell /bin/bash ci; \
     fi \
  && mkdir -p /workspace /vcpkg-cache \
- && chown -R 1000:1000 /workspace /vcpkg-cache /opt/vcpkg-triplets /opt/vcpkg-overlays \
+ && chown -R 1000:1000 /workspace /vcpkg-cache /opt/venv /opt/vcpkg-triplets /opt/vcpkg-overlays \
  && find / -xdev -type f \( -perm -4000 -o -perm -2000 \) -exec chmod a-s {} +
 
 WORKDIR /workspace

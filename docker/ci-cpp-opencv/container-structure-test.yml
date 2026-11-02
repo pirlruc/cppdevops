@@ -57,6 +57,42 @@ commandTests:
     command: "bash"
     args: ["-c", "! command -v curl"]
     exitCode: 0
+  - name: coverage runtime
+    command: "test"
+    args: ["-f", "/usr/lib/llvm-18/lib/clang/18/lib/linux/libclang_rt.profile-x86_64.a"]
+    exitCode: 0
+  - name: gcovr
+    command: "gcovr"
+    args: ["--version"]
+    exitCode: 0
+  - name: cpplint
+    command: "cpplint"
+    args: ["--version"]
+    exitCode: 0
+  - name: lizard
+    command: "lizard"
+    args: ["--version"]
+    exitCode: 0
+  - name: metrixpp
+    command: "python3"
+    args: ["-c", "import metrixpp"]
+    exitCode: 0
+  - name: clang-format
+    command: "clang-format"
+    args: ["--version"]
+    exitCode: 0
+  - name: clang-tidy
+    command: "clang-tidy"
+    args: ["--version"]
+    exitCode: 0
+  - name: cppcheck
+    command: "cppcheck"
+    args: ["--version"]
+    exitCode: 0
+  - name: valgrind
+    command: "valgrind"
+    args: ["--version"]
+    exitCode: 0
   - name: "no setuid or setgid files"
     command: "bash"
     args:
