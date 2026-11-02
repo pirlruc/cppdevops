@@ -1,10 +1,5 @@
 name: C++ Documentation (reusable)
 
-# ci-cpp-opencv ships dash as /bin/sh. Steps use pipefail.
-defaults:
-  run:
-    shell: bash
-
 on:
   workflow_call:
     inputs:
@@ -39,6 +34,11 @@ on:
 permissions:
   contents: read
   packages: read
+
+# ci-cpp-opencv ships dash as /bin/sh. Steps use pipefail.
+defaults:
+  run:
+    shell: bash
 
 env:
   ADVISORY: ${{ inputs.blocking == false }}

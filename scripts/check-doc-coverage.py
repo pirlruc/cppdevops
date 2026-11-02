@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import glob
+import os
 import sys
 import tempfile
 from pathlib import Path
@@ -45,13 +46,18 @@ def library_file() -> str:
 
 def public_headers(include: Path) -> list[Path]:
     headers: list[Path] = []
-    for path in sorted(include.rglob("*")):
-        if not path.is_file() or path.suffix not in PUBLIC_SUFFIXES:
+    # rglob does not follow directory links. Module layouts keep include/ as links.
+    for dirpath, dirnames, filenames in os.walk(include, followlinks=True):
+        parts = Path(dirpath).parts
+        if "detail" in parts:
+            dirnames.clear()
             continue
-        if "detail" in path.parts:
-            continue
-        headers.append(path)
-    return headers
+        for name in filenames:
+            path = Path(dirpath) / name
+            if path.suffix not in PUBLIC_SUFFIXES or "detail" in path.parts:
+                continue
+            headers.append(path)
+    return sorted(headers)
 
 
 def is_public_header(filename: str | None, include: Path) -> bool:
