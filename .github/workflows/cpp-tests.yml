@@ -1,10 +1,5 @@
 name: C++ Tests (reusable)
 
-# ci-cpp-opencv ships dash as /bin/sh. Steps use pipefail.
-defaults:
-  run:
-    shell: bash
-
 on:
   workflow_call:
     inputs:
@@ -51,6 +46,11 @@ on:
 
 # CI-025: default deny. Each job grants only what it uses.
 permissions: {}
+
+# ci-cpp-opencv ships dash as /bin/sh. Steps use pipefail.
+defaults:
+  run:
+    shell: bash
 
 env:
   ADVISORY: ${{ inputs.blocking == false }}
