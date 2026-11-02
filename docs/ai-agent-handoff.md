@@ -94,6 +94,8 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Known pitfalls
 
+- Doc coverage lists headers with `os.walk(followlinks=True)` and must keep the path Clang opened. `Path.resolve()` follows an `include/` directory symlink into `modules/` and then every declaration looks private. `header_relative()` tries the opened path before the resolved path.
+
 - **Wave 3 GitHub status drift:** MOBILE-MECH-001, AIREV-MECH-001, and
   DEP-MECH-001 are `done` in `docs/issues.yml`. GitHub issues
   [#27](https://github.com/pirlruc/cppdevops/issues/27),
@@ -265,4 +267,4 @@ gitconfig under `RUNNER_TEMP`.
 
 - 2026-11-02: `cpp-tests.yml` input `run_ubuntu_compile` defaults to true. Callers that need OpenCV set it false because `ci-cpp-ubuntu` does not ship that library. Quality, tests, docs, dynamic, and CodeQL set `defaults.run.shell` to bash after `on:`, because a default placed above `on:` was ignored and `ci-cpp-opencv` has dash as `/bin/sh`. Doc coverage follows directory symlinks under `include/`. The quality job also sets `shell: bash` in its own `defaults.run`, because that block replaced the workflow shell.
 
-*Last updated: 2026-11-02.*
+*Last updated: 2026-11-02 (doc coverage keeps symlink include paths).*

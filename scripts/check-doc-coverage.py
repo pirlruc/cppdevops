@@ -60,13 +60,24 @@ def public_headers(include: Path) -> list[Path]:
     return sorted(headers)
 
 
+def header_relative(filename: str, include: Path) -> Path | None:
+    path = Path(filename)
+    # Keep the path Clang opened. Resolving first follows include/ directory
+    # symlinks into modules/ and then the header is no longer under include/.
+    for candidate, root in ((path, include), (path.resolve(), include.resolve())):
+        try:
+            return candidate.relative_to(root)
+        except ValueError:
+            continue
+    return None
+
+
 def is_public_header(filename: str | None, include: Path) -> bool:
     if not filename:
         return False
     path = Path(filename)
-    try:
-        relative = path.resolve().relative_to(include.resolve())
-    except ValueError:
+    relative = header_relative(filename, include)
+    if relative is None:
         return False
     return path.suffix in PUBLIC_SUFFIXES and "detail" not in relative.parts
 
