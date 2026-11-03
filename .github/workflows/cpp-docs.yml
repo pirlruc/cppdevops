@@ -47,7 +47,7 @@ jobs:
   docs:
     runs-on: ubuntu-24.04
     container:
-      image: ghcr.io/pirlruc/ci-cpp@sha256:88d24172b5b6ab74a4276a60bb341c238b072cb57169c690a21c2d2cfbeafbac
+      image: ghcr.io/pirlruc/ci-cpp@sha256:3f4776490bcf197fc10983e416443d01f365134df44110c24176f5b2ded09475
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}

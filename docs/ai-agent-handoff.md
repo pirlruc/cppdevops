@@ -6,7 +6,7 @@
 |-------|-------|
 | **Folder** | cppdevops |
 | **Remote** | https://github.com/pirlruc/cppdevops |
-| **Branch** | `feature-image-consolidation`. `main` is `54f4171`. GitHub Release **v6.3.0** published the images. Tag **v6.3.1** records the 6.3.0 manifests and does not republish. **v6.3.2** grants the CodeQL job `actions: read` and does not republish. Do not move v6.1.0 through v6.3.2. 6.4.0 is the image consolidation and is not published yet. commondevops callers pin **5.6.2** (`b85f95bb`). containerdevops callers pin **6.3.6** (`b419c24c`). |
+| **Branch** | `main` at `0cb33e7`. GitHub Release **v6.4.0** published the images. Tag **v6.4.1** records those manifests and does not republish. Do not move v6.3.0 through v6.3.2. commondevops callers pin **5.6.2** (`b85f95bb`). containerdevops callers pin **6.3.6** (`b419c24c`). |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
@@ -26,7 +26,7 @@ contexts `docker/ci-cpp/` (Debian and Alpine, both with vcpkg) and
 
 Standalone library callers should pin `pirlruc/cppdevops@<sha>` (`CI-018`)
 and pass the same value as `scripts_ref`. The published analysis image is
-ci-cpp 6.3.0 Debian. Actions pins the linux/amd64 manifest.
+ci-cpp 6.4.0 Debian. Actions pins the linux/amd64 manifest.
 Hub/Packages, one page per image:
 [`docs/docker-hub-ci-cpp.md`](docker-hub-ci-cpp.md),
 [`docs/docker-hub-ci-cpp-ubuntu.md`](docker-hub-ci-cpp-ubuntu.md),
@@ -44,11 +44,11 @@ Contract reference: [`docs/workflows.md`](workflows.md).
 | `docs/guardrails` | tag **1.13.1** → `1945211ac851c3c0f83694bd4ea53571fdced4ab` |
 | `.github/scaffold` | tag **1.10.0** → `1d9901f7e7e5785abb7cac6f5d46e0e8e2023ff8` |
 | methodologies (links only; not a submodule) | tag **1.9.1** |
-| `ghcr.io/pirlruc/ci-cpp` (debian, unsuffixed) | `6.3.0` `linux/amd64` `sha256:88d24172b5b6ab74a4276a60bb341c238b072cb57169c690a21c2d2cfbeafbac`. Tag index `sha256:26422f6453e04c72d46792fe6ab70574eeb037f55c1ba31c962ab86cb8a71802`. Private package: `packages: read` and `container.credentials` |
-| `ghcr.io/pirlruc/ci-cpp` (alpine) | `6.3.0-alpine` `linux/amd64` `sha256:d686e56e013cf560818d9b7df515db78bf8313495155d66cf4125a99db44717b`. Tag index `sha256:2176dd7427f53691ea0e79710870fee5af31a7ff96c7135367e7b709a27179fb` |
+| `ghcr.io/pirlruc/ci-cpp` (debian, unsuffixed) | `6.4.0` `linux/amd64` `sha256:3f4776490bcf197fc10983e416443d01f365134df44110c24176f5b2ded09475`. Tag index `sha256:49d8078eaab4aab93114b9773dea66d51424849adf86633882cab5e1a75699f9`. Includes vcpkg. Private package: `packages: read` and `container.credentials` |
+| `ghcr.io/pirlruc/ci-cpp` (alpine) | `6.4.0-alpine` `linux/amd64` `sha256:817f79358c86cf4045288f74768901daa2b0f5416807e50ab4a601e8d7a8f331`. Tag index `sha256:2665aeaa0f9eb9b0a355a1216671724227cf21f5eaa4da7592a0d2f9fc78520d`. Includes vcpkg |
 | `ghcr.io/pirlruc/ci-cpp-ubuntu` | `6.3.0` `linux/amd64` `sha256:2a7622d8299d126f127847c09818de867170a3992efead0d1ecd7edd41c2a3d5`. Tag index `sha256:c5dc493c2059d61c8da58b001aeedff2ccb35ba28736eba73f3c378e814d06f8` |
 | `ci-cpp-vcpkg` | `6.3.0` `linux/amd64` `sha256:e551e5f6f6ec5b65bd571fb13c549916fc0ac4e6156c2185f0a8eb5be2a2fe44`. Tag index `sha256:7df56682882f2472cd0dd13d9d9148ea7a3f0cdd5140f12014abd4be0ba5cda4`. OpenCV is not in this image |
-| `ci-cpp-opencv` | `6.3.0` `linux/amd64` `sha256:42ba66c3c4c1b4f9552d43f11fa6eace05608000434b35e520b79c560dda4773`. Tag index `sha256:5b45c9c5a158b7b861f7933aac01d08b110eb0f2b692e02d778c64a054264368`. OpenCV 4.14.0, Eigen 3.4, libc++ triplet |
+| `ci-cpp-opencv` | `6.4.0` `linux/amd64` `sha256:5c603b8864c017e82906a2a6c6aa6728a3cc8aba1b8f12c83947d57ed04aa484`. Tag index `sha256:f7e721a5593987ac9a8e9ae145f4e622ebf8e34355b9dadcbab3154b980468eb`. OpenCV 4.14.0, Eigen 3.4, libc++ triplet, analysis tools. `sha256:42ba66c3…` remains the 6.3.0 linux/amd64 image |
 | commondevops `uses:` | `9e28757e47375bbe02f1150e3612cdf69723dd29` (included in tag **5.3.3** and later). Token audit is **5.4.1** `d03953476f3d5fa1081a0834d9882007ff26dd91` |
 | containerdevops `uses:` | `2ad052e69d2587cdaf8ccac59b9dae5c60f5560b` (included in tag **6.2.0**) |
 
@@ -267,4 +267,6 @@ gitconfig under `RUNNER_TEMP`.
 
 - 2026-11-03: Image consolidation on `feature-image-consolidation`. vcpkg folds into Debian and Alpine `ci-cpp`. `ci-cpp-opencv` gains a uv venv and llvm-cov. `ci-cpp-ubuntu` and `ci-cpp-vcpkg` directories are removed. Do not merge PRs #174 or #169. Do not `workflow_dispatch` with `publish: true`. Publish happens from the 6.4.0 release event. v6.4.1 is the later digest write-back and must not republish.
 
-*Last updated: 2026-11-03 (image consolidation, vcpkg folded into ci-cpp).*
+- 2026-11-03: v6.4.0 published the folded images. v6.4.1 records the linux/amd64 manifests and does not republish. Debian `sha256:3f477649…`, Alpine `sha256:817f7935…`, OpenCV `sha256:5c603b88…`.
+
+*Last updated: 2026-11-03 (v6.4.0 published, v6.4.1 digest write-back).*
