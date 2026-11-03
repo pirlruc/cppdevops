@@ -89,6 +89,7 @@ must not pass green as a `ctest -T memcheck` no-op.
 | `blocking` | `false` |
 | `run_asan` | `true` |
 | `run_valgrind` | `true` |
+| `asan_options` | `detect_leaks=1:halt_on_error=1` |
 
 ---
 

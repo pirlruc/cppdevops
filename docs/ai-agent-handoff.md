@@ -94,6 +94,11 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Known pitfalls
 
+- Doc coverage lists headers with `os.walk(followlinks=True)` and must keep the path Clang opened. `Path.resolve()` follows an `include/` directory symlink into `modules/` and then every declaration looks private. `header_relative()` tries the opened path before the resolved path.
+- `cpp-dynamic.yml` input `asan_options` defaults to `detect_leaks=1:halt_on_error=1`. Callers that link the image's libstdc++ OpenCV from a libc++ test can add `alloc_dealloc_mismatch=0`.
+- Coverage counts `include|src` and `modules/*/include|src`. If the image has gcovr but no `llvm-cov` or `gcov`, and the job is root, `check-coverage.sh` installs `llvm-18`.
+- `cpp-release.yml` grants `attestations: write` because `common-release.yml` requests it. `cpp-infra.yml` and `cpp-security.yml` forward `secrets.checkout_token` into commondevops.
+
 - **Wave 3 GitHub status drift:** MOBILE-MECH-001, AIREV-MECH-001, and
   DEP-MECH-001 are `done` in `docs/issues.yml`. GitHub issues
   [#27](https://github.com/pirlruc/cppdevops/issues/27),
@@ -265,4 +270,4 @@ gitconfig under `RUNNER_TEMP`.
 
 - 2026-11-02: `cpp-tests.yml` input `run_ubuntu_compile` defaults to true. Callers that need OpenCV set it false because `ci-cpp-ubuntu` does not ship that library. Quality, tests, docs, dynamic, and CodeQL set `defaults.run.shell` to bash after `on:`, because a default placed above `on:` was ignored and `ci-cpp-opencv` has dash as `/bin/sh`. Doc coverage follows directory symlinks under `include/`. The quality job also sets `shell: bash` in its own `defaults.run`, because that block replaced the workflow shell.
 
-*Last updated: 2026-11-02.*
+*Last updated: 2026-11-03 (coverage filter, release attestations, checkout token forward).*

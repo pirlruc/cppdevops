@@ -34,7 +34,21 @@ if [[ ! -d "${BUILD_DIR}" ]]; then
 fi
 
 # Prefer gcovr JSON summary when available. Clang builds need llvm-cov as the gcov driver.
+# ci-cpp-opencv 6.3.0 has gcovr but not llvm-cov. The tests job runs as root, so
+# install llvm-18 when the driver is missing. Later images ship the symlink.
 REPORT="${BUILD_DIR}/coverage.json"
+if ! command -v llvm-cov >/dev/null 2>&1 && ! command -v llvm-cov-18 >/dev/null 2>&1 && ! command -v gcov >/dev/null 2>&1; then
+  if [[ "$(id -u)" -eq 0 ]] && command -v apt-get >/dev/null 2>&1; then
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get update
+    apt-get install -y --no-install-recommends llvm-18
+    if [[ -x /usr/bin/llvm-cov-18 ]]; then
+      ln -sfn /usr/bin/llvm-cov-18 /usr/local/bin/llvm-cov
+    elif [[ -x /usr/lib/llvm-18/bin/llvm-cov ]]; then
+      ln -sfn /usr/lib/llvm-18/bin/llvm-cov /usr/local/bin/llvm-cov
+    fi
+  fi
+fi
 GCOV_ARGS=()
 if command -v llvm-cov >/dev/null 2>&1; then
   GCOV_ARGS=(--gcov-executable "llvm-cov gcov")
@@ -47,7 +61,10 @@ if ! command -v gcovr >/dev/null 2>&1; then
   exit 1
 fi
 
-if ! gcovr --root "${ROOT}" --filter "${ROOT}/(include|src)/" \
+# Flat libraries live under include/ and src/. Module libraries live under modules/*/include and modules/*/src.
+if ! gcovr --root "${ROOT}" \
+  --filter "${ROOT}/(include|src)/" \
+  --filter "${ROOT}/modules/.*/(include|src)/" \
   --json-summary "${REPORT}" \
   --exclude '.*/(test|external|build)/.*' \
   ${GCOV_ARGS[@]+"${GCOV_ARGS[@]}"} \

@@ -25,12 +25,14 @@ on:
 permissions:
   contents: write
   id-token: write
+  attestations: write
 
 jobs:
   release:
     permissions:
       contents: write
       id-token: write
+      attestations: write
     uses: pirlruc/commondevops/.github/workflows/common-release.yml@b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
     with:
       tag: ${{ inputs.tag }}

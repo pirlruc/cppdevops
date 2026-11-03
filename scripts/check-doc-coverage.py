@@ -60,13 +60,24 @@ def public_headers(include: Path) -> list[Path]:
     return sorted(headers)
 
 
+def header_relative(filename: str, include: Path) -> Path | None:
+    path = Path(filename)
+    # Keep the path Clang opened. Resolving first follows include/ directory
+    # symlinks into modules/ and then the header is no longer under include/.
+    for candidate, root in ((path, include), (path.resolve(), include.resolve())):
+        try:
+            return candidate.relative_to(root)
+        except ValueError:
+            continue
+    return None
+
+
 def is_public_header(filename: str | None, include: Path) -> bool:
     if not filename:
         return False
     path = Path(filename)
-    try:
-        relative = path.resolve().relative_to(include.resolve())
-    except ValueError:
+    relative = header_relative(filename, include)
+    if relative is None:
         return False
     return path.suffix in PUBLIC_SUFFIXES and "detail" not in relative.parts
 
@@ -150,12 +161,17 @@ def main() -> None:
         *args.clang_args,
     ]
     lines = ['#include "' + path.relative_to(include).as_posix() + '"' for path in headers]
-    with tempfile.NamedTemporaryFile("w", suffix=".cpp", delete=False) as handle:
-        handle.write("\n".join(lines) + "\n")
-        source = handle.name
-    tu = parse_tu(index, source, clang_args)
-    seen: dict[str, bool] = {}
-    walk(tu.cursor, include, seen)
+    source = ""
+    try:
+        with tempfile.NamedTemporaryFile("w", suffix=".cpp", delete=False) as handle:
+            handle.write("\n".join(lines) + "\n")
+            source = handle.name
+        tu = parse_tu(index, source, clang_args)
+        seen: dict[str, bool] = {}
+        walk(tu.cursor, include, seen)
+    finally:
+        if source:
+            os.unlink(source)
     total = len(seen)
     if total == 0:
         print("error: the AST contained no public declarations", file=sys.stderr)
