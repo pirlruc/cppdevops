@@ -22,19 +22,23 @@ this image. OpenCV stays on
 
 ### Tags
 
-Current rows are release 6.3.0. Index digests are the tag. Actions rows are
+Current rows are release 6.4.0. Index digests are the tag. Actions rows are
 the `linux/amd64` image manifests. Actions `container:` cannot pull the tag
 index, and `ghcr.io/pirlruc/ci-cpp` is private.
 
 | Tag | Digest |
 |-----|--------|
-| `6.3.0` / `6.3.0-debian` / `latest` / `latest-debian` | `sha256:26422f6453e04c72d46792fe6ab70574eeb037f55c1ba31c962ab86cb8a71802` (tag index) |
+| `6.4.0` / `6.4.0-debian` / `latest` / `latest-debian` | `sha256:49d8078eaab4aab93114b9773dea66d51424849adf86633882cab5e1a75699f9` (tag index) |
+| `6.4.0` `linux/amd64` (Actions) | `sha256:3f4776490bcf197fc10983e416443d01f365134df44110c24176f5b2ded09475` |
+| `6.4.0-alpine` / `latest-alpine` | `sha256:2665aeaa0f9eb9b0a355a1216671724227cf21f5eaa4da7592a0d2f9fc78520d` (tag index) |
+| `6.4.0-alpine` `linux/amd64` (Actions) | `sha256:817f79358c86cf4045288f74768901daa2b0f5416807e50ab4a601e8d7a8f331` |
+| `6.3.0` / `6.3.0-debian` | Previous Debian, without vcpkg. `sha256:26422f6453e04c72d46792fe6ab70574eeb037f55c1ba31c962ab86cb8a71802` (tag index) |
 | `6.3.0` `linux/amd64` (Actions) | `sha256:88d24172b5b6ab74a4276a60bb341c238b072cb57169c690a21c2d2cfbeafbac` |
 | `6.2.1` / `6.2.1-debian` | Previous Debian. `sha256:043eab3763325104619dc252ef003d03aa0690545b443858e0c528c1715be0c1` (tag index) |
 | `6.2.1` `linux/amd64` | `sha256:88fd10cb4cf754f190f565f14667fc5eef8cd933326fe2daa84ed0479709f19a` |
 | `6.0.0` / `6.0.0-debian` | Previous Debian. `sha256:b560e30b94c2b50538f61673bcbd8267403d021b8e4059fecf15817c9f3e4b26` (tag index) |
 | `6.0.0` `linux/amd64` | `sha256:32d74a33b346770271e26a640cf7261751285bf4f2095d56fa6658a7f4b61ef1` |
-| `6.3.0-alpine` / `latest-alpine` | `sha256:2176dd7427f53691ea0e79710870fee5af31a7ff96c7135367e7b709a27179fb` (tag index) |
+| `6.3.0-alpine` / `latest-alpine` | Previous Alpine, without vcpkg. `sha256:2176dd7427f53691ea0e79710870fee5af31a7ff96c7135367e7b709a27179fb` (tag index) |
 | `6.3.0-alpine` `linux/amd64` (Actions) | `sha256:d686e56e013cf560818d9b7df515db78bf8313495155d66cf4125a99db44717b` |
 | `6.2.1-alpine` | Previous Alpine. `sha256:e1f4ce03f7645c6e806d2917f77708c320bdcfab580055c946c963d876f50496` (tag index) |
 | `6.2.1-alpine` `linux/amd64` | `sha256:7412677a59089bd4556d20a4ee574da73ea3445454c5694ab5b057d509e8a410` |
@@ -50,16 +54,16 @@ Debian owns the unsuffixed tags. Prefer a digest in production. `latest` is
 never the only tag.
 
 ```bash
-docker pull pirlruc/ci-cpp:6.3.0
-docker pull pirlruc/ci-cpp:6.3.0-alpine
-docker pull pirlruc/ci-cpp@sha256:88d24172b5b6ab74a4276a60bb341c238b072cb57169c690a21c2d2cfbeafbac
+docker pull pirlruc/ci-cpp:6.4.0
+docker pull pirlruc/ci-cpp:6.4.0-alpine
+docker pull pirlruc/ci-cpp@sha256:3f4776490bcf197fc10983e416443d01f365134df44110c24176f5b2ded09475
 ```
 
 ## Quick start
 
 ```bash
 docker run --rm -v "$PWD:/workspace:ro" -w /workspace \
-  pirlruc/ci-cpp:6.3.0 \
+  pirlruc/ci-cpp:6.4.0 \
   clang++ --version
 ```
 
@@ -72,7 +76,7 @@ docker run --rm \
   --security-opt no-new-privileges \
   --tmpfs /tmp:rw,noexec,nosuid,size=256m \
   -v "$PWD:/workspace:ro" -w /workspace \
-  pirlruc/ci-cpp:6.3.0 \
+  pirlruc/ci-cpp:6.4.0 \
   clang++ --version
 ```
 
@@ -88,8 +92,7 @@ docker run --rm \
 | valgrind | Dynamic analysis |
 | vcpkg `434307da` | `/opt/vcpkg`. Triplet `x64-linux-libcxx` at `/opt/vcpkg-triplets` |
 
-The published 6.3.0 rows above do not include vcpkg. 6.4.0 is the first tag
-that does. Not included: OpenCV and Eigen 3.4. Those stay on `ci-cpp-opencv`.
+The 6.3.0 rows do not include vcpkg. 6.4.0 is the first tag that does. Not included: OpenCV and Eigen 3.4. Those stay on `ci-cpp-opencv`.
 
 ## Verify a publish
 

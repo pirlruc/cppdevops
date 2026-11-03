@@ -5,6 +5,28 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [6.4.1] - 2026-11-03
+
+### Changed
+
+- Reusable job-container defaults and the public image pages record the
+  6.4.0 manifests. Actions pins are the `linux/amd64` image manifests.
+  ci-cpp Debian index
+  `sha256:49d8078eaab4aab93114b9773dea66d51424849adf86633882cab5e1a75699f9`,
+  linux/amd64
+  `sha256:3f4776490bcf197fc10983e416443d01f365134df44110c24176f5b2ded09475`.
+  ci-cpp Alpine index
+  `sha256:2665aeaa0f9eb9b0a355a1216671724227cf21f5eaa4da7592a0d2f9fc78520d`,
+  linux/amd64
+  `sha256:817f79358c86cf4045288f74768901daa2b0f5416807e50ab4a601e8d7a8f331`.
+  ci-cpp-opencv index
+  `sha256:f7e721a5593987ac9a8e9ae145f4e622ebf8e34355b9dadcbab3154b980468eb`,
+  linux/amd64
+  `sha256:5c603b8864c017e82906a2a6c6aa6728a3cc8aba1b8f12c83947d57ed04aa484`.
+  No image republish. Tags v6.3.0 through v6.3.2 stay put.
+
+## [6.4.0] - 2026-11-03
+
 ### Changed
 
 - Debian and Alpine `ci-cpp` include vcpkg `434307da` and the
