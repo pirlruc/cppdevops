@@ -17,17 +17,32 @@ RUN /usr/local/bin/uv venv /opt/venv --python /usr/bin/python3 \
 FROM dhi.io/python:3.13-alpine3.24-dev@sha256:4aed63aeb9d50fc3be32191e8ce5cd6a29bc6e939a0046a941d5fa83553266e9
 
 LABEL org.opencontainers.image.title="ci-cpp" \
-      org.opencontainers.image.description="C++ analysis toolchain, Alpine 3.24 variant. Non-root 1000:1000, linux/amd64." \
+      org.opencontainers.image.description="C++ analysis toolchain plus vcpkg, Alpine 3.24 variant. Non-root 1000:1000, linux/amd64." \
       org.opencontainers.image.source="https://github.com/pirlruc/cppdevops" \
       org.opencontainers.image.vendor="pirlruc" \
       org.opencontainers.image.licenses="MIT"
 
-ENV PATH="/opt/venv/bin:/usr/local/bin:${PATH}" \
+ENV PATH="/opt/venv/bin:/opt/vcpkg:/usr/local/bin:${PATH}" \
     PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    VCPKG_ROOT=/opt/vcpkg \
+    VCPKG_DISABLE_METRICS=1 \
+    VCPKG_DEFAULT_BINARY_CACHE=/vcpkg-cache \
+    VCPKG_DEFAULT_TRIPLET=x64-linux-libcxx \
+    VCPKG_OVERLAY_TRIPLETS=/opt/vcpkg-triplets \
+    VCPKG_FORCE_SYSTEM_BINARIES=1
 
 USER root
+ARG VCPKG_COMMIT=434307da09bc05b2c86996dccc8b2351fc0d5d37
 RUN apk add --no-cache \
+      bash=5.3.9-r1 \
+      curl=8.20.0-r1 \
+      gzip=1.14-r2 \
+      linux-headers=7.0.0-r1 \
+      nasm=3.01-r0 \
+      pkgconf=2.5.1-r0 \
+      unzip=6.0-r16 \
+      zip=3.0-r13 \
       clang20=20.1.8-r3 \
       clang20-libclang=20.1.8-r3 \
       clang20-extra-tools=20.1.8-r3 \
@@ -45,6 +60,7 @@ RUN apk add --no-cache \
  && ln -sf /usr/bin/clang-20 /usr/local/bin/clang \
  && ln -sf /usr/bin/clang++-20 /usr/local/bin/clang++ \
  && ln -sf /usr/lib/llvm20/bin/clang-tidy /usr/local/bin/clang-tidy \
+ && ln -sf /usr/lib/llvm20/bin/clang-format /usr/local/bin/clang-format \
  && ln -sf /usr/bin/llvm20-cov /usr/local/bin/llvm-cov \
  && ln -sf /usr/bin/llvm20-profdata /usr/local/bin/llvm-profdata \
  && ln -sf /usr/bin/llvm20-symbolizer /usr/local/bin/llvm-symbolizer \
@@ -53,9 +69,16 @@ RUN apk add --no-cache \
       printf 'ci:x:1000:1000::/home/ci:/bin/sh\n' >> /etc/passwd; \
       printf 'ci:x:1000:\n' >> /etc/group; \
     fi \
- && mkdir -p /home/ci /workspace \
- && chown -R 1000:1000 /workspace /home/ci
+ && mkdir -p /home/ci /workspace /vcpkg-cache /opt/vcpkg-triplets \
+ && curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors -o /tmp/vcpkg.tar.gz \
+      "https://github.com/microsoft/vcpkg/archive/${VCPKG_COMMIT}.tar.gz" \
+ && tar -xzf /tmp/vcpkg.tar.gz -C /opt \
+ && rm -f /tmp/vcpkg.tar.gz \
+ && mv "/opt/vcpkg-${VCPKG_COMMIT}" /opt/vcpkg \
+ && /opt/vcpkg/bootstrap-vcpkg.sh -disableMetrics -musl \
+ && chown -R 1000:1000 /workspace /home/ci /opt/vcpkg /vcpkg-cache /opt/vcpkg-triplets
 
+COPY --chown=1000:1000 triplets/x64-linux-libcxx.cmake /opt/vcpkg-triplets/x64-linux-libcxx.cmake
 COPY --from=pybuild --chown=1000:1000 /opt/venv /opt/venv
 
 WORKDIR /workspace

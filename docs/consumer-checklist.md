@@ -8,10 +8,9 @@ workflows at a **tag or full SHA**, never `@main`.
 
 `ci-cpp` analysis moves from Ubuntu 24.04 to a Docker Hardened Images Debian 13
 base. Alpine is published as `ci-cpp` with tag suffix `-alpine`. Compile-and-ctest
-on Ubuntu uses the separate `ci-cpp-ubuntu` image. graphviz, cloc, and curl are
-not in the analysis image. The devcontainer stays Ubuntu 24.04. Do not pin the
-5.0.0 workflows until `ci-cpp-ubuntu:5.0.0` exists; the `ubuntu-compile` job
-references that tag.
+on Ubuntu used the separate `ci-cpp-ubuntu` image through 6.3.0. That image
+is not rebuilt. graphviz and cloc are not in the analysis image. The
+devcontainer stays Ubuntu 24.04.
 
 ## Who still pins `@main`
 

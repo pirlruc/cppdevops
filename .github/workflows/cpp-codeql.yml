@@ -20,7 +20,7 @@ on:
         type: string
         default: ""
       container_image:
-        description: Image for this job. Default is ci-cpp. Pass ci-cpp-vcpkg for manifest builds.
+        description: Image for this job. Default is ci-cpp, which includes vcpkg from 6.4.0. Callers on 6.3.0 still pass ci-cpp-vcpkg.
         required: false
         type: string
         default: ghcr.io/pirlruc/ci-cpp@sha256:88d24172b5b6ab74a4276a60bb341c238b072cb57169c690a21c2d2cfbeafbac

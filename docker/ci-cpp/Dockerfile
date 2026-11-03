@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
-# C++ analysis image on DHI Debian 13. Ubuntu compile coverage is
-# docker/ci-cpp/Dockerfile.ubuntu (CPP-BUILD-004). Devcontainers stay Ubuntu.
+# C++ analysis image on DHI Debian 13. vcpkg is installed in this image.
+# Devcontainers stay Ubuntu.
 #
 # No HEALTHCHECK: short-lived CI toolchain, not a supervised service.
 # kics-scan disable=b03a748a-542d-44f4-bb86-9199ab4fd2d5
@@ -19,21 +19,33 @@ RUN find /opt/venv -type d -name '__pycache__' -exec rm -rf {} +
 FROM dhi.io/python:3.13-debian13-dev@sha256:2b8a45bc49c1398c8ef8e9092b9a2d028a878e7229f5ff86913f551a089372b3
 
 LABEL org.opencontainers.image.title="ci-cpp" \
-      org.opencontainers.image.description="C++ analysis toolchain: Clang 18, libclang, libc++, CMake, Ninja, cppcheck, clang-tidy, Doxygen, gcovr, lizard, Metrix++, valgrind. Debian 13. Non-root 1000:1000, linux/amd64." \
+      org.opencontainers.image.description="C++ analysis toolchain: Clang 18, libclang, libc++, CMake, Ninja, vcpkg, cppcheck, clang-tidy, Doxygen, gcovr, lizard, Metrix++, valgrind. Debian 13. Non-root 1000:1000, linux/amd64." \
       org.opencontainers.image.source="https://github.com/pirlruc/cppdevops" \
       org.opencontainers.image.vendor="pirlruc" \
       org.opencontainers.image.licenses="MIT"
 
 ENV DEBIAN_FRONTEND=noninteractive \
-    PATH="/opt/venv/bin:/usr/local/bin:${PATH}" \
+    PATH="/opt/venv/bin:/opt/vcpkg:/usr/local/bin:${PATH}" \
     PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    VCPKG_ROOT=/opt/vcpkg \
+    VCPKG_DISABLE_METRICS=1 \
+    VCPKG_DEFAULT_BINARY_CACHE=/vcpkg-cache \
+    VCPKG_DEFAULT_TRIPLET=x64-linux-libcxx \
+    VCPKG_OVERLAY_TRIPLETS=/opt/vcpkg-triplets \
+    VCPKG_FORCE_SYSTEM_BINARIES=1
 
 USER root
 # libclang-rt-18-dev Depends on lib32stdc++6, which conflicts with the DHI
 # libc. Extract the deb so the amd64 sanitizer runtimes are present.
+# The base image ships gcc-14-base +dhi5. Current clang depends on
+# +deb13u0+dhi6, which apt treats as a downgrade of that trio.
+ARG VCPKG_COMMIT=434307da09bc05b2c86996dccc8b2351fc0d5d37
 RUN apt-get update \
- && apt-get install -y --no-install-recommends \
+ && apt-get install -y --allow-downgrades --no-install-recommends \
+      gcc-14-base=14.2.0-19+deb13u0+dhi6 \
+      libgcc-s1=14.2.0-19+deb13u0+dhi6 \
+      libstdc++6=14.2.0-19+deb13u0+dhi6 \
       clang-18=1:18.1.8-18+b1 \
       clang-tidy-18=1:18.1.8-18+b1 \
       libc++-18-dev=1:18.1.8-18+b1 \
@@ -48,6 +60,12 @@ RUN apt-get update \
       doxygen=1.9.8+ds-2.1 \
       git=1:2.47.3-0+deb13u1+dhi2 \
       ca-certificates=20250419+deb13u1+dhi0 \
+      curl=8.14.1-2+deb13u7+dhi0 \
+      gzip=1.13-1+deb13u1+dhi1 \
+      zip=3.0-15+deb13u1+dhi1 \
+      unzip=6.0-29+deb13u1+dhi1 \
+      pkgconf=1.8.1-4+deb13u0+dhi1 \
+      nasm=2.16.03-1 \
  && apt-get download libclang-rt-18-dev=1:18.1.8-18+b1 \
  && dpkg-deb -x libclang-rt-18-dev_*.deb /tmp/rt \
  && cp -a /tmp/rt/usr/. /usr/ \
@@ -64,8 +82,17 @@ RUN apt-get update \
       printf 'ci:x:1000:\n' >> /etc/group; \
     fi \
  && mkdir -p /home/ci /workspace \
- && chown -R 1000:1000 /workspace /home/ci
+ && chown -R 1000:1000 /workspace /home/ci \
+ && curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors -o /tmp/vcpkg.tar.gz \
+      "https://github.com/microsoft/vcpkg/archive/${VCPKG_COMMIT}.tar.gz" \
+ && tar -xzf /tmp/vcpkg.tar.gz -C /opt \
+ && rm -f /tmp/vcpkg.tar.gz \
+ && mv "/opt/vcpkg-${VCPKG_COMMIT}" /opt/vcpkg \
+ && /opt/vcpkg/bootstrap-vcpkg.sh -disableMetrics \
+ && mkdir -p /vcpkg-cache /opt/vcpkg-triplets \
+ && chown -R 1000:1000 /opt/vcpkg /vcpkg-cache /opt/vcpkg-triplets
 
+COPY --chown=1000:1000 triplets/x64-linux-libcxx.cmake /opt/vcpkg-triplets/x64-linux-libcxx.cmake
 COPY --from=pybuild --chown=1000:1000 /opt/venv /opt/venv
 
 WORKDIR /workspace

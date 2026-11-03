@@ -72,7 +72,7 @@ jobs:
       - name: shellcheck
         run: find scripts -name '*.sh' -print0 | xargs -0 shellcheck
       - name: hadolint
-        run: hadolint docker/ci-cpp/Dockerfile docker/ci-cpp/Dockerfile.alpine docker/ci-cpp-ubuntu/Dockerfile docker/ci-cpp-vcpkg/Dockerfile docker/ci-cpp-opencv/Dockerfile
+        run: hadolint docker/ci-cpp/Dockerfile docker/ci-cpp/Dockerfile.alpine docker/ci-cpp-opencv/Dockerfile
       - name: zizmor
         run: zizmor --min-severity=low -c .github/config/zizmor.yml .github/workflows
 
@@ -102,7 +102,7 @@ jobs:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       working_directory: .
       shell_scripts: scripts/*.sh
-      dockerfiles: docker/ci-cpp/Dockerfile docker/ci-cpp/Dockerfile.alpine docker/ci-cpp-ubuntu/Dockerfile docker/ci-cpp-vcpkg/Dockerfile docker/ci-cpp-opencv/Dockerfile
+      dockerfiles: docker/ci-cpp/Dockerfile docker/ci-cpp/Dockerfile.alpine docker/ci-cpp-opencv/Dockerfile
       scripts_ref: b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
       container_image: ghcr.io/pirlruc/ci-lint@sha256:f9001c4c8726f72107545094237d4fc0592baca023cfa299a532634666d88111
   threshold-drift:

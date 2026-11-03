@@ -1,14 +1,13 @@
 # ci-cpp
 
 Short-lived C++ analysis image. Debian 13 owns the unsuffixed tags (Clang 18,
-libc++, CMake, Ninja, cppcheck, clang-tidy/format, Doxygen, gcovr, lizard,
-Metrix++, valgrind). Alpine 3.24 is the `-alpine` variant (Clang 20,
-because Alpine libc++ is LLVM 22). Not a product runtime — no `HEALTHCHECK`.
-graphviz and cloc are not installed.
+libc++, CMake, Ninja, vcpkg, cppcheck, clang-tidy/format, Doxygen, gcovr,
+lizard, Metrix++, valgrind). Alpine 3.24 is the `-alpine` variant (Clang 20,
+because Alpine libc++ is LLVM 22) and carries the same vcpkg. Not a product
+runtime — no `HEALTHCHECK`. graphviz and cloc are not installed.
 
-Compile-only and dependency images are separate names:
-[ci-cpp-ubuntu](https://hub.docker.com/r/pirlruc/ci-cpp-ubuntu),
-[ci-cpp-vcpkg](https://hub.docker.com/r/pirlruc/ci-cpp-vcpkg),
+`ci-cpp-ubuntu` and `ci-cpp-vcpkg` stopped at 6.3.0. New builds put vcpkg in
+this image. OpenCV stays on
 [ci-cpp-opencv](https://hub.docker.com/r/pirlruc/ci-cpp-opencv).
 
 ## Image
@@ -87,9 +86,10 @@ docker run --rm \
 | gcovr / llvm-cov | Coverage |
 | lizard / Metrix++ / Doxygen / libclang | Complexity and API doc coverage |
 | valgrind | Dynamic analysis |
+| vcpkg `434307da` | `/opt/vcpkg`. Triplet `x64-linux-libcxx` at `/opt/vcpkg-triplets` |
 
-Not included: vcpkg, OpenCV, Eigen. Those live on `ci-cpp-vcpkg` and
-`ci-cpp-opencv`.
+The published 6.3.0 rows above do not include vcpkg. 6.4.0 is the first tag
+that does. Not included: OpenCV and Eigen 3.4. Those stay on `ci-cpp-opencv`.
 
 ## Verify a publish
 

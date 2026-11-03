@@ -4,11 +4,27 @@
 # distro package so find_package(Eigen3) stays on 3.4. Overlay ports make
 # manifest installs reuse those system libraries instead of compiling them.
 # vcpkg and the libc++ triplet are copied from the build stage. curl stays in
-# the build stage only.
+# the build stage only. Analysis tools live in a hashed uv venv; gcovr is not
+# installed from apt.
 # No HEALTHCHECK. kics-scan disable=b03a748a-542d-44f4-bb86-9199ab4fd2d5
 # Base tag in a comment for DOCKER-BUILD-003: ubuntu:24.04
-# Digest created 2026-10-25 (same index as ci-cpp-ubuntu). Refreshed
-# before the 30-day age gate.
+# Digest created 2026-10-25. Refreshed before the 30-day age gate.
+
+FROM docker.io/library/ubuntu:24.04@sha256:24737cef17f4e22b1977df7d9a05e77c4e28b7da5b8911f8d8ccda136bf3573c AS pybuild
+COPY --from=ghcr.io/astral-sh/uv:0.12.0@sha256:606e70c71c852d03f611b1e56a195d08648507018a7057fab82c4974c4eae105 \
+  /uv /usr/local/bin/uv
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+      ca-certificates=20260816ubuntu0.24.04.1 \
+      python3=3.12.3-0ubuntu2.1 \
+      python3-venv=3.12.3-0ubuntu2.1 \
+ && rm -rf /var/lib/apt/lists/*
+COPY requirements.txt /tmp/requirements.txt
+RUN /usr/local/bin/uv venv /opt/venv --python /usr/bin/python3 \
+ && /usr/local/bin/uv pip install --python /opt/venv/bin/python --no-cache --require-hashes \
+      -r /tmp/requirements.txt \
+ && rm -f /tmp/requirements.txt \
+ && find /opt/venv -type d -name '__pycache__' -exec rm -rf {} +
 
 FROM docker.io/library/ubuntu:24.04@sha256:24737cef17f4e22b1977df7d9a05e77c4e28b7da5b8911f8d8ccda136bf3573c AS opencv-build
 
@@ -81,13 +97,15 @@ RUN curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors -o /tmp/vcpkg.tar.gz
 FROM docker.io/library/ubuntu:24.04@sha256:24737cef17f4e22b1977df7d9a05e77c4e28b7da5b8911f8d8ccda136bf3573c
 
 LABEL org.opencontainers.image.title="ci-cpp-opencv" \
-      org.opencontainers.image.description="Compile image: Clang 18, libc++, CMake, Ninja, vcpkg, OpenCV 4.14.0, Eigen 3.4. Ubuntu 24.04. Non-root 1000:1000, linux/amd64." \
+      org.opencontainers.image.description="Compile image: Clang 18, libc++, CMake, Ninja, vcpkg, OpenCV 4.14.0, Eigen 3.4, gcovr, clang-tidy, cppcheck, valgrind. Ubuntu 24.04. Non-root 1000:1000, linux/amd64." \
       org.opencontainers.image.source="https://github.com/pirlruc/cppdevops" \
       org.opencontainers.image.vendor="pirlruc" \
       org.opencontainers.image.licenses="MIT"
 
 ENV DEBIAN_FRONTEND=noninteractive \
-    PATH="/opt/vcpkg:/usr/local/bin:${PATH}" \
+    PATH="/opt/venv/bin:/opt/vcpkg:/usr/local/bin:${PATH}" \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
     VCPKG_ROOT=/opt/vcpkg \
     VCPKG_DISABLE_METRICS=1 \
     VCPKG_DEFAULT_BINARY_CACHE=/vcpkg-cache \
@@ -113,8 +131,18 @@ RUN apt-get update \
       unzip=6.0-28ubuntu4.1 \
       zip=3.0-13ubuntu0.2 \
       zlib1g-dev=1:1.3.dfsg-3.1ubuntu2.3 \
+      python3=3.12.3-0ubuntu2.1 \
+      python3-venv=3.12.3-0ubuntu2.1 \
+      clang-format=1:18.0-59~exp2 \
+      clang-tidy=1:18.0-59~exp2 \
+      cppcheck=2.13.0-2ubuntu3 \
+      llvm-18=1:18.1.3-1ubuntu1 \
+      libclang-rt-18-dev=1:18.1.3-1ubuntu1 \
+      valgrind=1:3.22.0-0ubuntu3 \
+ && ln -sf /usr/bin/llvm-cov-18 /usr/local/bin/llvm-cov \
  && rm -rf /var/lib/apt/lists/*
 
+COPY --from=pybuild --chown=1000:1000 /opt/venv /opt/venv
 COPY --from=opencv-build /usr/local /usr/local
 COPY --from=opencv-build --chown=1000:1000 /opt/vcpkg /opt/vcpkg
 COPY triplets/ /opt/vcpkg-triplets/

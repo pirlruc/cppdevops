@@ -5,3 +5,5 @@
 !requirements.txt
 !requirements-alpine.txt
 !README.md
+!triplets
+!triplets/**

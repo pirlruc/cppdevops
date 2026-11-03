@@ -129,7 +129,7 @@ Task ids: `<EPIC-ID>-T1`, …
 | `.github/workflows/` | Reusable `cpp-*` workflows. `container:` pins are `ghcr.io/pirlruc/ci-cpp` at the linux/amd64 manifest. Jobs set `packages: read` and `container.credentials` with `GITHUB_TOKEN`, the same private-package pull as pydevops, and `--user root` so the runner can write |
 | `scripts/` | Coverage, Metrix++ (`std.code.mi:simple`), sync-library tooling. Quality cpplint honors `.cpplint` |
 | `templates/` | Library bootstrap configs |
-| `docker/<image>/` | One build context per published image name. `ci-cpp` keeps Debian and Alpine together. `ci-cpp-ubuntu`, `ci-cpp-vcpkg`, and `ci-cpp-opencv` are separate contexts |
+| `docker/<image>/` | One build context per published image name. `ci-cpp` keeps Debian and Alpine together and includes vcpkg. `ci-cpp-opencv` is its own context. `ci-cpp-ubuntu` and `ci-cpp-vcpkg` stopped at 6.3.0 |
 | `docs/docker-hub-<image>.md` / `docs/github-packages-<image>.md` | One registry page per image name. Derive which variant owns unsuffixed tags from that image's workflow |
 | `docs/` | Handoff, this prompt, authored `issues.yml`, deviations |
 | `.github/dependabot.yml` | Multi-ecosystem dependency updates |

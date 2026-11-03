@@ -7,8 +7,11 @@ and Eigen 3.4 from `libeigen3-dev`. The same image ships vcpkg, the
 no `HEALTHCHECK`.
 
 vcpkg is bootstrapped in the build stage. curl is not in the final image.
-Analysis tools stay on [ci-cpp](https://hub.docker.com/r/pirlruc/ci-cpp). A vcpkg image without
-OpenCV is [ci-cpp-vcpkg](https://hub.docker.com/r/pirlruc/ci-cpp-vcpkg).
+From 6.4.0 the final image also has clang-format, clang-tidy, cppcheck,
+valgrind, llvm-cov, and a hashed venv with gcovr, cpplint, lizard, and
+Metrix++. The 6.3.0 digest does not have those tools.
+[ci-cpp](https://hub.docker.com/r/pirlruc/ci-cpp) is the analysis image.
+`ci-cpp-vcpkg` stopped at 6.3.0.
 
 ## Image
 
@@ -52,10 +55,11 @@ docker pull pirlruc/ci-cpp-opencv@sha256:42ba66c3c4c1b4f9552d43f11fa6eace0560800
 | vcpkg `434307da` | `/opt/vcpkg`, triplet `/opt/vcpkg-triplets`, overlays `/opt/vcpkg-overlays` |
 | overlay `opencv4` | Empty port. Sets `OpenCV_DIR` to `/usr/local/lib/cmake/opencv4` |
 | overlay `eigen3` | Empty port. Sets `Eigen3_DIR` to `/usr/share/eigen3/cmake` |
+| gcovr / clang-format / clang-tidy / cppcheck / valgrind / llvm-cov | Present from 6.4.0. The 6.3.0 digest does not include them |
 
 System jpeg, png, and zlib are present. curl is not.
 
-The Ubuntu base matches `ci-cpp-ubuntu`:
+The Ubuntu base is
 `ubuntu:24.04@sha256:24737cef17f4e22b1977df7d9a05e77c4e28b7da5b8911f8d8ccda136bf3573c`.
 
 ## License

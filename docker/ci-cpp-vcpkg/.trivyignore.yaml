@@ -1,4 +1,0 @@
-# ci-cpp-vcpkg library scan, 2026-10-27.
-# A local Trivy scan of the rebuilt image reported no HIGH or CRITICAL
-# finding, including CVE-2025-47273. No path-scoped ignores remain.
-vulnerabilities: []

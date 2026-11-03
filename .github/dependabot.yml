@@ -59,31 +59,6 @@ updates:
         versions: [">= 3.14"]
 
   - package-ecosystem: docker
-    directory: /docker/ci-cpp-ubuntu
-    patterns: ["*"]
-    multi-ecosystem-group: all-dependencies
-    registries:
-      - github-private
-      - dhi
-    cooldown:
-      default-days: 7
-    ignore:
-      # CPP-BUILD-004: Ubuntu 24.04 is the compile-and-ctest reference OS.
-      # Review 2027-01-31.
-      - dependency-name: "library/ubuntu"
-        versions: [">= 24.10"]
-
-  - package-ecosystem: docker
-    directory: /docker/ci-cpp-vcpkg
-    patterns: ["*"]
-    multi-ecosystem-group: all-dependencies
-    registries:
-      - github-private
-      - dhi
-    cooldown:
-      default-days: 7
-
-  - package-ecosystem: docker
     directory: /docker/ci-cpp-opencv
     patterns: ["*"]
     multi-ecosystem-group: all-dependencies
