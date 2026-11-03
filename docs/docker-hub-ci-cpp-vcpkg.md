@@ -1,11 +1,12 @@
 # ci-cpp-vcpkg
 
-The Debian analysis image plus a pinned vcpkg
-(`434307da09bc05b2c86996dccc8b2351fc0d5d37`). OpenCV is not installed.
-Builds use `VCPKG_DEFAULT_BINARY_CACHE`. The image sets
-`VCPKG_DEFAULT_TRIPLET=x64-linux-libcxx` so ports link libc++, the same
-standard library the libraries compile with. Not a product runtime — no
-`HEALTHCHECK`.
+Stopped at 6.3.0. vcpkg now ships in
+[ci-cpp](https://hub.docker.com/r/pirlruc/ci-cpp) (Debian and Alpine). Keep
+the 6.3.0 digest below until a caller moves. This name is not rebuilt.
+
+The 6.3.0 image is the Debian analysis image of that release plus vcpkg
+`434307da09bc05b2c86996dccc8b2351fc0d5d37`. OpenCV is not installed. Not a
+product runtime — no `HEALTHCHECK`.
 
 Analysis tools are documented on [ci-cpp](https://hub.docker.com/r/pirlruc/ci-cpp). OpenCV and
 Eigen from the image are [ci-cpp-opencv](https://hub.docker.com/r/pirlruc/ci-cpp-opencv).

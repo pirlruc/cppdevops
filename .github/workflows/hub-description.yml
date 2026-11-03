@@ -36,7 +36,7 @@ jobs:
     with:
       dockerhub_image: pirlruc/ci-cpp-ubuntu
       dockerhub_readme: docs/docker-hub-ci-cpp-ubuntu.md
-      dockerhub_short_description: Compile-only C++ toolchain on Ubuntu 24.04
+      dockerhub_short_description: Stopped at 6.3.0. Compile-only C++ toolchain on Ubuntu 24.04
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_DESCRIPTION_TOKEN: ${{ secrets.DOCKERHUB_DESCRIPTION_TOKEN }}
@@ -48,7 +48,7 @@ jobs:
     with:
       dockerhub_image: pirlruc/ci-cpp-vcpkg
       dockerhub_readme: docs/docker-hub-ci-cpp-vcpkg.md
-      dockerhub_short_description: C++ CI toolchain with vcpkg, OpenCV via binary cache
+      dockerhub_short_description: Stopped at 6.3.0. vcpkg now ships in ci-cpp
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_DESCRIPTION_TOKEN: ${{ secrets.DOCKERHUB_DESCRIPTION_TOKEN }}

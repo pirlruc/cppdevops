@@ -53,6 +53,46 @@ commandTests:
       - "-c"
       - "test -f /opt/vcpkg-overlays/opencv4/portfile.cmake && test -f /opt/vcpkg-overlays/eigen3/portfile.cmake"
     exitCode: 0
+  - name: llvm-cov
+    command: "llvm-cov"
+    args: ["--version"]
+    exitCode: 0
+  - name: profile runtime
+    command: "test"
+    args: ["-f", "/usr/lib/llvm-18/lib/clang/18/lib/linux/libclang_rt.profile-x86_64.a"]
+    exitCode: 0
+  - name: gcovr
+    command: "gcovr"
+    args: ["--version"]
+    exitCode: 0
+  - name: cpplint
+    command: "cpplint"
+    args: ["--version"]
+    exitCode: 0
+  - name: lizard
+    command: "lizard"
+    args: ["--version"]
+    exitCode: 0
+  - name: metrix++
+    command: "metrix++"
+    args: ["--help"]
+    exitCode: 0
+  - name: clang-format
+    command: "clang-format"
+    args: ["--version"]
+    exitCode: 0
+  - name: clang-tidy
+    command: "clang-tidy"
+    args: ["--version"]
+    exitCode: 0
+  - name: cppcheck
+    command: "cppcheck"
+    args: ["--version"]
+    exitCode: 0
+  - name: valgrind
+    command: "valgrind"
+    args: ["--version"]
+    exitCode: 0
   - name: curl is not in the final image
     command: "bash"
     args: ["-c", "! command -v curl"]

@@ -1,6 +1,6 @@
 # ci-cpp-vcpkg (GitHub Packages)
 
-Debian analysis image plus pinned vcpkg. Same contents as
+Stopped at 6.3.0. vcpkg now ships in ci-cpp. Same historical contents as
 [docker-hub-ci-cpp-vcpkg.md](https://hub.docker.com/r/pirlruc/ci-cpp-vcpkg). Not a product
 runtime — no `HEALTHCHECK`.
 

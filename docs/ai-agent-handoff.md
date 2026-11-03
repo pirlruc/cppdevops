@@ -6,7 +6,7 @@
 |-------|-------|
 | **Folder** | cppdevops |
 | **Remote** | https://github.com/pirlruc/cppdevops |
-| **Branch** | `main`. GitHub Release **v6.3.0** published the images. Tag **v6.3.1** records the 6.3.0 manifests and does not republish. **v6.3.2** grants the CodeQL job `actions: read` and does not republish. commondevops callers pin **5.6.2** (`b85f95bb`). containerdevops callers pin **6.3.6** (`b419c24c`). Do not move v6.1.0 through v6.3.1. |
+| **Branch** | `feature-image-consolidation`. `main` is `54f4171`. GitHub Release **v6.3.0** published the images. Tag **v6.3.1** records the 6.3.0 manifests and does not republish. **v6.3.2** grants the CodeQL job `actions: read` and does not republish. Do not move v6.1.0 through v6.3.2. 6.4.0 is the image consolidation and is not published yet. commondevops callers pin **5.6.2** (`b85f95bb`). containerdevops callers pin **6.3.6** (`b419c24c`). |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
@@ -20,9 +20,9 @@ Owns reusable workflows under `.github/workflows/`:
 - `cpp-mobile-matrix.yml` (real NDK/Xcode smoke compile)
 - Self-CI: `cppdevops-ci.yml`, `cppdevops-security.yml`, `ci-cpp-image.yml`
 
-Also owns `templates/`, `scripts/sync-library-*.sh`, and one Docker context per
-image: `docker/ci-cpp/`, `docker/ci-cpp-ubuntu/`, `docker/ci-cpp-vcpkg/`,
-`docker/ci-cpp-opencv/`.
+Also owns `templates/`, `scripts/sync-library-*.sh`, and the live Docker
+contexts `docker/ci-cpp/` (Debian and Alpine, both with vcpkg) and
+`docker/ci-cpp-opencv/`. `ci-cpp-ubuntu` and `ci-cpp-vcpkg` stopped at 6.3.0.
 
 Standalone library callers should pin `pirlruc/cppdevops@<sha>` (`CI-018`)
 and pass the same value as `scripts_ref`. The published analysis image is
@@ -80,8 +80,6 @@ Contract reference: [`docs/workflows.md`](workflows.md).
 ```bash
 docker build -t ci-cpp:debian-local docker/ci-cpp
 docker build -f docker/ci-cpp/Dockerfile.alpine -t ci-cpp:alpine-local docker/ci-cpp
-docker build -t ci-cpp-ubuntu:local docker/ci-cpp-ubuntu
-docker build -t ci-cpp-vcpkg:debian-local docker/ci-cpp-vcpkg
 docker build -t ci-cpp-opencv:local docker/ci-cpp-opencv
 ./scripts/check-ci-local.sh
 ./scripts/check-ci-docker.sh
@@ -142,7 +140,7 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Suggested next work
 
-1. CPPD-SCAN-001 stays open. `ubuntu:24.04` index `sha256:68ee2200…` is still the current noble tag (created 2026-09-30), so the 30-day age gate falls on 2026-10-30. There is no newer index. Do not leave 24.04. The pin is in `docker/ci-cpp-ubuntu/Dockerfile` and `docker/ci-cpp-opencv/Dockerfile`.
+1. CPPD-SCAN-001 stays open. The Ubuntu pin is only in `docker/ci-cpp-opencv/Dockerfile`. Do not leave 24.04. Do not retag v6.3.0 through v6.3.2.
 2. Callers that need vcpkg must pin the `linux/amd64` image manifest `sha256:b8da2259…`, not the tag index `sha256:b92e65c8…`. The same rule applies to `ci-cpp-opencv` (image `sha256:c167f4b2…`, index `sha256:79089fae…`).
 3. Library callers pass `run_ios: false`. iOS is a recorded `CPP-BUILD-010` deviation.
 4. The weekly token audit passes the three read tokens. `SCORECARD_TOKEN` is not set. Expiries were confirmed on 2026-10-23.
@@ -151,20 +149,17 @@ python3 .github/scaffold/scripts/issues-sync.py \
 7. CPPD-PRIV-001 is done. The reusable C++ jobs already set `container.credentials`. Scorecard alerts 298, 308, and 300 were dismissed under CI-042 (review 2026-12-31). Alerts on jobs that also hold `packages: write`, `actions: write`, or `id-token: write` stay open.
 8. CPPD-PKG-001 is open. Before any library leaves `c4309e56`, add bifrost-cpp, bor-cpp, draupnir-cpp, edda-cpp, heimdallcv, mimir-cpp, mjolnir-cpp, nornir-cpp, and runa-cpp to the private `ci-lint` and `ci-supply-chain` allow lists. Those pins do not pull the packages today. `ci-iac` has no library caller.
 
-## ci-cpp-vcpkg
+## vcpkg
 
-`docker/ci-cpp-vcpkg/Dockerfile` starts FROM the published Debian ci-cpp digest
-and adds vcpkg. ci-cpp itself stays free of OpenCV (DOCKER-PERF-002).
+Debian and Alpine `ci-cpp` install vcpkg `434307da` at `/opt/vcpkg` with
+`VCPKG_FORCE_SYSTEM_BINARIES=1` and triplet `x64-linux-libcxx`. Alpine
+bootstraps with `-musl` because the glibc vcpkg binary does not run there.
+The published
+6.3.0 `ci-cpp-vcpkg` digest `sha256:e551e5f6…` stays until callers move. Do not
+rebuild that name. `run_ubuntu_compile` remains an input. The job is a no-op
+and does not compile, because actionlint rejects `if: false`.
 
-```bash
-docker build -t ci-cpp-vcpkg:debian-local docker/ci-cpp-vcpkg
-docker volume create pirlruc-vcpkg-cache
-docker run --rm -v pirlruc-vcpkg-cache:/vcpkg-cache -v "$PWD":/src -w /src \
-  -e VCPKG_DEFAULT_BINARY_CACHE=/vcpkg-cache ci-cpp-vcpkg:debian-local \
-  vcpkg version
-```
-
-GitHub jobs pass `use_vcpkg: true` and `container_image` once the image is
+GitHub jobs pass `use_vcpkg: true` and `container_image` once 6.4.0 is
 published. `scripts/prepare-vcpkg.sh` writes `checkout_token` only into a
 gitconfig under `RUNNER_TEMP`.
 
@@ -270,4 +265,6 @@ gitconfig under `RUNNER_TEMP`.
 
 - 2026-11-02: `cpp-tests.yml` input `run_ubuntu_compile` defaults to true. Callers that need OpenCV set it false because `ci-cpp-ubuntu` does not ship that library. Quality, tests, docs, dynamic, and CodeQL set `defaults.run.shell` to bash after `on:`, because a default placed above `on:` was ignored and `ci-cpp-opencv` has dash as `/bin/sh`. Doc coverage follows directory symlinks under `include/`. The quality job also sets `shell: bash` in its own `defaults.run`, because that block replaced the workflow shell.
 
-*Last updated: 2026-11-03 (coverage filter, release attestations, checkout token forward).*
+- 2026-11-03: Image consolidation on `feature-image-consolidation`. vcpkg folds into Debian and Alpine `ci-cpp`. `ci-cpp-opencv` gains a uv venv and llvm-cov. `ci-cpp-ubuntu` and `ci-cpp-vcpkg` directories are removed. Do not merge PRs #174 or #169. Do not `workflow_dispatch` with `publish: true`. Publish happens from the 6.4.0 release event. v6.4.1 is the later digest write-back and must not republish.
+
+*Last updated: 2026-11-03 (image consolidation, vcpkg folded into ci-cpp).*

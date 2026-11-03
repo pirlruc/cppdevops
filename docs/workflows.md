@@ -17,9 +17,9 @@ Shared inputs:
 | `library_path` | string | (required on most) | Library root relative to the caller checkout |
 | `blocking` | bool | `false` | `false` → collect-then-fail stays advisory (`ADVISORY=true`); missing tools/thresholds always fail |
 | `scripts_ref` | string | `""` | Commit SHA matching the `uses:` pin. Required for cross-repo callers (CI-034). |
-| `container_image` | string | ci-cpp digest | quality, tests, codeql, dynamic. Pass `ci-cpp-vcpkg` for manifest builds. |
+| `container_image` | string | ci-cpp digest | quality, tests, codeql, dynamic. Debian and Alpine `ci-cpp` include vcpkg from 6.4.0. Callers still on 6.3.0 pass `ci-cpp-vcpkg`. |
 | `use_vcpkg` | bool | `false` | Manifest mode plus a files binary cache. The image must set `VCPKG_ROOT`. Private ports need `checkout_token`. |
-| `vcpkg_triplet` | string | `""` | Sets `VCPKG_DEFAULT_TRIPLET` when non-empty. ci-cpp-vcpkg and ci-cpp-opencv ship `x64-linux-libcxx`. Docs accepts the input and does not install ports. |
+| `vcpkg_triplet` | string | `""` | Sets `VCPKG_DEFAULT_TRIPLET` when non-empty. `ci-cpp` and `ci-cpp-opencv` ship `x64-linux-libcxx`. Docs accepts the input and does not install ports. |
 | `run_ios` | bool | `true` | Mobile matrix only. `false` skips the macOS iOS smoke job. |
 | `checkout_token` (secret) | string | — | PAT with `contents:read` on `pirlruc/cppdevops` for quality/tests/docs/codeql/dynamic/mobile/fuzz, on `commondevops` for security/infra, and on private library repos when `use_vcpkg` clones them. |
 
@@ -59,7 +59,7 @@ CMake configure/build, CTest, coverage gate (`scripts/check-coverage.sh`).
 | `library_path` | required |
 | `cmake_preset` | `ci-linux` |
 | `blocking` | `false` |
-| `run_ubuntu_compile` | `true`. Set `false` when `ci-cpp-ubuntu` does not have a library the build links, such as OpenCV |
+| `run_ubuntu_compile` | `true`. The input stays so old callers validate. The job is a no-op and does not compile; `ci-cpp-ubuntu` stopped at 6.3.0 |
 
 ---
 
@@ -180,10 +180,10 @@ repository (CPPD-MOBILE-002, CPPD-PIN-002).
 
 ## `ci-cpp-image.yml` (caller)
 
-Thin caller into containerdevops. One context per image name, matching
-commondevops: `docker/ci-cpp/` (Debian and Alpine), `docker/ci-cpp-ubuntu/`,
-`docker/ci-cpp-vcpkg/`, `docker/ci-cpp-opencv/`. Hub pages are
-`docs/docker-hub-<image>.md`. Triggers (same shape as commondevops
+Thin caller into containerdevops. One context per image name:
+`docker/ci-cpp/` (Debian and Alpine, both with vcpkg) and
+`docker/ci-cpp-opencv/`. `ci-cpp-ubuntu` and `ci-cpp-vcpkg` stopped at 6.3.0.
+Hub pages are `docs/docker-hub-<image>.md`. Triggers (same shape as commondevops
 `ci-lint-image.yml`):
 
 | Trigger | Behaviour |

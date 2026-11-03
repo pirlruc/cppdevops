@@ -5,6 +5,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Changed
+
+- Debian and Alpine `ci-cpp` include vcpkg `434307da` and the
+  `x64-linux-libcxx` triplet. `ci-cpp-opencv` adds analysis tools from a
+  hashed uv venv plus llvm-cov. `ci-cpp-ubuntu` and `ci-cpp-vcpkg` are not
+  rebuilt after 6.3.0. `run_ubuntu_compile` stays as an input. The job is a
+  no-op and does not compile.
+
 ## [6.3.2] - 2026-10-28
 
 ### Fixed

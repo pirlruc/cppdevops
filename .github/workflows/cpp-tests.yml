@@ -20,7 +20,7 @@ on:
         type: string
         default: ""
       container_image:
-        description: Image for the tests job. Default is ci-cpp. Pass ci-cpp-vcpkg for manifest builds.
+        description: Image for the tests job. Default is ci-cpp, which includes vcpkg from 6.4.0. Callers on 6.3.0 still pass ci-cpp-vcpkg.
         required: false
         type: string
         default: ghcr.io/pirlruc/ci-cpp@sha256:88d24172b5b6ab74a4276a60bb341c238b072cb57169c690a21c2d2cfbeafbac
@@ -35,7 +35,7 @@ on:
         type: string
         default: ""
       run_ubuntu_compile:
-        description: Also compile on ci-cpp-ubuntu without vcpkg. Turn off when that image lacks a required library.
+        description: Deprecated. Kept so existing callers still validate. The job is a no-op and does not compile.
         required: false
         type: boolean
         default: true
@@ -170,33 +170,7 @@ jobs:
             coverage="${COVERAGE}"
 
   ubuntu-compile:
-    if: inputs.run_ubuntu_compile
     runs-on: ubuntu-24.04
-    container:
-      image: ghcr.io/pirlruc/ci-cpp-ubuntu@sha256:2a7622d8299d126f127847c09818de867170a3992efead0d1ecd7edd41c2a3d5
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-      options: --user root
-    timeout-minutes: 30
-    permissions:
-      contents: read
-      packages: read
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - name: Configure, build, and test
-        working-directory: ${{ inputs.library_path }}
-        env:
-          CMAKE_PRESET: ${{ inputs.cmake_preset }}
-        run: |
-          cmake --preset "${CMAKE_PRESET}" \
-            -DPIRLRUC_WITH_TESTS=ON \
-            -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wdocumentation -Wdocumentation-unknown-command -Werror=documentation -Werror=documentation-unknown-command" \
-            || cmake -B build \
-              -DPIRLRUC_WITH_TESTS=ON \
-              -DCMAKE_CXX_COMPILER=clang++ \
-              -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wdocumentation -Wdocumentation-unknown-command -Werror=documentation -Werror=documentation-unknown-command"
-          cmake --build build -j
-          ctest --test-dir build --output-on-failure
+      - name: Retired
+        run: echo "ci-cpp-ubuntu stopped at 6.3.0; this job does not compile"

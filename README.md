@@ -117,6 +117,8 @@ Deviations: [`docs/guardrail-deviations.yml`](docs/guardrail-deviations.yml) onl
 | `ci-cpp-vcpkg` | [`docs/docker-hub-ci-cpp-vcpkg.md`](docs/docker-hub-ci-cpp-vcpkg.md) | [`docs/github-packages-ci-cpp-vcpkg.md`](docs/github-packages-ci-cpp-vcpkg.md) |
 | `ci-cpp-opencv` | [`docs/docker-hub-ci-cpp-opencv.md`](docs/docker-hub-ci-cpp-opencv.md) | [`docs/github-packages-ci-cpp-opencv.md`](docs/github-packages-ci-cpp-opencv.md) |
 
+`ci-cpp-ubuntu` and `ci-cpp-vcpkg` stopped at 6.3.0. Their pages keep that digest. vcpkg is in `ci-cpp` from 6.4.0.
+
 ## Review protocol
 
 Changes to reusable workflow bodies affect all libraries — submit as a separate

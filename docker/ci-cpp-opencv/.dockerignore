@@ -6,3 +6,5 @@
 !vcpkg-overlays
 !vcpkg-overlays/**
 !README.md
+!requirements.txt
+!requirements.in

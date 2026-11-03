@@ -17,8 +17,7 @@ fi
 if [[ $# -eq 0 ]]; then
   set -- \
     docker/ci-cpp/Dockerfile \
-    docker/ci-cpp-ubuntu/Dockerfile \
-    docker/ci-cpp-vcpkg/Dockerfile \
+    docker/ci-cpp/Dockerfile.alpine \
     docker/ci-cpp-opencv/Dockerfile
 fi
 

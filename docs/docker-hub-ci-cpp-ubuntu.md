@@ -1,8 +1,11 @@
 # ci-cpp-ubuntu
 
-Compile-only C++ image: Clang 18, libc++, CMake, Ninja, and git on Ubuntu
-24.04. Analysis tools stay on [ci-cpp](https://hub.docker.com/r/pirlruc/ci-cpp). Not a product
-runtime — no `HEALTHCHECK`.
+Stopped at 6.3.0. The compile job that used this image no longer runs.
+Keep the 6.3.0 digest below for anything that still pins it. This name is
+not rebuilt.
+
+6.3.0 is a compile-only C++ image: Clang 18, libc++, CMake, Ninja, and git
+on Ubuntu 24.04. Not a product runtime — no `HEALTHCHECK`.
 
 ## Image
 

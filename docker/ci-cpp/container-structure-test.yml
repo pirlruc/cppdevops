@@ -66,6 +66,14 @@ commandTests:
     command: "llvm-cov"
     args: ["--version"]
     exitCode: 0
+  - name: vcpkg
+    command: "vcpkg"
+    args: ["version"]
+    exitCode: 0
+  - name: libc++ triplet
+    command: "test"
+    args: ["-f", "/opt/vcpkg-triplets/x64-linux-libcxx.cmake"]
+    exitCode: 0
   - name: "no setuid or setgid files"
     command: "sh"
     args:
