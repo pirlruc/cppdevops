@@ -66,6 +66,8 @@ jobs:
       working_directory: ${{ inputs.library_path }}
       scripts_ref: b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
       container_image: ghcr.io/pirlruc/ci-lint@sha256:f9001c4c8726f72107545094237d4fc0592baca023cfa299a532634666d88111
+    secrets:
+      checkout_token: ${{ secrets.checkout_token }}
   supply-chain:
     # CI-024; gated by run_sbom (default true for SC-SBOM-001).
     if: github.event.pull_request.user.login != 'dependabot[bot]' && inputs.run_sbom
@@ -80,3 +82,5 @@ jobs:
       working_directory: ${{ inputs.library_path }}
       scripts_ref: b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
       container_image: ghcr.io/pirlruc/ci-supply-chain@sha256:dc83deb4465d5989a03b14ccabef46c3f3426231048b962c69b8e434a7200d48
+    secrets:
+      checkout_token: ${{ secrets.checkout_token }}

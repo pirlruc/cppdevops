@@ -161,12 +161,17 @@ def main() -> None:
         *args.clang_args,
     ]
     lines = ['#include "' + path.relative_to(include).as_posix() + '"' for path in headers]
-    with tempfile.NamedTemporaryFile("w", suffix=".cpp", delete=False) as handle:
-        handle.write("\n".join(lines) + "\n")
-        source = handle.name
-    tu = parse_tu(index, source, clang_args)
-    seen: dict[str, bool] = {}
-    walk(tu.cursor, include, seen)
+    source = ""
+    try:
+        with tempfile.NamedTemporaryFile("w", suffix=".cpp", delete=False) as handle:
+            handle.write("\n".join(lines) + "\n")
+            source = handle.name
+        tu = parse_tu(index, source, clang_args)
+        seen: dict[str, bool] = {}
+        walk(tu.cursor, include, seen)
+    finally:
+        if source:
+            os.unlink(source)
     total = len(seen)
     if total == 0:
         print("error: the AST contained no public declarations", file=sys.stderr)
