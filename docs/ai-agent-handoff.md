@@ -270,3 +270,4 @@ gitconfig under `RUNNER_TEMP`.
 - 2026-11-03: v6.4.0 published the folded images. v6.4.1 records the linux/amd64 manifests and does not republish. Debian `sha256:3f477649…`, Alpine `sha256:817f7935…`, OpenCV `sha256:5c603b88…`.
 
 *Last updated: 2026-11-03 (v6.4.0 published, v6.4.1 digest write-back).*
+*Last updated: 2026-11-04 — workflows no longer pass COMMONDEVOPS_READ_TOKEN, CONTAINERDEVOPS_READ_TOKEN, or a Dependabot secret as a checkout token. The secrets are still present until they are deleted.*

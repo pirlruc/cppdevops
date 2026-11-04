@@ -47,8 +47,6 @@ jobs:
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       scripts_ref: b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
-    secrets:
-      checkout_token: ${{ github.event.pull_request.user.login == 'dependabot[bot]' && secrets.DEPENDABOT_GITHUB_TOKEN || secrets.COMMONDEVOPS_READ_TOKEN }}
 
   lint-dependabot:
     if: github.event.pull_request.user.login == 'dependabot[bot]'
@@ -88,8 +86,6 @@ jobs:
       yaml_globs: .github/workflows/*.yml
       run_link_lint: true
       scripts_ref: b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
-    secrets:
-      checkout_token: ${{ github.event.pull_request.user.login == 'dependabot[bot]' && secrets.DEPENDABOT_GITHUB_TOKEN || secrets.COMMONDEVOPS_READ_TOKEN }}
 
   infra-lint:
     if: github.event.pull_request.user.login != 'dependabot[bot]'

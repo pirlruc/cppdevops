@@ -53,9 +53,6 @@ jobs:
       run_infra_lint: false
       run_secrets_scan: true
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
-    secrets:
-      checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
-      scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
 
   build:
     needs: [lint]
@@ -86,7 +83,6 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
 
   scan:
     needs: build
@@ -108,8 +104,6 @@ jobs:
       pkg_types: library
       ignorefile: docker/ci-cpp/.trivyignore.yaml
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
-    secrets:
-      scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
 
   scan-posture:
     needs: build
@@ -131,8 +125,6 @@ jobs:
       pkg_types: os,library
       ignorefile: none
       blocking: false
-    secrets:
-      scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
 
   publish:
     needs: [build, scan]
@@ -177,7 +169,6 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
 
   cleanup:
     needs: [build, scan, publish]
@@ -207,9 +198,6 @@ jobs:
       run_infra_lint: false
       run_secrets_scan: true
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
-    secrets:
-      checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
-      scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
 
   build-alpine:
     needs: [lint-alpine]
@@ -235,7 +223,6 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
 
   scan-alpine:
     needs: build-alpine
@@ -257,8 +244,6 @@ jobs:
       pkg_types: library
       ignorefile: docker/ci-cpp/.trivyignore.yaml
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
-    secrets:
-      scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
 
   publish-alpine:
     needs: [build-alpine, scan-alpine]
@@ -295,7 +280,6 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
 
   lint-opencv:
     if: >-
@@ -315,9 +299,6 @@ jobs:
       run_infra_lint: false
       run_secrets_scan: true
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
-    secrets:
-      checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
-      scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
 
   build-opencv:
     needs: [lint-opencv]
@@ -344,8 +325,6 @@ jobs:
         Compile image with OpenCV 4.14.0, Eigen 3.4, a libc++ vcpkg, and analysis tools.
         Non-root 1000:1000, linux/amd64.
       dhi_login: false
-    secrets:
-      scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
 
   scan-opencv:
     needs: build-opencv
@@ -367,8 +346,6 @@ jobs:
       pkg_types: library
       ignorefile: docker/ci-cpp-opencv/.trivyignore.yaml
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
-    secrets:
-      scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
 
   scan-posture-opencv:
     needs: build-opencv
@@ -390,8 +367,6 @@ jobs:
       pkg_types: os,library
       ignorefile: none
       blocking: false
-    secrets:
-      scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
 
   publish-opencv:
     needs: [build-opencv, scan-opencv]
@@ -427,4 +402,3 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
