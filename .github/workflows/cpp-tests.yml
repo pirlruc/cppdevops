@@ -34,6 +34,13 @@ on:
         required: false
         type: string
         default: ""
+      tests_option:
+        description: >-
+          CMake option for CPP-BUILD-040, for example RUNA_BUILD_TESTS.
+          Passed as ON beside PIRLRUC_WITH_TESTS.
+        required: false
+        type: string
+        default: ""
       run_ubuntu_compile:
         description: Deprecated. Kept so existing callers still validate. The job is a no-op and does not compile.
         required: false
@@ -125,15 +132,23 @@ jobs:
         working-directory: ${{ inputs.library_path }}
         env:
           CMAKE_PRESET: ${{ inputs.cmake_preset }}
+          TESTS_OPTION: ${{ inputs.tests_option }}
         run: |
           # Use gcov-compatible --coverage (not llvm source-based profiling) so
           # check-coverage.sh / gcovr can produce a numeric coverage.json.
+          extra=""
+          if [ -n "${TESTS_OPTION}" ]; then
+            extra="-D${TESTS_OPTION}=ON"
+          fi
+          # shellcheck disable=SC2086
           sh "${GITHUB_WORKSPACE}/_cppdevops/scripts/cmake-ci.sh" --preset "${CMAKE_PRESET}" \
             -DPIRLRUC_WITH_TESTS=ON \
+            ${extra} \
             -DPIRLRUC_WITH_COVERAGE=ON \
             -DCMAKE_CXX_FLAGS="-stdlib=libc++ --coverage -Wdocumentation -Wdocumentation-unknown-command -Werror=documentation -Werror=documentation-unknown-command" \
             || sh "${GITHUB_WORKSPACE}/_cppdevops/scripts/cmake-ci.sh" -B build \
               -DPIRLRUC_WITH_TESTS=ON \
+              ${extra} \
               -DPIRLRUC_WITH_COVERAGE=ON \
               -DCMAKE_CXX_COMPILER=clang++ \
               -DCMAKE_CXX_FLAGS="-stdlib=libc++ --coverage -Wdocumentation -Wdocumentation-unknown-command -Werror=documentation -Werror=documentation-unknown-command"

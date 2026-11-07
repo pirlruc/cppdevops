@@ -19,7 +19,7 @@ jobs:
   ci-cpp:
     permissions:
       contents: read
-    uses: pirlruc/containerdevops/.github/workflows/container-hub-description.yml@6ccc0abe77f578f6b6c0a35430eae0334ffa94bd
+    uses: pirlruc/containerdevops/.github/workflows/container-hub-description.yml@b8c0746603eefdc89571b17c62d1e965b28ff31f
     with:
       dockerhub_image: pirlruc/ci-cpp
       dockerhub_readme: docs/docker-hub-ci-cpp.md
@@ -32,7 +32,7 @@ jobs:
   ci-cpp-ubuntu:
     permissions:
       contents: read
-    uses: pirlruc/containerdevops/.github/workflows/container-hub-description.yml@6ccc0abe77f578f6b6c0a35430eae0334ffa94bd
+    uses: pirlruc/containerdevops/.github/workflows/container-hub-description.yml@b8c0746603eefdc89571b17c62d1e965b28ff31f
     with:
       dockerhub_image: pirlruc/ci-cpp-ubuntu
       dockerhub_readme: docs/docker-hub-ci-cpp-ubuntu.md
@@ -44,7 +44,7 @@ jobs:
   ci-cpp-vcpkg:
     permissions:
       contents: read
-    uses: pirlruc/containerdevops/.github/workflows/container-hub-description.yml@6ccc0abe77f578f6b6c0a35430eae0334ffa94bd
+    uses: pirlruc/containerdevops/.github/workflows/container-hub-description.yml@b8c0746603eefdc89571b17c62d1e965b28ff31f
     with:
       dockerhub_image: pirlruc/ci-cpp-vcpkg
       dockerhub_readme: docs/docker-hub-ci-cpp-vcpkg.md
@@ -56,7 +56,7 @@ jobs:
   ci-cpp-opencv:
     permissions:
       contents: read
-    uses: pirlruc/containerdevops/.github/workflows/container-hub-description.yml@6ccc0abe77f578f6b6c0a35430eae0334ffa94bd
+    uses: pirlruc/containerdevops/.github/workflows/container-hub-description.yml@b8c0746603eefdc89571b17c62d1e965b28ff31f
     with:
       dockerhub_image: pirlruc/ci-cpp-opencv
       dockerhub_readme: docs/docker-hub-ci-cpp-opencv.md

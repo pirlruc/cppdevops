@@ -1,0 +1,48 @@
+# Release caller. Copy to .github/workflows/release.yml.
+# Push of an annotated tag vMAJOR.MINOR.PATCH creates the GitHub Release
+# and attaches the SBOM from the supply-chain job in this same run.
+# Replace CPPDEVOPS_PIN with the cppdevops commit the library pins.
+
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  actions: read
+  attestations: write
+  contents: write
+  id-token: write
+  packages: read
+  security-events: write
+
+jobs:
+  sbom:
+    permissions:
+      actions: read
+      contents: read
+      packages: read
+      security-events: write
+    uses: pirlruc/cppdevops/.github/workflows/cpp-security.yml@CPPDEVOPS_PIN
+    with:
+      library_path: .
+      scripts_ref: CPPDEVOPS_PIN
+      blocking: true
+      run_sbom: true
+      upload_sarif: false
+    secrets:
+      checkout_token: ${{ secrets.CPP_READ_TOKEN }}
+  release:
+    needs: sbom
+    permissions:
+      attestations: write
+      contents: write
+      id-token: write
+    uses: pirlruc/cppdevops/.github/workflows/cpp-release.yml@CPPDEVOPS_PIN
+    with:
+      tag: ${{ github.ref_name }}
+      attach_sbom: true
+    secrets:
+      release_token: ${{ secrets.GITHUB_TOKEN }}

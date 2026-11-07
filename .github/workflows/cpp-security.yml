@@ -19,10 +19,19 @@ on:
         type: boolean
         default: true
       scripts_ref:
-        description: Accepted so callers can pass the uses pin. Nested calls use the pinned SHA.
+        description: >-
+          Caller's cppdevops pin. Nested commondevops checkouts use the
+          uses pin, because a cppdevops SHA is not a commondevops tree.
         required: false
         type: string
         default: ""
+      upload_sarif:
+        description: >-
+          Upload the supply-chain SARIF. A private repository without code
+          scanning sets this false. The caller still grants security-events.
+        required: false
+        type: boolean
+        default: true
     secrets:
       checkout_token:
         required: false
@@ -35,6 +44,9 @@ on:
         type: boolean
         default: false
       run_sbom:
+        type: boolean
+        default: true
+      upload_sarif:
         type: boolean
         default: true
 
@@ -56,11 +68,11 @@ jobs:
     permissions:
       contents: read
       packages: read
-    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@e41270c45b858cfa7a9f8404eaee781b5c29b61c
+    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@2c5e1ebe9797828128e01f3941b5a02650abe59a
     with:
       blocking: ${{ inputs.blocking }}
       working_directory: ${{ inputs.library_path }}
-      scripts_ref: e41270c45b858cfa7a9f8404eaee781b5c29b61c
+      scripts_ref: 2c5e1ebe9797828128e01f3941b5a02650abe59a
       container_image: ghcr.io/pirlruc/ci-lint@sha256:f9001c4c8726f72107545094237d4fc0592baca023cfa299a532634666d88111
     secrets:
       checkout_token: ${{ secrets.checkout_token }}
@@ -72,11 +84,12 @@ jobs:
       actions: read
       packages: read
       security-events: write
-    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@e41270c45b858cfa7a9f8404eaee781b5c29b61c
+    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@2c5e1ebe9797828128e01f3941b5a02650abe59a
     with:
       blocking: ${{ inputs.blocking }}
       working_directory: ${{ inputs.library_path }}
-      scripts_ref: e41270c45b858cfa7a9f8404eaee781b5c29b61c
+      scripts_ref: 2c5e1ebe9797828128e01f3941b5a02650abe59a
+      upload_sarif: ${{ inputs.upload_sarif }}
       container_image: ghcr.io/pirlruc/ci-supply-chain@sha256:dc83deb4465d5989a03b14ccabef46c3f3426231048b962c69b8e434a7200d48
     secrets:
       checkout_token: ${{ secrets.checkout_token }}

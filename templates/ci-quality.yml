@@ -62,6 +62,7 @@ jobs:
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
       use_vcpkg: true
       vcpkg_triplet: x64-linux-libcxx
+      tests_option: ""
     secrets:
       checkout_token: ${{ secrets.CPP_READ_TOKEN }}
   tests:
@@ -75,6 +76,7 @@ jobs:
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
       use_vcpkg: true
       vcpkg_triplet: x64-linux-libcxx
+      tests_option: ""
     secrets:
       checkout_token: ${{ secrets.CPP_READ_TOKEN }}
   docs:
@@ -101,6 +103,7 @@ jobs:
       scripts_ref: CPPDEVOPS_PIN
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
       run_sbom: ${{ github.event_name != 'workflow_dispatch' || inputs.run_sbom }}
+      upload_sarif: false
     secrets:
       checkout_token: ${{ secrets.CPP_READ_TOKEN }}
   codeql:
@@ -116,6 +119,8 @@ jobs:
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
       use_vcpkg: true
       vcpkg_triplet: x64-linux-libcxx
+      run_codeql: false
+      tests_option: ""
     secrets:
       checkout_token: ${{ secrets.CPP_READ_TOKEN }}
   dynamic:
@@ -129,6 +134,7 @@ jobs:
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
       use_vcpkg: true
       vcpkg_triplet: x64-linux-libcxx
+      tests_option: ""
     secrets:
       checkout_token: ${{ secrets.CPP_READ_TOKEN }}
   mobile:
@@ -153,3 +159,102 @@ jobs:
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
     secrets:
       checkout_token: ${{ secrets.CPP_READ_TOKEN }}
+  pins:
+    permissions:
+      contents: read
+    uses: pirlruc/cppdevops/.github/workflows/cpp-pins.yml@CPPDEVOPS_PIN
+    with:
+      scripts_ref: CPPDEVOPS_PIN
+  threshold-drift:
+    permissions:
+      contents: read
+    uses: pirlruc/cppdevops/.github/workflows/cpp-threshold-drift.yml@CPPDEVOPS_PIN
+    with:
+      scripts_ref: CPPDEVOPS_PIN
+  token-audit:
+    permissions:
+      contents: read
+    uses: pirlruc/cppdevops/.github/workflows/cpp-token-audit.yml@CPPDEVOPS_PIN
+    with:
+      scripts_ref: CPPDEVOPS_PIN
+  doc-verify:
+    permissions:
+      contents: read
+    uses: pirlruc/cppdevops/.github/workflows/cpp-doc-verify.yml@CPPDEVOPS_PIN
+    with:
+      scripts_ref: CPPDEVOPS_PIN
+      blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
+      run_markdownlint: true
+    secrets:
+      checkout_token: ${{ secrets.CPP_READ_TOKEN }}
+  fuzz:
+    permissions:
+      contents: read
+      packages: read
+    uses: pirlruc/cppdevops/.github/workflows/cpp-fuzz.yml@CPPDEVOPS_PIN
+    with:
+      library_path: .
+      scripts_ref: CPPDEVOPS_PIN
+      run_fuzz: false
+      blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
+    secrets:
+      checkout_token: ${{ secrets.CPP_READ_TOKEN }}
+  # CI-044. Docs-only pulls still run this job, so a required check exists
+  # when the heavy jobs are skipped by a path filter.
+  aggregate:
+    if: always()
+    needs:
+      - quality
+      - tests
+      - docs
+      - security
+      - codeql
+      - dynamic
+      - mobile
+      - infra
+      - pins
+      - threshold-drift
+      - token-audit
+      - doc-verify
+      - fuzz
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - name: Fail when a needed job failed
+        env:
+          QUALITY: ${{ needs.quality.result }}
+          TESTS: ${{ needs.tests.result }}
+          DOCS: ${{ needs.docs.result }}
+          SECURITY: ${{ needs.security.result }}
+          CODEQL: ${{ needs.codeql.result }}
+          DYNAMIC: ${{ needs.dynamic.result }}
+          MOBILE: ${{ needs.mobile.result }}
+          INFRA: ${{ needs.infra.result }}
+          PINS: ${{ needs.pins.result }}
+          DRIFT: ${{ needs.threshold-drift.result }}
+          TOKEN: ${{ needs.token-audit.result }}
+          DOC: ${{ needs.doc-verify.result }}
+          FUZZ: ${{ needs.fuzz.result }}
+        run: |
+          set -eu
+          failed=""
+          for item in \
+            "quality=${QUALITY}" "tests=${TESTS}" "docs=${DOCS}" \
+            "security=${SECURITY}" "codeql=${CODEQL}" "dynamic=${DYNAMIC}" \
+            "mobile=${MOBILE}" "infra=${INFRA}" "pins=${PINS}" \
+            "threshold-drift=${DRIFT}" "token-audit=${TOKEN}" \
+            "doc-verify=${DOC}" "fuzz=${FUZZ}"
+          do
+            name=${item%%=*}
+            result=${item#*=}
+            if [ "${result}" != "success" ] && [ "${result}" != "skipped" ]; then
+              failed="${failed} ${name}(${result})"
+            fi
+          done
+          if [ -n "${failed}" ]; then
+            echo "::error::Jobs failed:${failed}"
+            exit 1
+          fi
+          echo "Aggregate passed."
