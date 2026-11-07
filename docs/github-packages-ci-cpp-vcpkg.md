@@ -39,4 +39,4 @@ The PAT needs `read:packages`. Public Hub pulls do not.
 
 ## License
 
-MIT. Source: https://github.com/pirlruc/cppdevops
+MIT. Source: <https://github.com/pirlruc/cppdevops>

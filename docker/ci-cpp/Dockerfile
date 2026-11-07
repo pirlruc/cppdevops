@@ -60,7 +60,7 @@ RUN apt-get update \
       doxygen=1.9.8+ds-2.1 \
       git=1:2.47.3-0+deb13u1+dhi2 \
       ca-certificates=20250419+deb13u1+dhi0 \
-      curl=8.14.1-2+deb13u7+dhi0 \
+      curl=8.14.1-2+deb13u7+dhi1 \
       gzip=1.13-1+deb13u1+dhi1 \
       zip=3.0-15+deb13u1+dhi1 \
       unzip=6.0-29+deb13u1+dhi1 \

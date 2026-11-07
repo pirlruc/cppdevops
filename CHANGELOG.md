@@ -284,7 +284,6 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 - Ubuntu 24.04 digest is unchanged. The index is still created 2026-09-17,
   so CPPD-SCAN-001 stays open until Canonical publishes a newer noble image.
 
-
 ## [5.1.1] - 2026-10-06
 
 ### Fixed

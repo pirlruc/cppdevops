@@ -119,4 +119,4 @@ Debian CRITICAL findings are CVE-2026-6653 (`libxml2`) and CVE-2026-43185
 
 ## License
 
-MIT. Source: https://github.com/pirlruc/cppdevops
+MIT. Source: <https://github.com/pirlruc/cppdevops>

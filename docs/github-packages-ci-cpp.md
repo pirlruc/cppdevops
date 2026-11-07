@@ -83,4 +83,4 @@ is 23.1.0.
 
 ## License
 
-MIT. Source: https://github.com/pirlruc/cppdevops
+MIT. Source: <https://github.com/pirlruc/cppdevops>

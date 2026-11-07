@@ -63,4 +63,4 @@ headers on `ci-cpp-opencv`.
 
 ## License
 
-MIT. Source: https://github.com/pirlruc/cppdevops
+MIT. Source: <https://github.com/pirlruc/cppdevops>

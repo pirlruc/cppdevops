@@ -5,7 +5,7 @@
 | Field | Value |
 |-------|-------|
 | **Folder** | cppdevops |
-| **Remote** | https://github.com/pirlruc/cppdevops |
+| **Remote** | <https://github.com/pirlruc/cppdevops> |
 | **Branch** | `main` at `0cb33e7`. GitHub Release **v6.4.0** published the images. Tag **v6.4.1** records those manifests and does not republish. Do not move v6.3.0 through v6.3.2. commondevops callers pin **5.6.2** (`b85f95bb`). containerdevops callers pin **6.3.6** (`b419c24c`). |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
@@ -176,7 +176,7 @@ gitconfig under `RUNNER_TEMP`.
 ## Recent history
 
 - 2026-10-28: **v6.3.2** grants `actions: read` on the CodeQL job so `codeql-action/analyze` can read the workflow run. No image republish. Do not move v6.1.0 through v6.3.1.
-- 2026-10-28: **v6.3.0** on `fadd4e7` published the images (https://github.com/pirlruc/cppdevops/actions/runs/40762360977). Security dispatch https://github.com/pirlruc/cppdevops/actions/runs/40762499368 succeeded. **v6.3.1** records the 6.3.0 index and linux/amd64 manifests in the reusable defaults and the Hub/GHCR pages. No second publish. Do not move v6.1.0 through v6.3.0.
+- 2026-10-28: **v6.3.0** on `fadd4e7` published the images (<https://github.com/pirlruc/cppdevops/actions/runs/40762360977>). Security dispatch <https://github.com/pirlruc/cppdevops/actions/runs/40762499368> succeeded. **v6.3.1** records the 6.3.0 index and linux/amd64 manifests in the reusable defaults and the Hub/GHCR pages. No second publish. Do not move v6.1.0 through v6.3.0.
 - 2026-10-28: `feature-v631` grants the Scorecard job `actions: read`, pins commondevops 5.6.2 and containerdevops 6.3.6, adds `cpp-pins`, `cpp-threshold-drift`, `cpp-release`, `cpp-token-audit`, `cpp-doc-verify`, and `cpp-devcontainer`, and moves setuptools to 84.1.0. `templates/ci-quality.yml` drops `scripts_ref` on `cpp-infra` and grants `packages: read` plus `actions: read` on security. Merged as pull request 166.
 - 2026-10-28: Dependabot pull requests pass `DEPENDABOT_GITHUB_TOKEN` to scaffold and doc verify. Actions runs pass `COMMONDEVOPS_READ_TOKEN`. Pull request 163 proved the Actions path (`scaffold / verify` and `docs / verify`). Pull request 154 then ran `scaffold / verify` on Dependabot, including the private commondevops checkout, and merged as `d72bea6`. The pinned `common-doc-verify` job still skips Dependabot, so `docs / verify` did not start. Threshold drift still skips Dependabot and still uses `GUARDRAILS_READ_TOKEN`.
 - 2026-10-28: commondevops callers pin 5.5.3 (`c8ab717`). `scripts_ref` matches. Job containers pass the 5.5.0 linux/amd64 manifests (`ci-lint` `4d96a023…`, `ci-supply-chain` Debian `b43eb3a9…`) and do not forward `checkout_token`. That PAT is the registry password and cannot see the package. `github.token` can. Library repos stay on `c4309e56` until each one is on those allow lists (CPPD-PKG-001). Do not move v6.1.0 through v6.2.2. No image republish.
@@ -185,7 +185,7 @@ gitconfig under `RUNNER_TEMP`.
 - 2026-10-24: **v6.1.0** on `3c1fdb60` (PR 150). Image tags are `6.1.0`. Issue #87 is closed. Hub pages still name 6.0.0. Debian owns the unsuffixed `ci-cpp` tags.
 - 2026-10-23: **v6.0.2** — guardrails 1.13.1. Hub Overview push when `docs/docker-hub*.md` changes. Tag only. No GitHub Release.
 - 2026-10-23: Hub Overview dispatch for `ci-cpp`, `ci-cpp-ubuntu`, `ci-cpp-vcpkg`, and `ci-cpp-opencv`. It does not republish images.
-- 2026-10-23: v6.0.1 records the 6.0.0 `linux/amd64` manifests. No GitHub Release. Publish run https://github.com/pirlruc/cppdevops/actions/runs/39919054101. CPPD-SCAN-001 stays open.
+- 2026-10-23: v6.0.1 records the 6.0.0 `linux/amd64` manifests. No GitHub Release. Publish run <https://github.com/pirlruc/cppdevops/actions/runs/39919054101>. CPPD-SCAN-001 stays open.
 - 2026-10-23: doc coverage is the Clang AST. coverxygen is removed. `-Wdocumentation` fails quality and test builds. Ubuntu Dependabot ignores `>= 24.10`. CPP-BUILD-004 deviation dropped against guardrails 1.12.0.
 - 2026-10-02: spike. Hello-world `-stdlib=libc++ -fsanitize=address,undefined`
   passes on Debian Clang 18.1.8 and Alpine Clang 20.1.8. Ubuntu compile image
