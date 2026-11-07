@@ -10,9 +10,9 @@ CPPDEVOPS_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 THRESH_FILE="${SCRIPT_DIR}/cpp.profile.thresholds.yml"
 LIB_THRESH="${ROOT}/docs/guardrails/cpp/profile.thresholds.yml"
 if [[ -f "${LIB_THRESH}" ]]; then
-  THRESH_FILE="${LIB_THRESH}"
+	THRESH_FILE="${LIB_THRESH}"
 elif [[ -f "${CPPDEVOPS_ROOT}/docs/guardrails/cpp/profile.thresholds.yml" ]]; then
-  THRESH_FILE="${CPPDEVOPS_ROOT}/docs/guardrails/cpp/profile.thresholds.yml"
+	THRESH_FILE="${CPPDEVOPS_ROOT}/docs/guardrails/cpp/profile.thresholds.yml"
 fi
 
 STMT_MIN="$(bash "${CPPDEVOPS_ROOT}/scripts/read-thresholds.sh" statement_coverage "${THRESH_FILE}")"
@@ -20,17 +20,17 @@ BRANCH_MIN="$(bash "${CPPDEVOPS_ROOT}/scripts/read-thresholds.sh" branch_coverag
 
 BUILD_DIR="${CPPDEVOPS_BUILD_DIR:-}"
 if [[ -z "${BUILD_DIR}" ]]; then
-  if [[ -d "${ROOT}/build-host" ]]; then
-    BUILD_DIR="${ROOT}/build-host"
-  else
-    BUILD_DIR="${ROOT}/build"
-  fi
+	if [[ -d "${ROOT}/build-host" ]]; then
+		BUILD_DIR="${ROOT}/build-host"
+	else
+		BUILD_DIR="${ROOT}/build"
+	fi
 fi
 cd "${ROOT}"
 
 if [[ ! -d "${BUILD_DIR}" ]]; then
-  echo "error: build directory missing at ${BUILD_DIR}" >&2
-  exit 1
+	echo "error: build directory missing at ${BUILD_DIR}" >&2
+	exit 1
 fi
 
 # Prefer gcovr JSON summary when available. Clang builds need llvm-cov as the gcov driver.
@@ -38,44 +38,44 @@ fi
 # install llvm-18 when the driver is missing. Later images ship the symlink.
 REPORT="${BUILD_DIR}/coverage.json"
 if ! command -v llvm-cov >/dev/null 2>&1 && ! command -v llvm-cov-18 >/dev/null 2>&1 && ! command -v gcov >/dev/null 2>&1; then
-  if [[ "$(id -u)" -eq 0 ]] && command -v apt-get >/dev/null 2>&1; then
-    export DEBIAN_FRONTEND=noninteractive
-    apt-get update
-    apt-get install -y --no-install-recommends llvm-18
-    if [[ -x /usr/bin/llvm-cov-18 ]]; then
-      ln -sfn /usr/bin/llvm-cov-18 /usr/local/bin/llvm-cov
-    elif [[ -x /usr/lib/llvm-18/bin/llvm-cov ]]; then
-      ln -sfn /usr/lib/llvm-18/bin/llvm-cov /usr/local/bin/llvm-cov
-    fi
-  fi
+	if [[ "$(id -u)" -eq 0 ]] && command -v apt-get >/dev/null 2>&1; then
+		export DEBIAN_FRONTEND=noninteractive
+		apt-get update
+		apt-get install -y --no-install-recommends llvm-18
+		if [[ -x /usr/bin/llvm-cov-18 ]]; then
+			ln -sfn /usr/bin/llvm-cov-18 /usr/local/bin/llvm-cov
+		elif [[ -x /usr/lib/llvm-18/bin/llvm-cov ]]; then
+			ln -sfn /usr/lib/llvm-18/bin/llvm-cov /usr/local/bin/llvm-cov
+		fi
+	fi
 fi
 GCOV_ARGS=()
 if command -v llvm-cov >/dev/null 2>&1; then
-  GCOV_ARGS=(--gcov-executable "llvm-cov gcov")
+	GCOV_ARGS=(--gcov-executable "llvm-cov gcov")
 elif command -v llvm-cov-18 >/dev/null 2>&1; then
-  GCOV_ARGS=(--gcov-executable "llvm-cov-18 gcov")
+	GCOV_ARGS=(--gcov-executable "llvm-cov-18 gcov")
 fi
 
 if ! command -v gcovr >/dev/null 2>&1; then
-  echo "error: gcovr not on PATH (install in ci-cpp image / local env)" >&2
-  exit 1
+	echo "error: gcovr not on PATH (install in ci-cpp image / local env)" >&2
+	exit 1
 fi
 
 # Flat libraries live under include/ and src/. Module libraries live under modules/*/include and modules/*/src.
 if ! gcovr --root "${ROOT}" \
-  --filter "${ROOT}/(include|src)/" \
-  --filter "${ROOT}/modules/.*/(include|src)/" \
-  --json-summary "${REPORT}" \
-  --exclude '.*/(test|external|build)/.*' \
-  ${GCOV_ARGS[@]+"${GCOV_ARGS[@]}"} \
-  "${BUILD_DIR}"; then
-  echo "error: gcovr failed to produce ${REPORT}" >&2
-  exit 1
+	--filter "${ROOT}/(include|src)/" \
+	--filter "${ROOT}/modules/.*/(include|src)/" \
+	--json-summary "${REPORT}" \
+	--exclude '.*/(test|external|build)/.*' \
+	${GCOV_ARGS[@]+"${GCOV_ARGS[@]}"} \
+	"${BUILD_DIR}"; then
+	echo "error: gcovr failed to produce ${REPORT}" >&2
+	exit 1
 fi
 
 if [[ ! -f "${REPORT}" ]]; then
-  echo "error: coverage report missing at ${REPORT} after gcovr" >&2
-  exit 1
+	echo "error: coverage report missing at ${REPORT} after gcovr" >&2
+	exit 1
 fi
 
 python3 - "${REPORT}" "${STMT_MIN}" "${BRANCH_MIN}" <<'PY'

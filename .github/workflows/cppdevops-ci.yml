@@ -3,7 +3,7 @@ name: Cppdevops CI (self)
 # Deterministic infra lint + threshold drift. Time-varying security stays on
 # cppdevops-security.yml (schedule). Jobs that need GUARDRAILS_READ_TOKEN
 # skip Dependabot (CI-024). pins and lint-dependabot stay token-free.
-# Cross-repo checkout uses DEPENDABOT_GITHUB_TOKEN on Dependabot pull
+# Cross-repo checkout uses COMMONDEVOPS_READ_TOKEN. Dependabot skips the jobs.
 # requests and COMMONDEVOPS_READ_TOKEN on Actions runs.
 
 on:
@@ -43,12 +43,13 @@ jobs:
     permissions:
       contents: read
       issues: read
-    uses: pirlruc/commondevops/.github/workflows/common-scaffold-verify.yml@b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+    uses: pirlruc/commondevops/.github/workflows/common-scaffold-verify.yml@e41270c45b858cfa7a9f8404eaee781b5c29b61c
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
-      scripts_ref: b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+      scripts_ref: e41270c45b858cfa7a9f8404eaee781b5c29b61c
     secrets:
-      checkout_token: ${{ github.event.pull_request.user.login == 'dependabot[bot]' && secrets.DEPENDABOT_GITHUB_TOKEN || secrets.COMMONDEVOPS_READ_TOKEN }}
+      checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
+      packs_token: ${{ secrets.GUARDRAILS_READ_TOKEN }}
 
   lint-dependabot:
     if: github.event.pull_request.user.login == 'dependabot[bot]'
@@ -79,7 +80,7 @@ jobs:
   docs:
     permissions:
       contents: read
-    uses: pirlruc/commondevops/.github/workflows/common-doc-verify.yml@b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+    uses: pirlruc/commondevops/.github/workflows/common-doc-verify.yml@e41270c45b858cfa7a9f8404eaee781b5c29b61c
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       shell_scripts: scripts/*.sh
@@ -87,23 +88,23 @@ jobs:
       yaml_files: docs/issues.yml docs/guardrail-deviations.yml .github/dependabot.yml
       yaml_globs: .github/workflows/*.yml
       run_link_lint: true
-      scripts_ref: b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+      scripts_ref: e41270c45b858cfa7a9f8404eaee781b5c29b61c
     secrets:
-      checkout_token: ${{ github.event.pull_request.user.login == 'dependabot[bot]' && secrets.DEPENDABOT_GITHUB_TOKEN || secrets.COMMONDEVOPS_READ_TOKEN }}
+      checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
 
   infra-lint:
     if: github.event.pull_request.user.login != 'dependabot[bot]'
     permissions:
       contents: read
       packages: read
-    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@e41270c45b858cfa7a9f8404eaee781b5c29b61c
     with:
       # Push/PR are blocking; workflow_dispatch honours the input.
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       working_directory: .
       shell_scripts: scripts/*.sh
       dockerfiles: docker/ci-cpp/Dockerfile docker/ci-cpp/Dockerfile.alpine docker/ci-cpp-opencv/Dockerfile
-      scripts_ref: b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+      scripts_ref: e41270c45b858cfa7a9f8404eaee781b5c29b61c
       container_image: ghcr.io/pirlruc/ci-lint@sha256:f9001c4c8726f72107545094237d4fc0592baca023cfa299a532634666d88111
   threshold-drift:
     if: github.event.pull_request.user.login != 'dependabot[bot]'

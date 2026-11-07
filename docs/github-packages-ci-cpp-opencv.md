@@ -40,4 +40,4 @@ docker pull ghcr.io/pirlruc/ci-cpp-opencv:6.4.0
 
 ## License
 
-MIT. Source: https://github.com/pirlruc/cppdevops
+MIT. Source: <https://github.com/pirlruc/cppdevops>

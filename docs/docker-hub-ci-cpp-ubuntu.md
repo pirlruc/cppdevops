@@ -69,4 +69,4 @@ The image stays on Ubuntu 24.04. The Dockerfile pins
 
 ## License
 
-MIT. Source: https://github.com/pirlruc/cppdevops
+MIT. Source: <https://github.com/pirlruc/cppdevops>

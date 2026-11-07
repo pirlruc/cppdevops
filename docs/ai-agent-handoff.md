@@ -5,7 +5,7 @@
 | Field | Value |
 |-------|-------|
 | **Folder** | cppdevops |
-| **Remote** | https://github.com/pirlruc/cppdevops |
+| **Remote** | <https://github.com/pirlruc/cppdevops> |
 | **Branch** | `main` at `0cb33e7`. GitHub Release **v6.4.0** published the images. Tag **v6.4.1** records those manifests and does not republish. Do not move v6.3.0 through v6.3.2. commondevops callers pin **5.6.2** (`b85f95bb`). containerdevops callers pin **6.3.6** (`b419c24c`). |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
@@ -41,8 +41,8 @@ Contract reference: [`docs/workflows.md`](workflows.md).
 
 | Submodule / artifact | Pin |
 |----------------------|-----|
-| `docs/guardrails` | tag **1.13.1** → `1945211ac851c3c0f83694bd4ea53571fdced4ab` |
-| `.github/scaffold` | tag **1.10.0** → `1d9901f7e7e5785abb7cac6f5d46e0e8e2023ff8` |
+| `docs/guardrails` | tag **1.15.0** → `2d4bb70e95449f6922781716857adeb22badf676` |
+| `.github/scaffold` | tag **1.12.0** → `9c443ea978851768f451b1df2020dd86dfb1a967` |
 | methodologies (links only; not a submodule) | tag **1.9.1** |
 | `ghcr.io/pirlruc/ci-cpp` (debian, unsuffixed) | `6.4.0` `linux/amd64` `sha256:3f4776490bcf197fc10983e416443d01f365134df44110c24176f5b2ded09475`. Tag index `sha256:49d8078eaab4aab93114b9773dea66d51424849adf86633882cab5e1a75699f9`. Includes vcpkg. Private package: `packages: read` and `container.credentials` |
 | `ghcr.io/pirlruc/ci-cpp` (alpine) | `6.4.0-alpine` `linux/amd64` `sha256:817f79358c86cf4045288f74768901daa2b0f5416807e50ab4a601e8d7a8f331`. Tag index `sha256:2665aeaa0f9eb9b0a355a1216671724227cf21f5eaa4da7592a0d2f9fc78520d`. Includes vcpkg |
@@ -176,7 +176,7 @@ gitconfig under `RUNNER_TEMP`.
 ## Recent history
 
 - 2026-10-28: **v6.3.2** grants `actions: read` on the CodeQL job so `codeql-action/analyze` can read the workflow run. No image republish. Do not move v6.1.0 through v6.3.1.
-- 2026-10-28: **v6.3.0** on `fadd4e7` published the images (https://github.com/pirlruc/cppdevops/actions/runs/40762360977). Security dispatch https://github.com/pirlruc/cppdevops/actions/runs/40762499368 succeeded. **v6.3.1** records the 6.3.0 index and linux/amd64 manifests in the reusable defaults and the Hub/GHCR pages. No second publish. Do not move v6.1.0 through v6.3.0.
+- 2026-10-28: **v6.3.0** on `fadd4e7` published the images (<https://github.com/pirlruc/cppdevops/actions/runs/40762360977>). Security dispatch <https://github.com/pirlruc/cppdevops/actions/runs/40762499368> succeeded. **v6.3.1** records the 6.3.0 index and linux/amd64 manifests in the reusable defaults and the Hub/GHCR pages. No second publish. Do not move v6.1.0 through v6.3.0.
 - 2026-10-28: `feature-v631` grants the Scorecard job `actions: read`, pins commondevops 5.6.2 and containerdevops 6.3.6, adds `cpp-pins`, `cpp-threshold-drift`, `cpp-release`, `cpp-token-audit`, `cpp-doc-verify`, and `cpp-devcontainer`, and moves setuptools to 84.1.0. `templates/ci-quality.yml` drops `scripts_ref` on `cpp-infra` and grants `packages: read` plus `actions: read` on security. Merged as pull request 166.
 - 2026-10-28: Dependabot pull requests pass `DEPENDABOT_GITHUB_TOKEN` to scaffold and doc verify. Actions runs pass `COMMONDEVOPS_READ_TOKEN`. Pull request 163 proved the Actions path (`scaffold / verify` and `docs / verify`). Pull request 154 then ran `scaffold / verify` on Dependabot, including the private commondevops checkout, and merged as `d72bea6`. The pinned `common-doc-verify` job still skips Dependabot, so `docs / verify` did not start. Threshold drift still skips Dependabot and still uses `GUARDRAILS_READ_TOKEN`.
 - 2026-10-28: commondevops callers pin 5.5.3 (`c8ab717`). `scripts_ref` matches. Job containers pass the 5.5.0 linux/amd64 manifests (`ci-lint` `4d96a023…`, `ci-supply-chain` Debian `b43eb3a9…`) and do not forward `checkout_token`. That PAT is the registry password and cannot see the package. `github.token` can. Library repos stay on `c4309e56` until each one is on those allow lists (CPPD-PKG-001). Do not move v6.1.0 through v6.2.2. No image republish.
@@ -185,7 +185,7 @@ gitconfig under `RUNNER_TEMP`.
 - 2026-10-24: **v6.1.0** on `3c1fdb60` (PR 150). Image tags are `6.1.0`. Issue #87 is closed. Hub pages still name 6.0.0. Debian owns the unsuffixed `ci-cpp` tags.
 - 2026-10-23: **v6.0.2** — guardrails 1.13.1. Hub Overview push when `docs/docker-hub*.md` changes. Tag only. No GitHub Release.
 - 2026-10-23: Hub Overview dispatch for `ci-cpp`, `ci-cpp-ubuntu`, `ci-cpp-vcpkg`, and `ci-cpp-opencv`. It does not republish images.
-- 2026-10-23: v6.0.1 records the 6.0.0 `linux/amd64` manifests. No GitHub Release. Publish run https://github.com/pirlruc/cppdevops/actions/runs/39919054101. CPPD-SCAN-001 stays open.
+- 2026-10-23: v6.0.1 records the 6.0.0 `linux/amd64` manifests. No GitHub Release. Publish run <https://github.com/pirlruc/cppdevops/actions/runs/39919054101>. CPPD-SCAN-001 stays open.
 - 2026-10-23: doc coverage is the Clang AST. coverxygen is removed. `-Wdocumentation` fails quality and test builds. Ubuntu Dependabot ignores `>= 24.10`. CPP-BUILD-004 deviation dropped against guardrails 1.12.0.
 - 2026-10-02: spike. Hello-world `-stdlib=libc++ -fsanitize=address,undefined`
   passes on Debian Clang 18.1.8 and Alpine Clang 20.1.8. Ubuntu compile image
@@ -272,3 +272,7 @@ gitconfig under `RUNNER_TEMP`.
 *Last updated: 2026-11-03 (v6.4.0 published, v6.4.1 digest write-back).*
 
 *Last updated: 2026-11-04 — filed documentation follow-up epics moved out of guardrails, methodologies, or github-scaffold. Not implemented here.*
+
+*Last updated: 2026-11-07 — v6.5.0 branch. Guardrails 1.15.0. Scaffold 1.12.0. commondevops 6.0.1. containerdevops 6.4.0.*
+
+*Last updated: 2026-11-07 — Scorecard Code-Review, Fuzzing, and CII-Best-Practices stay open. See docs/scorecard-open-checks.md.*

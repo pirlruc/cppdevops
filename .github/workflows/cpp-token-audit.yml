@@ -23,9 +23,9 @@ permissions: {}
 jobs:
   audit:
     permissions: {}
-    uses: pirlruc/commondevops/.github/workflows/common-token-audit.yml@b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+    uses: pirlruc/commondevops/.github/workflows/common-token-audit.yml@e41270c45b858cfa7a9f8404eaee781b5c29b61c
     with:
-      scripts_ref: b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+      scripts_ref: e41270c45b858cfa7a9f8404eaee781b5c29b61c
     secrets:
       scorecard_token: ${{ secrets.scorecard_token }}
       guardrails_token: ${{ secrets.guardrails_token }}

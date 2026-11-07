@@ -7,6 +7,10 @@ on:
   schedule:
     # Weekly Wednesday 06:17 UTC — staggered vs commondevops (Mon) / containerdevops (Tue).
     - cron: "17 6 * * 3"
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
     inputs:
       blocking:
@@ -27,11 +31,11 @@ jobs:
     permissions:
       contents: read
       packages: read
-    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@e41270c45b858cfa7a9f8404eaee781b5c29b61c
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       working_directory: .
-      scripts_ref: b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+      scripts_ref: e41270c45b858cfa7a9f8404eaee781b5c29b61c
       container_image: ghcr.io/pirlruc/ci-lint@sha256:f9001c4c8726f72107545094237d4fc0592baca023cfa299a532634666d88111
   supply-chain:
     if: github.event.pull_request.user.login != 'dependabot[bot]'
@@ -40,11 +44,11 @@ jobs:
       actions: read
       packages: read
       security-events: write
-    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@e41270c45b858cfa7a9f8404eaee781b5c29b61c
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       working_directory: .
-      scripts_ref: b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+      scripts_ref: e41270c45b858cfa7a9f8404eaee781b5c29b61c
       container_image: ghcr.io/pirlruc/ci-supply-chain@sha256:dc83deb4465d5989a03b14ccabef46c3f3426231048b962c69b8e434a7200d48
   scorecard:
     if: >-
@@ -55,7 +59,7 @@ jobs:
       contents: read
       security-events: write
       id-token: write
-    uses: pirlruc/commondevops/.github/workflows/common-scorecard.yml@b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+    uses: pirlruc/commondevops/.github/workflows/common-scorecard.yml@e41270c45b858cfa7a9f8404eaee781b5c29b61c
     with:
       blocking: false
       publish_results: false
@@ -65,27 +69,27 @@ jobs:
   token-audit:
     if: github.event.pull_request.user.login != 'dependabot[bot]'
     permissions: {}
-    uses: pirlruc/commondevops/.github/workflows/common-token-audit.yml@b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+    uses: pirlruc/commondevops/.github/workflows/common-token-audit.yml@e41270c45b858cfa7a9f8404eaee781b5c29b61c
     with:
-      scripts_ref: b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+      scripts_ref: e41270c45b858cfa7a9f8404eaee781b5c29b61c
     secrets:
       guardrails_token: ${{ secrets.GUARDRAILS_READ_TOKEN }}
       containerdevops_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
       checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
 
   published-ci-cpp-rescan:
-    if: github.event.pull_request.user.login != 'dependabot[bot]'
+    if: github.event_name != 'pull_request' && github.event.pull_request.user.login != 'dependabot[bot]'
     permissions:
       actions: read
       contents: read
       security-events: write
       packages: read
-    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@b419c24cbaf09f39d73fa0146a71155f1a4fbd54
+    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@6ccc0abe77f578f6b6c0a35430eae0334ffa94bd
     with:
       # Same digest as reusable cpp-* `container:` pins (CI-018). Do not float
       # on :latest; weekly rescan of a digest still picks up new CVEs.
       image: ghcr.io/pirlruc/ci-cpp@sha256:3f4776490bcf197fc10983e416443d01f365134df44110c24176f5b2ded09475
-      scripts_ref: b419c24cbaf09f39d73fa0146a71155f1a4fbd54
+      scripts_ref: 6ccc0abe77f578f6b6c0a35430eae0334ffa94bd
       pkg_types: library
       ignorefile: docker/ci-cpp/.trivyignore.yaml
       results_artifact: published-ci-cpp-scan
@@ -93,3 +97,34 @@ jobs:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
     secrets:
       scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
+
+  security-aggregate:
+    if: always()
+    needs: [secrets-sast, supply-chain, scorecard, token-audit, published-ci-cpp-rescan]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - name: Fail when a security job failed
+        env:
+          SECRETS: ${{ needs.secrets-sast.result }}
+          SUPPLY: ${{ needs.supply-chain.result }}
+          SCORE: ${{ needs.scorecard.result }}
+          TOKEN: ${{ needs.token-audit.result }}
+          RESCAN: ${{ needs.published-ci-cpp-rescan.result }}
+        run: |
+          set -eu
+          failed=""
+          for item in "secrets-sast=${SECRETS}" "supply-chain=${SUPPLY}" "scorecard=${SCORE}" "token-audit=${TOKEN}" "rescan=${RESCAN}"; do
+            name=${item%%=*}
+            result=${item#*=}
+            if [ "${result}" != "success" ] && [ "${result}" != "skipped" ]; then
+              failed="${failed} ${name}(${result})"
+            fi
+          done
+          if [ -n "${failed}" ]; then
+            echo "::error::Security jobs failed:${failed}"
+            exit 1
+          fi
+          echo "Security aggregate passed."

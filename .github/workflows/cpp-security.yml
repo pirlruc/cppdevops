@@ -38,12 +38,8 @@ on:
         type: boolean
         default: true
 
-# CI-025: workflow permissions are the union of the job permissions.
-permissions:
-  actions: read
-  contents: read
-  packages: read
-  security-events: write
+# CI-025: each job grants its own scopes. No top-level write.
+permissions: {}
 
 concurrency:
   group: >-
@@ -60,11 +56,11 @@ jobs:
     permissions:
       contents: read
       packages: read
-    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@e41270c45b858cfa7a9f8404eaee781b5c29b61c
     with:
       blocking: ${{ inputs.blocking }}
       working_directory: ${{ inputs.library_path }}
-      scripts_ref: b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+      scripts_ref: e41270c45b858cfa7a9f8404eaee781b5c29b61c
       container_image: ghcr.io/pirlruc/ci-lint@sha256:f9001c4c8726f72107545094237d4fc0592baca023cfa299a532634666d88111
     secrets:
       checkout_token: ${{ secrets.checkout_token }}
@@ -76,11 +72,11 @@ jobs:
       actions: read
       packages: read
       security-events: write
-    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@e41270c45b858cfa7a9f8404eaee781b5c29b61c
     with:
       blocking: ${{ inputs.blocking }}
       working_directory: ${{ inputs.library_path }}
-      scripts_ref: b85f95bbac8ba7d82eb90d1d84d1b8d1e8590a12
+      scripts_ref: e41270c45b858cfa7a9f8404eaee781b5c29b61c
       container_image: ghcr.io/pirlruc/ci-supply-chain@sha256:dc83deb4465d5989a03b14ccabef46c3f3426231048b962c69b8e434a7200d48
     secrets:
       checkout_token: ${{ secrets.checkout_token }}

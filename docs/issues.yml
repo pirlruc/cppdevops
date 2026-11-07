@@ -1421,7 +1421,11 @@ milestones:
       - CPP-DOC-004
       - CPP-BUILD-004
   - id: CPPD-PKG-001
-    status: open
+    status: rejected
+    resolution: >-
+      Obsolete. The NjordLabs libraries already pin cppdevops v6.4.1 and
+      their Quality workflows pull ci-lint. The private-package allow list
+      from the c4309e56 era is not the gate anymore.
     title: Grant library repos pull on private ci-lint and ci-supply-chain
     overview:
       problem: >-
@@ -1450,7 +1454,9 @@ milestones:
     - No library workflow pin moves to v6.2.2 before that access exists
     tasks:
     - id: CPPD-PKG-001-T1
-      status: open
+      status: rejected
+      resolution: >-
+        Obsolete with CPPD-PKG-001. The libraries pin v6.4.1 and pull ci-lint.
       title: Confirm the nine libraries can pull before the v6.2.2 pin
       instructions:
         files:
@@ -1458,59 +1464,59 @@ milestones:
       verification:
       - The nine repos are on both package allow lists, and every library ci-quality.yml still pins c4309e56 until then
 
-  - name: Documentation follow-up
-    epics:
-      - id: CPPD-CODEQL-001
-        status: open
-        title: Grant actions read on the vendored codeql caller
-        overview:
-          problem: >-
-            cpp-codeql.yml at v6.4.1 requests actions read. The vendored
-            caller omits it, so the job fails at startup.
-          goal: >-
-            The vendored caller grants actions read.
-        decision: >-
-          In the context of the C++ caller, facing a missing scope, we
-          decided to add actions read, to achieve a job that starts,
-          accepting no other permission change.
-        acceptance_criteria:
-          - The codeql job grants actions read
-        tasks:
-          - id: CPPD-CODEQL-001-T1
-            status: open
-            title: Add actions read
-            instructions:
-              files:
-                - templates/
-            verification:
-              - The codeql job permissions include actions read
-            guardrail_refs:
-              - CI-031
-              - CI-042
-      - id: CPPD-REG-001
-        status: open
-        title: Verify vcpkg git-tree and baseline in CI
-        overview:
-          problem: >-
-            Guardrails CPP-BUILD-039 checks find_package. Verifying the
-            registry git-tree and baseline is this repo's job, not a
-            language principle.
-          goal: >-
-            CI runs vcpkg x-ci-verify-versions or the equivalent check.
-        decision: >-
-          In the context of the vcpkg registry, facing tree drift, we
-          decided the check lives in cppdevops, to achieve a registry
-          gate, accepting that library repos only declare dependencies.
-        acceptance_criteria:
-          - A workflow runs the version verification
-        tasks:
-          - id: CPPD-REG-001-T1
-            status: open
-            title: Add the registry verification job
-            instructions:
-              files:
-                - .github/workflows/
-            verification:
-              - The workflow names the verification command
-            guardrail_refs:
-              - CPP-BUILD-039
+- name: Documentation follow-up
+  epics:
+    - id: CPPD-CODEQL-001
+      status: done
+      title: Grant actions read on the vendored codeql caller
+      overview:
+        problem: >-
+          cpp-codeql.yml at v6.4.1 requests actions read. The vendored
+          caller omits it, so the job fails at startup.
+        goal: >-
+          The vendored caller grants actions read.
+      decision: >-
+        In the context of the C++ caller, facing a missing scope, we
+        decided to add actions read, to achieve a job that starts,
+        accepting no other permission change.
+      acceptance_criteria:
+        - The codeql job grants actions read
+      tasks:
+        - id: CPPD-CODEQL-001-T1
+          status: done
+          title: Add actions read
+          instructions:
+            files:
+              - templates/
+          verification:
+            - The codeql job permissions include actions read
+          guardrail_refs:
+            - CI-031
+            - CI-042
+    - id: CPPD-REG-001
+      status: done
+      title: Verify vcpkg git-tree and baseline in CI
+      overview:
+        problem: >-
+          Guardrails CPP-BUILD-039 checks find_package. Verifying the
+          registry git-tree and baseline is this repo's job, not a
+          language principle.
+        goal: >-
+          CI runs vcpkg x-ci-verify-versions or the equivalent check.
+      decision: >-
+        In the context of the vcpkg registry, facing tree drift, we
+        decided the check lives in cppdevops, to achieve a registry
+        gate, accepting that library repos only declare dependencies.
+      acceptance_criteria:
+        - A workflow runs the version verification
+      tasks:
+        - id: CPPD-REG-001-T1
+          status: done
+          title: Add the registry verification job
+          instructions:
+            files:
+              - .github/workflows/
+          verification:
+            - The workflow names the verification command
+          guardrail_refs:
+            - CPP-BUILD-039

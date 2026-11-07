@@ -12,14 +12,14 @@ CPPDEVOPS_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 THRESH_FILE="${SCRIPT_DIR}/cpp.profile.thresholds.yml"
 LIB_THRESH="${ROOT}/docs/guardrails/cpp/profile.thresholds.yml"
 if [[ -f "${LIB_THRESH}" ]]; then
-  THRESH_FILE="${LIB_THRESH}"
+	THRESH_FILE="${LIB_THRESH}"
 elif [[ -f "${CPPDEVOPS_ROOT}/docs/guardrails/cpp/profile.thresholds.yml" ]]; then
-  THRESH_FILE="${CPPDEVOPS_ROOT}/docs/guardrails/cpp/profile.thresholds.yml"
+	THRESH_FILE="${CPPDEVOPS_ROOT}/docs/guardrails/cpp/profile.thresholds.yml"
 fi
 TARGET="$(bash "${CPPDEVOPS_ROOT}/scripts/read-thresholds.sh" doc_coverage "${THRESH_FILE}")"
 
 exec python3 "${SCRIPT_DIR}/check-doc-coverage.py" \
-  --root "${ROOT}" \
-  --threshold "${TARGET}" \
-  -- \
-  "$@"
+	--root "${ROOT}" \
+	--threshold "${TARGET}" \
+	-- \
+	"$@"

@@ -105,6 +105,7 @@ jobs:
       checkout_token: ${{ secrets.CPP_READ_TOKEN }}
   codeql:
     permissions:
+      actions: read
       contents: read
       packages: read
       security-events: write

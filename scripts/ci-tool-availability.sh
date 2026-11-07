@@ -4,23 +4,23 @@
 set -euo pipefail
 
 ci_project_root() {
-  cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd
+	cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd
 }
 
 ci_venv_bin() {
-  local root_dir="$1"
-  echo "${root_dir}/.venv-quality/bin"
+	local root_dir="$1"
+	echo "${root_dir}/.venv-quality/bin"
 }
 
 ci_lizard_available() {
-  local root_dir="$1"
-  command -v lizard >/dev/null 2>&1 || [[ -x "$(ci_venv_bin "${root_dir}")/lizard" ]]
+	local root_dir="$1"
+	command -v lizard >/dev/null 2>&1 || [[ -x "$(ci_venv_bin "${root_dir}")/lizard" ]]
 }
 
 ci_doxygen_available() {
-  command -v doxygen >/dev/null 2>&1
+	command -v doxygen >/dev/null 2>&1
 }
 
 ci_cmake_available() {
-  command -v cmake >/dev/null 2>&1
+	command -v cmake >/dev/null 2>&1
 }

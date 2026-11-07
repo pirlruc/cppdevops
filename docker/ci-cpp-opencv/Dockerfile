@@ -10,12 +10,12 @@
 # Base tag in a comment for DOCKER-BUILD-003: ubuntu:24.04
 # Digest created 2026-10-25. Refreshed before the 30-day age gate.
 
-FROM docker.io/library/ubuntu:24.04@sha256:24737cef17f4e22b1977df7d9a05e77c4e28b7da5b8911f8d8ccda136bf3573c AS pybuild
+FROM docker.io/library/ubuntu:24.04@sha256:fe81560990fae86dc4743202b2cb4d3df98d0bcf949173cecef15ce1127ef852 AS pybuild
 COPY --from=ghcr.io/astral-sh/uv:0.12.0@sha256:606e70c71c852d03f611b1e56a195d08648507018a7057fab82c4974c4eae105 \
   /uv /usr/local/bin/uv
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
-      ca-certificates=20260816ubuntu0.24.04.1 \
+      ca-certificates=20260816ubuntu0.24.04.2 \
       python3=3.12.3-0ubuntu2.1 \
       python3-venv=3.12.3-0ubuntu2.1 \
  && rm -rf /var/lib/apt/lists/*
@@ -26,7 +26,7 @@ RUN /usr/local/bin/uv venv /opt/venv --python /usr/bin/python3 \
  && rm -f /tmp/requirements.txt \
  && find /opt/venv -type d -name '__pycache__' -exec rm -rf {} +
 
-FROM docker.io/library/ubuntu:24.04@sha256:24737cef17f4e22b1977df7d9a05e77c4e28b7da5b8911f8d8ccda136bf3573c AS opencv-build
+FROM docker.io/library/ubuntu:24.04@sha256:fe81560990fae86dc4743202b2cb4d3df98d0bcf949173cecef15ce1127ef852 AS opencv-build
 
 ENV DEBIAN_FRONTEND=noninteractive \
     OPENCV_VERSION=4.14.0 \
@@ -34,7 +34,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
-      ca-certificates=20260816ubuntu0.24.04.1 \
+      ca-certificates=20260816ubuntu0.24.04.2 \
       clang=1:18.0-59~exp2 \
       cmake=3.28.3-1build7 \
       curl=8.5.0-2ubuntu10.16 \
@@ -94,7 +94,7 @@ RUN curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors -o /tmp/vcpkg.tar.gz
  && mv "/opt/vcpkg-${VCPKG_COMMIT}" /opt/vcpkg \
  && /opt/vcpkg/bootstrap-vcpkg.sh -disableMetrics
 
-FROM docker.io/library/ubuntu:24.04@sha256:24737cef17f4e22b1977df7d9a05e77c4e28b7da5b8911f8d8ccda136bf3573c
+FROM docker.io/library/ubuntu:24.04@sha256:fe81560990fae86dc4743202b2cb4d3df98d0bcf949173cecef15ce1127ef852
 
 LABEL org.opencontainers.image.title="ci-cpp-opencv" \
       org.opencontainers.image.description="Compile image: Clang 18, libc++, CMake, Ninja, vcpkg, OpenCV 4.14.0, Eigen 3.4, gcovr, clang-tidy, cppcheck, valgrind. Ubuntu 24.04. Non-root 1000:1000, linux/amd64." \
@@ -115,7 +115,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
-      ca-certificates=20260816ubuntu0.24.04.1 \
+      ca-certificates=20260816ubuntu0.24.04.2 \
       clang=1:18.0-59~exp2 \
       cmake=3.28.3-1build7 \
       git=1:2.43.0-1ubuntu7.4 \

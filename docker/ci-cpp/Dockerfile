@@ -6,7 +6,7 @@
 # kics-scan disable=b03a748a-542d-44f4-bb86-9199ab4fd2d5
 # Base tag in a comment for DOCKER-BUILD-003: dhi.io/python:3.13-debian13-dev
 
-FROM dhi.io/python:3.13-debian13-dev@sha256:2b8a45bc49c1398c8ef8e9092b9a2d028a878e7229f5ff86913f551a089372b3 AS pybuild
+FROM dhi.io/python:3.13-debian13-dev@sha256:9559f15098603bee3338bfcd5ce3bf8ff2621a314119ba1c4716d4ee2f6d448c AS pybuild
 COPY --from=ghcr.io/astral-sh/uv:0.12.0@sha256:606e70c71c852d03f611b1e56a195d08648507018a7057fab82c4974c4eae105 \
   /uv /usr/local/bin/uv
 COPY requirements.txt /tmp/requirements.txt
@@ -16,7 +16,7 @@ RUN /usr/local/bin/uv venv /opt/venv --python /usr/bin/python3 \
  && rm -f /tmp/requirements.txt
 RUN find /opt/venv -type d -name '__pycache__' -exec rm -rf {} +
 
-FROM dhi.io/python:3.13-debian13-dev@sha256:2b8a45bc49c1398c8ef8e9092b9a2d028a878e7229f5ff86913f551a089372b3
+FROM dhi.io/python:3.13-debian13-dev@sha256:9559f15098603bee3338bfcd5ce3bf8ff2621a314119ba1c4716d4ee2f6d448c
 
 LABEL org.opencontainers.image.title="ci-cpp" \
       org.opencontainers.image.description="C++ analysis toolchain: Clang 18, libclang, libc++, CMake, Ninja, vcpkg, cppcheck, clang-tidy, Doxygen, gcovr, lizard, Metrix++, valgrind. Debian 13. Non-root 1000:1000, linux/amd64." \
@@ -60,7 +60,7 @@ RUN apt-get update \
       doxygen=1.9.8+ds-2.1 \
       git=1:2.47.3-0+deb13u1+dhi2 \
       ca-certificates=20250419+deb13u1+dhi0 \
-      curl=8.14.1-2+deb13u7+dhi0 \
+      curl=8.14.1-2+deb13u7+dhi1 \
       gzip=1.13-1+deb13u1+dhi1 \
       zip=3.0-15+deb13u1+dhi1 \
       unzip=6.0-29+deb13u1+dhi1 \
