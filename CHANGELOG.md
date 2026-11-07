@@ -5,6 +5,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [6.5.0] - 2026-11-07
+
 ### Added
 
 - `cpp-registry-verify.yml` runs `vcpkg x-ci-verify-versions` and requires
