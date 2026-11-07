@@ -1421,7 +1421,11 @@ milestones:
       - CPP-DOC-004
       - CPP-BUILD-004
   - id: CPPD-PKG-001
-    status: open
+    status: rejected
+    resolution: >-
+      Obsolete. The NjordLabs libraries already pin cppdevops v6.4.1 and
+      their Quality workflows pull ci-lint. The private-package allow list
+      from the c4309e56 era is not the gate anymore.
     title: Grant library repos pull on private ci-lint and ci-supply-chain
     overview:
       problem: >-
@@ -1450,7 +1454,9 @@ milestones:
     - No library workflow pin moves to v6.2.2 before that access exists
     tasks:
     - id: CPPD-PKG-001-T1
-      status: open
+      status: rejected
+      resolution: >-
+        Obsolete with CPPD-PKG-001. The libraries pin v6.4.1 and pull ci-lint.
       title: Confirm the nine libraries can pull before the v6.2.2 pin
       instructions:
         files:
@@ -1461,7 +1467,7 @@ milestones:
 - name: Documentation follow-up
   epics:
     - id: CPPD-CODEQL-001
-      status: open
+      status: done
       title: Grant actions read on the vendored codeql caller
       overview:
         problem: >-
@@ -1477,7 +1483,7 @@ milestones:
         - The codeql job grants actions read
       tasks:
         - id: CPPD-CODEQL-001-T1
-          status: open
+          status: done
           title: Add actions read
           instructions:
             files:
@@ -1488,7 +1494,7 @@ milestones:
             - CI-031
             - CI-042
     - id: CPPD-REG-001
-      status: open
+      status: done
       title: Verify vcpkg git-tree and baseline in CI
       overview:
         problem: >-
@@ -1505,7 +1511,7 @@ milestones:
         - A workflow runs the version verification
       tasks:
         - id: CPPD-REG-001-T1
-          status: open
+          status: done
           title: Add the registry verification job
           instructions:
             files:

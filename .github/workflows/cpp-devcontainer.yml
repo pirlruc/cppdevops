@@ -43,14 +43,14 @@ jobs:
   devcontainer:
     permissions:
       contents: read
-    uses: pirlruc/containerdevops/.github/workflows/container-devcontainer.yml@b419c24cbaf09f39d73fa0146a71155f1a4fbd54
+    uses: pirlruc/containerdevops/.github/workflows/container-devcontainer.yml@6ccc0abe77f578f6b6c0a35430eae0334ffa94bd
     with:
       dockerfile: ${{ inputs.dockerfile }}
       dockerfiles: ${{ inputs.dockerfiles }}
       working_directory: ${{ inputs.working_directory }}
       structure_test_config: ${{ inputs.structure_test_config }}
       blocking: ${{ inputs.blocking }}
-      scripts_ref: b419c24cbaf09f39d73fa0146a71155f1a4fbd54
+      scripts_ref: 6ccc0abe77f578f6b6c0a35430eae0334ffa94bd
       runner_image: ${{ inputs.runner_image }}
     secrets:
       scripts_token: ${{ secrets.scripts_token }}

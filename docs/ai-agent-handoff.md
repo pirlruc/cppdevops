@@ -41,8 +41,8 @@ Contract reference: [`docs/workflows.md`](workflows.md).
 
 | Submodule / artifact | Pin |
 |----------------------|-----|
-| `docs/guardrails` | tag **1.13.1** → `1945211ac851c3c0f83694bd4ea53571fdced4ab` |
-| `.github/scaffold` | tag **1.10.0** → `1d9901f7e7e5785abb7cac6f5d46e0e8e2023ff8` |
+| `docs/guardrails` | tag **1.15.0** → `2d4bb70e95449f6922781716857adeb22badf676` |
+| `.github/scaffold` | tag **1.12.0** → `9c443ea978851768f451b1df2020dd86dfb1a967` |
 | methodologies (links only; not a submodule) | tag **1.9.1** |
 | `ghcr.io/pirlruc/ci-cpp` (debian, unsuffixed) | `6.4.0` `linux/amd64` `sha256:3f4776490bcf197fc10983e416443d01f365134df44110c24176f5b2ded09475`. Tag index `sha256:49d8078eaab4aab93114b9773dea66d51424849adf86633882cab5e1a75699f9`. Includes vcpkg. Private package: `packages: read` and `container.credentials` |
 | `ghcr.io/pirlruc/ci-cpp` (alpine) | `6.4.0-alpine` `linux/amd64` `sha256:817f79358c86cf4045288f74768901daa2b0f5416807e50ab4a601e8d7a8f331`. Tag index `sha256:2665aeaa0f9eb9b0a355a1216671724227cf21f5eaa4da7592a0d2f9fc78520d`. Includes vcpkg |
@@ -272,3 +272,5 @@ gitconfig under `RUNNER_TEMP`.
 *Last updated: 2026-11-03 (v6.4.0 published, v6.4.1 digest write-back).*
 
 *Last updated: 2026-11-04 — filed documentation follow-up epics moved out of guardrails, methodologies, or github-scaffold. Not implemented here.*
+
+*Last updated: 2026-11-07 — v6.5.0 branch. Guardrails 1.15.0. Scaffold 1.12.0. commondevops 6.0.1. containerdevops 6.4.0.*

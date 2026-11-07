@@ -18,13 +18,13 @@ Seven Nordic libraries still call `pirlruc/cppdevops/.github/workflows/*.yml@mai
 
 | Repo | Thin caller |
 |------|-------------|
-| [bifrost-cpp](https://github.com/pirlruc/bifrost-cpp) | `.github/workflows/ci-quality.yml` |
-| [draupnir-cpp](https://github.com/pirlruc/draupnir-cpp) | `.github/workflows/ci-quality.yml` |
-| [edda-cpp](https://github.com/pirlruc/edda-cpp) | `.github/workflows/ci-quality.yml` |
-| [heimdallcv](https://github.com/pirlruc/heimdallcv) | `.github/workflows/ci-quality.yml` |
-| [mimir-cpp](https://github.com/pirlruc/mimir-cpp) | `.github/workflows/ci-quality.yml` |
-| [mjolnir-cpp](https://github.com/pirlruc/mjolnir-cpp) | `.github/workflows/ci-quality.yml` |
-| [nornir-cpp](https://github.com/pirlruc/nornir-cpp) | `.github/workflows/ci-quality.yml` |
+| [bifrost-cpp](https://github.com/NjordLabs/bifrost-cpp) | `.github/workflows/ci-quality.yml` |
+| [draupnir-cpp](https://github.com/NjordLabs/draupnir-cpp) | `.github/workflows/ci-quality.yml` |
+| [edda-cpp](https://github.com/NjordLabs/edda-cpp) | `.github/workflows/ci-quality.yml` |
+| [heimdallcv](https://github.com/NjordLabs/heimdallcv) | `.github/workflows/ci-quality.yml` |
+| [mimir-cpp](https://github.com/NjordLabs/mimir-cpp) | `.github/workflows/ci-quality.yml` |
+| [mjolnir-cpp](https://github.com/NjordLabs/mjolnir-cpp) | `.github/workflows/ci-quality.yml` |
+| [nornir-cpp](https://github.com/NjordLabs/nornir-cpp) | `.github/workflows/ci-quality.yml` |
 
 `bor-cpp` and `runa-cpp` already pin a SHA and are out of this list.
 
@@ -48,16 +48,16 @@ the `uses:` lines themselves. Do not wait for a scaffold template bump.
 
 ## draupnir-cpp retirement
 
-Once [draupnir-cpp](https://github.com/pirlruc/draupnir-cpp) pins cppdevops and
+Once [draupnir-cpp](https://github.com/NjordLabs/draupnir-cpp) pins cppdevops and
 the thin caller is the only quality/test/docs/security path, retire the legacy
 workflows so they stop competing with `ci-quality.yml`:
 
 | Workflow | Why it goes |
 |----------|-------------|
-| [codeql.yml](https://github.com/pirlruc/draupnir-cpp/blob/main/.github/workflows/codeql.yml) | Replaced by `cpp-codeql.yml` via the thin caller |
-| [codacy-coverage-reporter.yml](https://github.com/pirlruc/draupnir-cpp/blob/main/.github/workflows/codacy-coverage-reporter.yml) | Coverage lives in `cpp-tests.yml` |
-| [cpp_build_test_ubuntu.yml](https://github.com/pirlruc/draupnir-cpp/blob/main/.github/workflows/cpp_build_test_ubuntu.yml) | Ubuntu host build replaced by `cpp-tests.yml` in `ci-cpp` |
-| [cpp_artifacts_ubuntu.yml](https://github.com/pirlruc/draupnir-cpp/blob/main/.github/workflows/cpp_artifacts_ubuntu.yml) | Artifact path is library-owned; drop or replace after the caller lands |
+| [codeql.yml](https://github.com/NjordLabs/draupnir-cpp/blob/main/.github/workflows/codeql.yml) | Replaced by `cpp-codeql.yml` via the thin caller |
+| [codacy-coverage-reporter.yml](https://github.com/NjordLabs/draupnir-cpp/blob/main/.github/workflows/codacy-coverage-reporter.yml) | Coverage lives in `cpp-tests.yml` |
+| [cpp_build_test_ubuntu.yml](https://github.com/NjordLabs/draupnir-cpp/blob/main/.github/workflows/cpp_build_test_ubuntu.yml) | Ubuntu host build replaced by `cpp-tests.yml` in `ci-cpp` |
+| [cpp_artifacts_ubuntu.yml](https://github.com/NjordLabs/draupnir-cpp/blob/main/.github/workflows/cpp_artifacts_ubuntu.yml) | Artifact path is library-owned; drop or replace after the caller lands |
 
 Do not delete those files from *this* repo — they are not in the tree. File the
 removals in draupnir-cpp after the pin bump.

@@ -10,29 +10,29 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "${ROOT}"
 
 if ! command -v docker >/dev/null 2>&1; then
-  echo "docker is required" >&2
-  exit 1
+	echo "docker is required" >&2
+	exit 1
 fi
 
 if [[ $# -eq 0 ]]; then
-  set -- \
-    docker/ci-cpp/Dockerfile \
-    docker/ci-cpp/Dockerfile.alpine \
-    docker/ci-cpp-opencv/Dockerfile
+	set -- \
+		docker/ci-cpp/Dockerfile \
+		docker/ci-cpp/Dockerfile.alpine \
+		docker/ci-cpp-opencv/Dockerfile
 fi
 
 refresh_ubuntu_digest() {
-  local file="$1"
-  if ! grep -q 'ubuntu:24.04@sha256:' "${file}"; then
-    return
-  fi
-  local digest
-  digest="$(docker buildx imagetools inspect docker.io/library/ubuntu:24.04 | awk '/^Digest:/ {print $2; exit}')"
-  if [[ -z "${digest}" ]]; then
-    echo "could not resolve ubuntu:24.04" >&2
-    exit 1
-  fi
-  python3 - "${file}" "${digest}" <<'PY'
+	local file="$1"
+	if ! grep -q 'ubuntu:24.04@sha256:' "${file}"; then
+		return
+	fi
+	local digest
+	digest="$(docker buildx imagetools inspect docker.io/library/ubuntu:24.04 | awk '/^Digest:/ {print $2; exit}')"
+	if [[ -z "${digest}" ]]; then
+		echo "could not resolve ubuntu:24.04" >&2
+		exit 1
+	fi
+	python3 - "${file}" "${digest}" <<'PY'
 import pathlib, re, sys
 path, digest = sys.argv[1], sys.argv[2]
 file = pathlib.Path(path)
@@ -45,35 +45,35 @@ PY
 }
 
 base_for() {
-  local file="$1"
-  local from
-  from="$(grep -E '^FROM ' "${file}" | head -1 | awk '{print $2}')"
-  if [[ -z "${from}" ]]; then
-    echo "no FROM in ${file}" >&2
-    exit 1
-  fi
-  printf '%s\n' "${from}"
+	local file="$1"
+	local from
+	from="$(grep -E '^FROM ' "${file}" | head -1 | awk '{print $2}')"
+	if [[ -z "${from}" ]]; then
+		echo "no FROM in ${file}" >&2
+		exit 1
+	fi
+	printf '%s\n' "${from}"
 }
 
 refresh_packages() {
-  local file="$1"
-  local base="$2"
-  local packages
-  packages="$(grep -E '^[[:space:]]+[a-z0-9][a-z0-9.+-]*=[0-9]' "${file}" | awk '{print $1}' | cut -d= -f1 | sort -u)"
-  if [[ -z "${packages}" ]]; then
-    echo "${file}: no apt pins"
-    return
-  fi
-  local listing joined
-  joined="$(printf '%s' "${packages}" | tr '\n' ' ')"
-  listing="$(docker run --rm --user root -e DEBIAN_FRONTEND=noninteractive -e PKGS="${joined}" "${base}" bash -c '
+	local file="$1"
+	local base="$2"
+	local packages
+	packages="$(grep -E '^[[:space:]]+[a-z0-9][a-z0-9.+-]*=[0-9]' "${file}" | awk '{print $1}' | cut -d= -f1 | sort -u)"
+	if [[ -z "${packages}" ]]; then
+		echo "${file}: no apt pins"
+		return
+	fi
+	local listing joined
+	joined="$(printf '%s' "${packages}" | tr '\n' ' ')"
+	listing="$(docker run --rm --user root -e DEBIAN_FRONTEND=noninteractive -e PKGS="${joined}" "${base}" bash -c '
     apt-get update -qq
     for pkg in $PKGS; do
       ver="$(apt-cache policy "${pkg}" | awk "/Candidate:/ {print \$2; exit}")"
       printf "%s %s\n" "${pkg}" "${ver}"
     done
   ')"
-  python3 - "${file}" "${listing}" <<'PY'
+	python3 - "${file}" "${listing}" <<'PY'
 import pathlib, sys
 path, listing = sys.argv[1], sys.argv[2]
 file = pathlib.Path(path)
@@ -104,8 +104,8 @@ PY
 }
 
 for file in "$@"; do
-  refresh_ubuntu_digest "${file}"
-  base="$(base_for "${file}")"
-  echo "${file}: apt query in ${base}"
-  refresh_packages "${file}" "${base}"
+	refresh_ubuntu_digest "${file}"
+	base="$(base_for "${file}")"
+	echo "${file}: apt query in ${base}"
+	refresh_packages "${file}" "${base}"
 done

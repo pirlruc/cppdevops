@@ -5,6 +5,26 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Added
+
+- `cpp-registry-verify.yml` runs `vcpkg x-ci-verify-versions` and requires
+  `versions/baseline.json` (CPPD-REG-001).
+- Dependabot `gitsubmodule` updates sit outside the grouped pull request.
+- `cppdevops-security` has an always-on aggregate job (CI-044).
+
+### Changed
+
+- The vendored codeql caller grants `actions: read` (CPPD-CODEQL-001).
+- `cpp-release` forwards `environment`, `release_artifact`, and
+  `release_files`. Top-level writes moved onto the release job.
+- Callers pin commondevops 6.0.1 and containerdevops 6.4.0. Scaffold
+  verify receives `packs_token`. Dependabot is not a checkout token.
+- Guardrails 1.15.0 and github-scaffold 1.12.0. Consumer checklist links
+  for the moved libraries point at NjordLabs.
+- CPPD-PKG-001 is rejected. The libraries already pin v6.4.1 and pull
+  ci-lint. SC-SIGN-001 is retired because the repo is public and signs
+  keyless.
+
 ## [6.4.1] - 2026-11-03
 
 ### Changed

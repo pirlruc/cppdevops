@@ -1,0 +1,58 @@
+name: C++ Registry Verify (reusable)
+
+# CPPD-REG-001. vcpkg x-ci-verify-versions plus the baseline gitlink.
+# Adoption in NjordLabs/cpp-registry is out of scope.
+
+on:
+  workflow_call:
+    inputs:
+      scripts_ref:
+        description: Must equal the caller's uses pin (CI-034)
+        required: false
+        type: string
+        default: ""
+      blocking:
+        required: false
+        type: boolean
+        default: true
+    secrets:
+      checkout_token:
+        required: false
+
+permissions: {}
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          token: ${{ secrets.checkout_token || github.token }}
+      - name: Require scripts_ref for cross-repo callers (CI-034)
+        env:
+          SCRIPTS_REF: ${{ inputs.scripts_ref }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -eu
+          if [ "${REPO}" != "pirlruc/cppdevops" ] && [ -z "${SCRIPTS_REF}" ]; then
+            echo "CI-034: cross-repo callers must pass scripts_ref matching the uses: pin" >&2
+            exit 1
+          fi
+      - name: Baseline gitlink
+        run: |
+          set -eu
+          test -f versions/baseline.json
+          git rev-parse "HEAD:versions/baseline.json" >/dev/null
+      - name: vcpkg x-ci-verify-versions
+        run: |
+          set -eu
+          if ! command -v vcpkg >/dev/null 2>&1; then
+            echo "vcpkg is not on PATH" >&2
+            exit 1
+          fi
+          vcpkg x-ci-verify-versions
