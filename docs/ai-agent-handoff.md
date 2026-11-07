@@ -92,6 +92,7 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Known pitfalls
 
+- Host PATH has no `vcpkg` (checked 2026-11-07). `cpp-registry-verify.yml` was not run locally: `vcpkg x-ci-verify-versions` against a read-only clone of NjordLabs/cpp-registry did not start. Do not install vcpkg on the host for this. Adoption in that registry stays out of scope.
 - Doc coverage lists headers with `os.walk(followlinks=True)` and must keep the path Clang opened. `Path.resolve()` follows an `include/` directory symlink into `modules/` and then every declaration looks private. `header_relative()` tries the opened path before the resolved path.
 - `cpp-dynamic.yml` input `asan_options` defaults to `detect_leaks=1:halt_on_error=1`. Callers that link the image's libstdc++ OpenCV from a libc++ test can add `alloc_dealloc_mismatch=0`.
 - Coverage counts `include|src` and `modules/*/include|src`. If the image has gcovr but no `llvm-cov` or `gcov`, and the job is root, `check-coverage.sh` installs `llvm-18`.
@@ -276,3 +277,5 @@ gitconfig under `RUNNER_TEMP`.
 *Last updated: 2026-11-07 — v6.5.0 branch. Guardrails 1.15.0. Scaffold 1.12.0. commondevops 6.0.1. containerdevops 6.4.0.*
 
 *Last updated: 2026-11-07 — Scorecard Code-Review, Fuzzing, and CII-Best-Practices stay open. See docs/scorecard-open-checks.md.*
+
+*Last updated: 2026-11-07 — vcpkg is not on the host PATH, so local cpp-registry verify stopped.*
