@@ -55,11 +55,14 @@ permissions:
   contents: read
   packages: read
 
+# A called workflow sees the caller's name in github.workflow. Sharing that
+# name across callees puts fuzz, infra, and security in one group, and GitHub
+# cancels the pending ones before they get a runner.
 concurrency:
   group: >-
     ${{ github.event_name == 'workflow_dispatch'
-        && format('dispatch-{0}-{1}', github.workflow, github.ref)
-        || format('call-{0}-{1}', github.workflow, github.run_id) }}
+        && format('dispatch-cpp-fuzz-{0}', github.ref)
+        || format('call-cpp-fuzz-{0}-{1}-{2}', github.repository, github.run_id, github.run_attempt) }}
   cancel-in-progress: ${{ github.event_name == 'workflow_dispatch' }}
 
 env:

@@ -95,6 +95,7 @@ python3 .github/scaffold/scripts/issues-sync.py \
 - Host PATH has no `vcpkg`. `ci-cpp:debian-local` has `/opt/vcpkg/vcpkg`, and that tree has no `.git`, so `vcpkg x-ci-verify-versions` cannot read port git trees. Pointing `--vcpkg-root` at NjordLabs/cpp-registry fails because that checkout has no `scripts/vcpkg-tools.json`. Do not install vcpkg on the host.
 - Doc coverage lists headers with `os.walk(followlinks=True)` and must keep the path Clang opened. `Path.resolve()` follows an `include/` directory symlink into `modules/` and then every declaration looks private. `header_relative()` tries the opened path before the resolved path.
 - `cpp-fuzz` configures with `-G Ninja`. ci-cpp has ninja and no make, so a bare `cmake -B build` stops before it compiles the fuzz target.
+- A called workflow's `github.workflow` is the caller name. `cpp-fuzz`, `cpp-infra`, and `cpp-security` must not build their concurrency group from that name, or the pending jobs cancel each other. The group includes `github.run_attempt` so a rerun does not reuse the previous attempt's group.
 - `cpp-dynamic.yml` input `asan_options` defaults to `detect_leaks=1:halt_on_error=1`. Callers that link the image's libstdc++ OpenCV from a libc++ test can add `alloc_dealloc_mismatch=0`.
 - Coverage counts `include|src` and `modules/*/include|src`. If the image has gcovr but no `llvm-cov` or `gcov`, and the job is root, `check-coverage.sh` installs `llvm-18`.
 - `cpp-release.yml` grants `attestations: write` because `common-release.yml` requests it. `cpp-infra.yml` and `cpp-security.yml` forward `secrets.checkout_token` into commondevops.
@@ -275,7 +276,7 @@ gitconfig under `RUNNER_TEMP`.
 
 *Last updated: 2026-11-04 — filed documentation follow-up epics moved out of guardrails, methodologies, or github-scaffold. Not implemented here.*
 
-*Last updated: 2026-11-08 — v6.6.3. cpp-fuzz configures with Ninja. v6.6.2 image-job token behavior is unchanged.*
+*Last updated: 2026-11-08 — v6.6.4. Fuzz, infra, and security no longer share a concurrency group. v6.6.3 still configures fuzz with Ninja.*
 
 *Last updated: 2026-11-07 — v6.5.0 branch. Guardrails 1.15.0. Scaffold 1.12.0. commondevops 6.0.1. containerdevops 6.4.0.*
 
