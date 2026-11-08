@@ -46,11 +46,12 @@ permissions:
   contents: read
   packages: read
 
+# github.workflow is the caller name here. Keep this group off the fuzz and security groups.
 concurrency:
   group: >-
     ${{ github.event_name == 'workflow_dispatch'
-        && format('dispatch-{0}-{1}', github.workflow, github.ref)
-        || format('call-{0}-{1}', github.workflow, github.run_id) }}
+        && format('dispatch-cpp-infra-{0}', github.ref)
+        || format('call-cpp-infra-{0}-{1}-{2}', github.repository, github.run_id, github.run_attempt) }}
   cancel-in-progress: ${{ github.event_name == 'workflow_dispatch' }}
 
 jobs:

@@ -61,11 +61,12 @@ on:
 # CI-025: each job grants its own scopes. No top-level write.
 permissions: {}
 
+# github.workflow is the caller name here. Keep this group off the fuzz and infra groups.
 concurrency:
   group: >-
     ${{ github.event_name == 'workflow_dispatch'
-        && format('dispatch-{0}-{1}', github.workflow, github.ref)
-        || format('call-{0}-{1}', github.workflow, github.run_id) }}
+        && format('dispatch-cpp-security-{0}', github.ref)
+        || format('call-cpp-security-{0}-{1}-{2}', github.repository, github.run_id, github.run_attempt) }}
   cancel-in-progress: ${{ github.event_name == 'workflow_dispatch' }}
 
 jobs:

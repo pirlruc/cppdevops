@@ -5,6 +5,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [6.6.4] - 2026-11-08
+
+### Fixed
+
+- `cpp-fuzz`, `cpp-infra`, and `cpp-security` use separate concurrency groups. A called workflow sees the caller's name in `github.workflow`, so the previous `call-{workflow}-{run_id}` group made those three cancel each other's pending jobs.
+
 ## [6.6.3] - 2026-11-08
 
 ### Fixed
