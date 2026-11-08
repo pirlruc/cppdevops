@@ -37,8 +37,17 @@ on:
         required: false
         type: string
         default: ""
+      container_username:
+        description: >-
+          Registry username for container_token. Empty uses github.actor.
+          Set this when the package owner is another account.
+        required: false
+        type: string
+        default: ""
     secrets:
       checkout_token:
+        required: false
+      container_token:
         required: false
 
 # CI-025: workflow permissions are the union of the job permissions.
@@ -63,8 +72,8 @@ jobs:
     container:
       image: ghcr.io/pirlruc/ci-cpp@sha256:8674685f88da7690e34418a32c52e37b832e339e290516a75a7dbf4f51932c30
       credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+        username: ${{ inputs.container_username || github.actor }}
+        password: ${{ secrets.container_token || secrets.GITHUB_TOKEN }}
       options: --user root
     timeout-minutes: 30
     permissions:

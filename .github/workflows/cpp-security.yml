@@ -32,8 +32,16 @@ on:
         required: false
         type: boolean
         default: true
+      container_username:
+        description: >-
+          Registry username for container_token. Empty uses github.actor.
+        required: false
+        type: string
+        default: ""
     secrets:
       checkout_token:
+        required: false
+      container_token:
         required: false
   workflow_dispatch:
     inputs:
@@ -68,14 +76,16 @@ jobs:
     permissions:
       contents: read
       packages: read
-    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@2c5e1ebe9797828128e01f3941b5a02650abe59a
+    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@c7751385f74edcf7f4ce1e64b408f225a38d9416
     with:
       blocking: ${{ inputs.blocking }}
       working_directory: ${{ inputs.library_path }}
-      scripts_ref: 2c5e1ebe9797828128e01f3941b5a02650abe59a
+      scripts_ref: c7751385f74edcf7f4ce1e64b408f225a38d9416
       container_image: ghcr.io/pirlruc/ci-lint@sha256:f9001c4c8726f72107545094237d4fc0592baca023cfa299a532634666d88111
+      container_username: ${{ inputs.container_username }}
     secrets:
       checkout_token: ${{ secrets.checkout_token }}
+      container_token: ${{ secrets.container_token }}
   supply-chain:
     # CI-024; gated by run_sbom (default true for SC-SBOM-001).
     if: github.event.pull_request.user.login != 'dependabot[bot]' && inputs.run_sbom
@@ -84,12 +94,14 @@ jobs:
       actions: read
       packages: read
       security-events: write
-    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@2c5e1ebe9797828128e01f3941b5a02650abe59a
+    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@c7751385f74edcf7f4ce1e64b408f225a38d9416
     with:
       blocking: ${{ inputs.blocking }}
       working_directory: ${{ inputs.library_path }}
-      scripts_ref: 2c5e1ebe9797828128e01f3941b5a02650abe59a
+      scripts_ref: c7751385f74edcf7f4ce1e64b408f225a38d9416
       upload_sarif: ${{ inputs.upload_sarif }}
       container_image: ghcr.io/pirlruc/ci-supply-chain@sha256:dc83deb4465d5989a03b14ccabef46c3f3426231048b962c69b8e434a7200d48
+      container_username: ${{ inputs.container_username }}
     secrets:
       checkout_token: ${{ secrets.checkout_token }}
+      container_token: ${{ secrets.container_token }}

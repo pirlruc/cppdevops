@@ -63,8 +63,10 @@ jobs:
       use_vcpkg: true
       vcpkg_triplet: x64-linux-libcxx
       tests_option: ""
+      container_username: pirlruc
     secrets:
       checkout_token: ${{ secrets.CPP_READ_TOKEN }}
+      container_token: ${{ secrets.GHCR_READ_TOKEN }}
   tests:
     permissions:
       contents: read
@@ -77,8 +79,10 @@ jobs:
       use_vcpkg: true
       vcpkg_triplet: x64-linux-libcxx
       tests_option: ""
+      container_username: pirlruc
     secrets:
       checkout_token: ${{ secrets.CPP_READ_TOKEN }}
+      container_token: ${{ secrets.GHCR_READ_TOKEN }}
   docs:
     permissions:
       contents: read
@@ -89,8 +93,10 @@ jobs:
       scripts_ref: CPPDEVOPS_PIN
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
       vcpkg_triplet: x64-linux-libcxx
+      container_username: pirlruc
     secrets:
       checkout_token: ${{ secrets.CPP_READ_TOKEN }}
+      container_token: ${{ secrets.GHCR_READ_TOKEN }}
   security:
     permissions:
       actions: read
@@ -104,8 +110,10 @@ jobs:
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
       run_sbom: ${{ github.event_name != 'workflow_dispatch' || inputs.run_sbom }}
       upload_sarif: false
+      container_username: pirlruc
     secrets:
       checkout_token: ${{ secrets.CPP_READ_TOKEN }}
+      container_token: ${{ secrets.GHCR_READ_TOKEN }}
   codeql:
     permissions:
       actions: read
@@ -121,8 +129,10 @@ jobs:
       vcpkg_triplet: x64-linux-libcxx
       run_codeql: false
       tests_option: ""
+      container_username: pirlruc
     secrets:
       checkout_token: ${{ secrets.CPP_READ_TOKEN }}
+      container_token: ${{ secrets.GHCR_READ_TOKEN }}
   dynamic:
     permissions:
       contents: read
@@ -135,8 +145,10 @@ jobs:
       use_vcpkg: true
       vcpkg_triplet: x64-linux-libcxx
       tests_option: ""
+      container_username: pirlruc
     secrets:
       checkout_token: ${{ secrets.CPP_READ_TOKEN }}
+      container_token: ${{ secrets.GHCR_READ_TOKEN }}
   mobile:
     permissions:
       contents: read
@@ -157,8 +169,10 @@ jobs:
     uses: pirlruc/cppdevops/.github/workflows/cpp-infra.yml@CPPDEVOPS_PIN
     with:
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
+      container_username: pirlruc
     secrets:
       checkout_token: ${{ secrets.CPP_READ_TOKEN }}
+      container_token: ${{ secrets.GHCR_READ_TOKEN }}
   pins:
     permissions:
       contents: read
@@ -197,8 +211,10 @@ jobs:
       scripts_ref: CPPDEVOPS_PIN
       run_fuzz: false
       blocking: ${{ github.event_name == 'workflow_dispatch' && inputs.blocking || github.event_name != 'workflow_dispatch' }}
+      container_username: pirlruc
     secrets:
       checkout_token: ${{ secrets.CPP_READ_TOKEN }}
+      container_token: ${{ secrets.GHCR_READ_TOKEN }}
   # CI-044. Docs-only pulls still run this job, so a required check exists
   # when the heavy jobs are skipped by a path filter.
   aggregate:

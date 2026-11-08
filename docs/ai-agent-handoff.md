@@ -6,7 +6,7 @@
 |-------|-------|
 | **Folder** | cppdevops |
 | **Remote** | <https://github.com/pirlruc/cppdevops> |
-| **Branch** | `main`. **v6.6.1** pins commondevops 6.1.0 (`2c5e1ebe9797828128e01f3941b5a02650abe59a`) and containerdevops 6.5.0 (`b8c0746603eefdc89571b17c62d1e965b28ff31f`). Workflow containers use ci-cpp 6.6.0 linux/amd64 `sha256:8674685f88da7690e34418a32c52e37b832e339e290516a75a7dbf4f51932c30`. Do not move v6.3.0 through v6.6.0. |
+| **Branch** | `main`. **v6.6.2** image jobs take `container_token`. `cpp-infra` and `cpp-security` pin commondevops 6.1.1 (`c7751385f74edcf7f4ce1e64b408f225a38d9416`). Other callees stay on 6.1.0 (`2c5e1ebe9797828128e01f3941b5a02650abe59a`). containerdevops 6.5.0 (`b8c0746603eefdc89571b17c62d1e965b28ff31f`). Workflow containers use ci-cpp 6.6.0 linux/amd64 `sha256:8674685f88da7690e34418a32c52e37b832e339e290516a75a7dbf4f51932c30`. |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
@@ -274,7 +274,7 @@ gitconfig under `RUNNER_TEMP`.
 
 *Last updated: 2026-11-04 — filed documentation follow-up epics moved out of guardrails, methodologies, or github-scaffold. Not implemented here.*
 
-*Last updated: 2026-11-08 — v6.6.1. Workflow containers use the ci-cpp 6.6.0 linux/amd64 manifest. The 6.4.0 digest is gone from the registry.*
+*Last updated: 2026-11-08 — v6.6.2. Image jobs take container_token. Infra and security pin commondevops 6.1.1. v6.6.1 container digest stays ci-cpp 6.6.0 linux/amd64.*
 
 *Last updated: 2026-11-07 — v6.5.0 branch. Guardrails 1.15.0. Scaffold 1.12.0. commondevops 6.0.1. containerdevops 6.4.0.*
 
