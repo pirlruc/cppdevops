@@ -5,6 +5,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [6.6.1] - 2026-11-08
+
+### Fixed
+
+- Workflow container images use the ci-cpp 6.6.0 linux/amd64 manifest
+  `sha256:8674685f88da7690e34418a32c52e37b832e339e290516a75a7dbf4f51932c30`.
+  The 6.4.0 digest is no longer on the registry.
+
 ## [6.6.0] - 2026-11-07
 
 ### Added

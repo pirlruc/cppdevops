@@ -6,7 +6,7 @@
 |-------|-------|
 | **Folder** | cppdevops |
 | **Remote** | <https://github.com/pirlruc/cppdevops> |
-| **Branch** | `main`. **v6.6.0** pins commondevops 6.1.0 (`2c5e1ebe9797828128e01f3941b5a02650abe59a`) and containerdevops 6.5.0 (`b8c0746603eefdc89571b17c62d1e965b28ff31f`). Do not move v6.3.0 through v6.5.0. |
+| **Branch** | `main`. **v6.6.1** pins commondevops 6.1.0 (`2c5e1ebe9797828128e01f3941b5a02650abe59a`) and containerdevops 6.5.0 (`b8c0746603eefdc89571b17c62d1e965b28ff31f`). Workflow containers use ci-cpp 6.6.0 linux/amd64 `sha256:8674685f88da7690e34418a32c52e37b832e339e290516a75a7dbf4f51932c30`. Do not move v6.3.0 through v6.6.0. |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
@@ -44,7 +44,7 @@ Contract reference: [`docs/workflows.md`](workflows.md).
 | `docs/guardrails` | tag **1.15.0** → `2d4bb70e95449f6922781716857adeb22badf676` |
 | `.github/scaffold` | tag **1.12.0** → `9c443ea978851768f451b1df2020dd86dfb1a967` |
 | methodologies (links only; not a submodule) | tag **1.9.1** |
-| `ghcr.io/pirlruc/ci-cpp` (debian, unsuffixed) | `6.4.0` `linux/amd64` `sha256:3f4776490bcf197fc10983e416443d01f365134df44110c24176f5b2ded09475`. Tag index `sha256:49d8078eaab4aab93114b9773dea66d51424849adf86633882cab5e1a75699f9`. Includes vcpkg. Private package: `packages: read` and `container.credentials` |
+| `ghcr.io/pirlruc/ci-cpp` (debian, unsuffixed) | `6.6.0` `linux/amd64` `sha256:8674685f88da7690e34418a32c52e37b832e339e290516a75a7dbf4f51932c30`. Tag index `sha256:bee2ce53fe717e52d85cc1e13994808eb098a4d2f1e76ff37b84b087bdfc331c`. Includes vcpkg. Private package: `packages: read` and `container.credentials` |
 | `ghcr.io/pirlruc/ci-cpp` (alpine) | `6.4.0-alpine` `linux/amd64` `sha256:817f79358c86cf4045288f74768901daa2b0f5416807e50ab4a601e8d7a8f331`. Tag index `sha256:2665aeaa0f9eb9b0a355a1216671724227cf21f5eaa4da7592a0d2f9fc78520d`. Includes vcpkg |
 | `ghcr.io/pirlruc/ci-cpp-ubuntu` | `6.3.0` `linux/amd64` `sha256:2a7622d8299d126f127847c09818de867170a3992efead0d1ecd7edd41c2a3d5`. Tag index `sha256:c5dc493c2059d61c8da58b001aeedff2ccb35ba28736eba73f3c378e814d06f8` |
 | `ci-cpp-vcpkg` | `6.3.0` `linux/amd64` `sha256:e551e5f6f6ec5b65bd571fb13c549916fc0ac4e6156c2185f0a8eb5be2a2fe44`. Tag index `sha256:7df56682882f2472cd0dd13d9d9148ea7a3f0cdd5140f12014abd4be0ba5cda4`. OpenCV is not in this image |
@@ -274,7 +274,7 @@ gitconfig under `RUNNER_TEMP`.
 
 *Last updated: 2026-11-04 — filed documentation follow-up epics moved out of guardrails, methodologies, or github-scaffold. Not implemented here.*
 
-*Last updated: 2026-11-07 — v6.6.0. commondevops 6.1.0. containerdevops 6.5.0. CI-032 and REL-PUB-004 retired. CodeQL can be skipped and otherwise gates on the SARIF artifact.*
+*Last updated: 2026-11-08 — v6.6.1. Workflow containers use the ci-cpp 6.6.0 linux/amd64 manifest. The 6.4.0 digest is gone from the registry.*
 
 *Last updated: 2026-11-07 — v6.5.0 branch. Guardrails 1.15.0. Scaffold 1.12.0. commondevops 6.0.1. containerdevops 6.4.0.*
 
