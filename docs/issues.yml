@@ -1520,3 +1520,46 @@ milestones:
             - The workflow names the verification command
           guardrail_refs:
             - CPP-BUILD-039
+    - id: CPPD-GATE-001
+      status: done
+      title: Gate CodeQL without an upload and publish release digests
+      overview:
+        problem: >-
+          CodeQL on a private repository uploads nothing and the gate only
+          checks step outcomes. Image releases do not append digests.
+          Wrappers and the quality template omit pins, drift, token audit,
+          doc verify, and fuzz.
+        goal: >-
+          A private caller can skip CodeQL, a run that does analyze fails
+          on findings, and the caller template covers the missing jobs.
+      decision: >-
+        In the context of private C++ callers, facing CodeQL without code
+        scanning, we decided to add run_codeql and a SARIF finding gate,
+        to achieve an enforced result without an upload, accepting that
+        the caller still grants security-events when the upload job is
+        declared.
+      acceptance_criteria:
+        - cpp-codeql has run_codeql and writes a SARIF artifact
+        - ci-cpp-image calls common-release-digests
+        - templates/ci-quality.yml has an aggregate job
+        - CI-032 and REL-PUB-004 are retired
+      guardrail_refs:
+        - CI-032
+        - CI-044
+        - REL-PUB-004
+        - REL-PUB-005
+      tasks:
+        - id: CPPD-GATE-001-T1
+          status: done
+          title: Add the gates and the caller template
+          instructions:
+            files:
+              - .github/workflows/cpp-codeql.yml
+              - .github/workflows/ci-cpp-image.yml
+              - templates/ci-quality.yml
+          verification:
+            - rg -n "run_codeql" .github/workflows/cpp-codeql.yml
+            - rg -n "common-release-digests" .github/workflows/ci-cpp-image.yml
+          guardrail_refs:
+            - CI-044
+            - REL-PUB-005

@@ -51,7 +51,7 @@ jobs:
   verify:
     permissions:
       contents: read
-    uses: pirlruc/commondevops/.github/workflows/common-doc-verify.yml@e41270c45b858cfa7a9f8404eaee781b5c29b61c
+    uses: pirlruc/commondevops/.github/workflows/common-doc-verify.yml@2c5e1ebe9797828128e01f3941b5a02650abe59a
     with:
       blocking: ${{ inputs.blocking }}
       shell_scripts: ${{ inputs.shell_scripts }}
@@ -61,6 +61,6 @@ jobs:
       run_link_lint: ${{ inputs.run_link_lint }}
       run_markdownlint: ${{ inputs.run_markdownlint }}
       run_lychee: ${{ inputs.run_lychee }}
-      scripts_ref: e41270c45b858cfa7a9f8404eaee781b5c29b61c
+      scripts_ref: 2c5e1ebe9797828128e01f3941b5a02650abe59a
     secrets:
       checkout_token: ${{ secrets.checkout_token }}

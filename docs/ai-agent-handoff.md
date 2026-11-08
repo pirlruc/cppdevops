@@ -6,7 +6,7 @@
 |-------|-------|
 | **Folder** | cppdevops |
 | **Remote** | <https://github.com/pirlruc/cppdevops> |
-| **Branch** | `main` at `0cb33e7`. GitHub Release **v6.4.0** published the images. Tag **v6.4.1** records those manifests and does not republish. Do not move v6.3.0 through v6.3.2. commondevops callers pin **5.6.2** (`b85f95bb`). containerdevops callers pin **6.3.6** (`b419c24c`). |
+| **Branch** | `main`. **v6.6.0** pins commondevops 6.1.0 (`2c5e1ebe9797828128e01f3941b5a02650abe59a`) and containerdevops 6.5.0 (`b8c0746603eefdc89571b17c62d1e965b28ff31f`). Do not move v6.3.0 through v6.5.0. |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
@@ -92,7 +92,7 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Known pitfalls
 
-- Host PATH has no `vcpkg` (checked 2026-11-07). `cpp-registry-verify.yml` was not run locally: `vcpkg x-ci-verify-versions` against a read-only clone of NjordLabs/cpp-registry did not start. Do not install vcpkg on the host for this. Adoption in that registry stays out of scope.
+- Host PATH has no `vcpkg`. `ci-cpp:debian-local` has `/opt/vcpkg/vcpkg`, and that tree has no `.git`, so `vcpkg x-ci-verify-versions` cannot read port git trees. Pointing `--vcpkg-root` at NjordLabs/cpp-registry fails because that checkout has no `scripts/vcpkg-tools.json`. Do not install vcpkg on the host.
 - Doc coverage lists headers with `os.walk(followlinks=True)` and must keep the path Clang opened. `Path.resolve()` follows an `include/` directory symlink into `modules/` and then every declaration looks private. `header_relative()` tries the opened path before the resolved path.
 - `cpp-dynamic.yml` input `asan_options` defaults to `detect_leaks=1:halt_on_error=1`. Callers that link the image's libstdc++ OpenCV from a libc++ test can add `alloc_dealloc_mismatch=0`.
 - Coverage counts `include|src` and `modules/*/include|src`. If the image has gcovr but no `llvm-cov` or `gcov`, and the job is root, `check-coverage.sh` installs `llvm-18`.
@@ -273,6 +273,8 @@ gitconfig under `RUNNER_TEMP`.
 *Last updated: 2026-11-03 (v6.4.0 published, v6.4.1 digest write-back).*
 
 *Last updated: 2026-11-04 — filed documentation follow-up epics moved out of guardrails, methodologies, or github-scaffold. Not implemented here.*
+
+*Last updated: 2026-11-07 — v6.6.0. commondevops 6.1.0. containerdevops 6.5.0. CI-032 and REL-PUB-004 retired. CodeQL can be skipped and otherwise gates on the SARIF artifact.*
 
 *Last updated: 2026-11-07 — v6.5.0 branch. Guardrails 1.15.0. Scaffold 1.12.0. commondevops 6.0.1. containerdevops 6.4.0.*
 

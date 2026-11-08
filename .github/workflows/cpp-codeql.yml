@@ -10,6 +10,20 @@ on:
         required: false
         type: boolean
         default: false
+      run_codeql:
+        description: >-
+          A private repository without code scanning sets this false.
+          The job still gates on SARIF findings when it runs.
+        required: false
+        type: boolean
+        default: true
+      tests_option:
+        description: >-
+          CMake option for CPP-BUILD-040, for example RUNA_BUILD_TESTS.
+          Passed beside PIRLRUC_WITH_TESTS. This job passes OFF.
+        required: false
+        type: string
+        default: ""
       cmake_preset:
         required: false
         type: string
@@ -53,7 +67,7 @@ env:
 jobs:
   codeql:
     # CI-024: CodeQL upload needs security-events; skip Dependabot secret path.
-    if: github.event.pull_request.user.login != 'dependabot[bot]'
+    if: inputs.run_codeql && github.event.pull_request.user.login != 'dependabot[bot]'
     runs-on: ubuntu-24.04
     # CodeQL action runs on the job container; keep toolchain from ci-cpp.
     # Default input is a digest. Callers that override must pass a digest too.
@@ -133,10 +147,16 @@ jobs:
         working-directory: ${{ inputs.library_path }}
         env:
           CMAKE_PRESET: ${{ inputs.cmake_preset }}
+          TESTS_OPTION: ${{ inputs.tests_option }}
         run: |
           set -euo pipefail
-          sh "${GITHUB_WORKSPACE}/_cppdevops/scripts/cmake-ci.sh" --preset "${CMAKE_PRESET}" -DPIRLRUC_WITH_TESTS=OFF || \
-            sh "${GITHUB_WORKSPACE}/_cppdevops/scripts/cmake-ci.sh" -B build -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_CXX_FLAGS='-stdlib=libc++'
+          extra=""
+          if [ -n "${TESTS_OPTION}" ]; then
+            extra="-D${TESTS_OPTION}=OFF"
+          fi
+          # shellcheck disable=SC2086
+          sh "${GITHUB_WORKSPACE}/_cppdevops/scripts/cmake-ci.sh" --preset "${CMAKE_PRESET}" -DPIRLRUC_WITH_TESTS=OFF ${extra} || \
+            sh "${GITHUB_WORKSPACE}/_cppdevops/scripts/cmake-ci.sh" -B build -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_CXX_FLAGS='-stdlib=libc++' -DPIRLRUC_WITH_TESTS=OFF ${extra}
           cmake --build build -j
 
       - name: Perform CodeQL Analysis
@@ -147,6 +167,30 @@ jobs:
           category: "/language:cpp"
           # Private repos without code scanning enabled reject the SARIF upload.
           upload: never
+          output: codeql.sarif
+
+      - name: Keep the SARIF
+        if: always() && steps.analyze.outcome == 'success'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: codeql-sarif-${{ inputs.library_path }}
+          path: codeql.sarif
+          if-no-files-found: error
+
+      - name: Gate — SARIF findings
+        if: always() && steps.analyze.outcome == 'success'
+        env:
+          ADVISORY: ${{ env.ADVISORY }}
+        run: |
+          set -euo pipefail
+          count="$(python3 -c 'import json; d=json.load(open("codeql.sarif")); print(sum(len(r.get("results", [])) for r in d.get("runs", [])))')"
+          echo "codeql_findings=${count}"
+          if [ "${count}" != "0" ]; then
+            echo "::error::CodeQL reported ${count} findings. upload is never, so the SARIF artifact is the record."
+            if [ "${ADVISORY}" != "true" ]; then
+              exit 1
+            fi
+          fi
 
       - name: Gate — CodeQL
         if: always()

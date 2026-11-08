@@ -42,7 +42,7 @@ jobs:
       contents: write
       id-token: write
       attestations: write
-    uses: pirlruc/commondevops/.github/workflows/common-release.yml@e41270c45b858cfa7a9f8404eaee781b5c29b61c
+    uses: pirlruc/commondevops/.github/workflows/common-release.yml@2c5e1ebe9797828128e01f3941b5a02650abe59a
     with:
       tag: ${{ inputs.tag }}
       attach_sbom: ${{ inputs.attach_sbom }}

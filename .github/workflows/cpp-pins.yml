@@ -2,7 +2,8 @@ name: C++ Pins (reusable)
 
 # Forwards to commondevops common-pins-verify. scripts_ref on this workflow
 # is the cppdevops pin the library passes. The nested checkout uses the
-# commondevops pin below.
+# commondevops pin below. A cppdevops SHA is not a commondevops tree, so
+# this workflow does not forward that input into the nested scripts_ref.
 
 on:
   workflow_call:
@@ -24,7 +25,7 @@ jobs:
   pins:
     permissions:
       contents: read
-    uses: pirlruc/commondevops/.github/workflows/common-pins-verify.yml@e41270c45b858cfa7a9f8404eaee781b5c29b61c
+    uses: pirlruc/commondevops/.github/workflows/common-pins-verify.yml@2c5e1ebe9797828128e01f3941b5a02650abe59a
     with:
       pin_script: ${{ inputs.pin_script }}
-      scripts_ref: e41270c45b858cfa7a9f8404eaee781b5c29b61c
+      scripts_ref: 2c5e1ebe9797828128e01f3941b5a02650abe59a

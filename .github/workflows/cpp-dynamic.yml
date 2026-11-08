@@ -38,6 +38,13 @@ on:
         required: false
         type: string
         default: ""
+      tests_option:
+        description: >-
+          CMake option for CPP-BUILD-040, for example RUNA_BUILD_TESTS.
+          Passed as ON beside PIRLRUC_WITH_TESTS.
+        required: false
+        type: string
+        default: ""
       asan_options:
         description: ASAN_OPTIONS for the ASan test step.
         required: false
@@ -226,12 +233,20 @@ jobs:
         id: configure
         continue-on-error: true
         working-directory: ${{ inputs.library_path }}
+        env:
+          TESTS_OPTION: ${{ inputs.tests_option }}
         run: |
           set -euo pipefail
+          extra=""
+          if [ -n "${TESTS_OPTION}" ]; then
+            extra="-D${TESTS_OPTION}=ON"
+          fi
+          # shellcheck disable=SC2086
           sh "${GITHUB_WORKSPACE}/_cppdevops/scripts/cmake-ci.sh" -B build-vg -G Ninja \
             -DCMAKE_CXX_COMPILER=clang++ \
             -DCMAKE_BUILD_TYPE=Debug \
             -DPIRLRUC_WITH_TESTS=ON \
+            ${extra} \
             -DCMAKE_CXX_FLAGS="-stdlib=libc++"
           cmake --build build-vg -j
 

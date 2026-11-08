@@ -5,7 +5,7 @@
 # No HEALTHCHECK. kics-scan disable=b03a748a-542d-44f4-bb86-9199ab4fd2d5
 # Base tag in a comment for DOCKER-BUILD-003: dhi.io/python:3.13-alpine3.24-dev
 
-FROM dhi.io/python:3.13-alpine3.24-dev@sha256:7d5cbf724a97c21e46828b10c6dc94a2de7a733d5371361b6f427ae5c00a25e5 AS pybuild
+FROM dhi.io/python:3.13-alpine3.24-dev@sha256:53ff6252b0cc680790b3e3b0ff6571753a8c34737aaf7f69e5ea17b676e1bfee AS pybuild
 COPY --from=ghcr.io/astral-sh/uv:0.12.0@sha256:606e70c71c852d03f611b1e56a195d08648507018a7057fab82c4974c4eae105 \
   /uv /usr/local/bin/uv
 COPY requirements-alpine.txt /tmp/requirements.txt
@@ -14,7 +14,7 @@ RUN /usr/local/bin/uv venv /opt/venv --python /usr/bin/python3 \
       -r /tmp/requirements.txt \
  && rm -f /tmp/requirements.txt
 
-FROM dhi.io/python:3.13-alpine3.24-dev@sha256:7d5cbf724a97c21e46828b10c6dc94a2de7a733d5371361b6f427ae5c00a25e5
+FROM dhi.io/python:3.13-alpine3.24-dev@sha256:53ff6252b0cc680790b3e3b0ff6571753a8c34737aaf7f69e5ea17b676e1bfee
 
 LABEL org.opencontainers.image.title="ci-cpp" \
       org.opencontainers.image.description="C++ analysis toolchain plus vcpkg, Alpine 3.24 variant. Non-root 1000:1000, linux/amd64." \

@@ -5,6 +5,24 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [6.6.0] - 2026-11-07
+
+### Added
+
+- `cpp-codeql` takes `run_codeql`. When analysis runs with `upload: never`, the job fails on SARIF findings unless the run is advisory, and it keeps the SARIF as an artifact.
+- `cpp-security` takes `upload_sarif` and passes it to common-supply-chain.
+- `cpp-quality`, `cpp-tests`, `cpp-dynamic`, and `cpp-codeql` take `tests_option` and pass it beside `PIRLRUC_WITH_TESTS`.
+- `templates/ci-quality.yml` calls pins, threshold drift, token audit, doc verify, and fuzz, and has an aggregate job.
+- `templates/release.yml` creates the GitHub Release from an annotated `v*` tag and attaches the SBOM from that run.
+- `ci-cpp-image` appends release digests after publish.
+
+### Changed
+
+- Callers pin commondevops 6.1.0 (`2c5e1ebe9797828128e01f3941b5a02650abe59a`) and containerdevops 6.5.0 (`b8c0746603eefdc89571b17c62d1e965b28ff31f`).
+- Image publish passes `environment: release` only on a release event. CI-032 and REL-PUB-004 are retired.
+- ci-cpp Debian and Alpine bases move to the current Python 3.13 DHI digests. The library pre-commit semgrep hook is v1.183.0.
+- A thin wrapper keeps the caller's `scripts_ref` as the cppdevops pin. The nested checkout stays the commondevops or containerdevops pin.
+
 ## [6.5.0] - 2026-11-07
 
 ### Added
