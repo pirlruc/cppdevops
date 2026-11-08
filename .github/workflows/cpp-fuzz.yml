@@ -124,7 +124,8 @@ jobs:
           # libFuzzer in the Ubuntu clang package is built against libstdc++.
           # Do not pass -stdlib=libc++ here or the link fails.
           flags="-fsanitize=fuzzer,address -g"
-          cmake -B build \
+          # ci-cpp ships ninja and has no make, so the Unix Makefiles default cannot configure.
+          cmake -B build -G Ninja \
             -DCMAKE_CXX_COMPILER=clang++ \
             -DCMAKE_BUILD_TYPE=Debug \
             -DCMAKE_CXX_FLAGS="${flags}" \

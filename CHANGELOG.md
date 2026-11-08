@@ -5,6 +5,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [6.6.3] - 2026-11-08
+
+### Fixed
+
+- `cpp-fuzz` configures with Ninja. ci-cpp has ninja and no make, so the Unix Makefiles default cannot build a fuzz target.
+
 ## [6.6.2] - 2026-11-08
 
 ### Added
