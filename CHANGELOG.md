@@ -5,6 +5,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [6.6.2] - 2026-11-08
+
+### Added
+
+- Image jobs take `container_username` and `container_token`. A caller in another account passes `GHCR_READ_TOKEN` and the package owner's login. An empty token still uses `GITHUB_TOKEN`.
+- `cpp-infra` and `cpp-security` pin commondevops 6.1.1 (`c7751385f74edcf7f4ce1e64b408f225a38d9416`) and forward that registry credential.
+
 ## [6.6.1] - 2026-11-08
 
 ### Fixed
