@@ -62,6 +62,9 @@ jobs:
           test -f versions/baseline.json
           git rev-parse "HEAD:versions/baseline.json" >/dev/null
       - name: vcpkg x-ci-verify-versions
+        env:
+          PORTS_ROOT: ${{ inputs.ports_root }}
+          VERSIONS_DIR: ${{ inputs.versions_dir }}
         run: |
           set -eu
           if ! command -v vcpkg >/dev/null 2>&1; then
@@ -69,10 +72,10 @@ jobs:
             exit 1
           fi
           args=()
-          if [ -n "${{ inputs.ports_root }}" ]; then
-            args+=(--x-builtin-ports-root="${{ inputs.ports_root }}")
+          if [ -n "${PORTS_ROOT}" ]; then
+            args+=(--x-builtin-ports-root="${PORTS_ROOT}")
           fi
-          if [ -n "${{ inputs.versions_dir }}" ]; then
-            args+=(--x-builtin-registry-versions-dir="${{ inputs.versions_dir }}")
+          if [ -n "${VERSIONS_DIR}" ]; then
+            args+=(--x-builtin-registry-versions-dir="${VERSIONS_DIR}")
           fi
           vcpkg x-ci-verify-versions "${args[@]}"
