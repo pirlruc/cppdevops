@@ -8,6 +8,14 @@ name: C++ Pins (reusable)
 on:
   workflow_call:
     inputs:
+      runs_on:
+        description: >-
+          JSON value for runs-on. The default is the GitHub-hosted
+          ubuntu-24.04 label. A caller passes a JSON array of labels
+          to select a self-hosted runner.
+        required: false
+        type: string
+        default: '"ubuntu-24.04"'
       pin_script:
         required: false
         type: string
@@ -25,7 +33,8 @@ jobs:
   pins:
     permissions:
       contents: read
-    uses: pirlruc/commondevops/.github/workflows/common-pins-verify.yml@2c5e1ebe9797828128e01f3941b5a02650abe59a
+    uses: pirlruc/commondevops/.github/workflows/common-pins-verify.yml@0e78652fa9f65b9d98033ac82bf9e5308ebb17a7
     with:
+      runs_on: ${{ inputs.runs_on }}
       pin_script: ${{ inputs.pin_script }}
-      scripts_ref: 2c5e1ebe9797828128e01f3941b5a02650abe59a
+      scripts_ref: 0e78652fa9f65b9d98033ac82bf9e5308ebb17a7

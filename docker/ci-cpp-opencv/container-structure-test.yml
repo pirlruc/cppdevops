@@ -27,6 +27,12 @@ commandTests:
     command: "pkg-config"
     args: ["--modversion", "opencv4"]
     expectedOutput: ["4.14.0"]
+  - name: opencv calib3d and photo
+    command: "bash"
+    args:
+      - "-c"
+      - "test -f /usr/local/lib/libopencv_calib3d.so && test -f /usr/local/lib/libopencv_photo.so"
+    exitCode: 0
   - name: opencv linked to libc++
     command: "bash"
     args:

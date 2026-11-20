@@ -3,6 +3,14 @@ name: C++ Token Audit (reusable)
 on:
   workflow_call:
     inputs:
+      runs_on:
+        description: >-
+          JSON value for runs-on. The default is the GitHub-hosted
+          ubuntu-24.04 label. A caller passes a JSON array of labels
+          to select a self-hosted runner.
+        required: false
+        type: string
+        default: '"ubuntu-24.04"'
       scripts_ref:
         description: Must match the caller's uses pin of this workflow
         required: false
@@ -23,9 +31,10 @@ permissions: {}
 jobs:
   audit:
     permissions: {}
-    uses: pirlruc/commondevops/.github/workflows/common-token-audit.yml@2c5e1ebe9797828128e01f3941b5a02650abe59a
+    uses: pirlruc/commondevops/.github/workflows/common-token-audit.yml@0e78652fa9f65b9d98033ac82bf9e5308ebb17a7
     with:
-      scripts_ref: 2c5e1ebe9797828128e01f3941b5a02650abe59a
+      runs_on: ${{ inputs.runs_on }}
+      scripts_ref: 0e78652fa9f65b9d98033ac82bf9e5308ebb17a7
     secrets:
       scorecard_token: ${{ secrets.scorecard_token }}
       guardrails_token: ${{ secrets.guardrails_token }}

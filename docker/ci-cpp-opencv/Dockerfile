@@ -67,7 +67,7 @@ RUN curl --retry 5 --retry-delay 2 --retry-all-errors -fsSL \
       -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
       -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++" \
       -DCMAKE_SHARED_LINKER_FLAGS="-stdlib=libc++" \
-      -DBUILD_LIST=core,imgproc,imgcodecs \
+      -DBUILD_LIST=core,imgproc,imgcodecs,calib3d,features2d,flann,photo \
       -DBUILD_TESTS=OFF \
       -DBUILD_PERF_TESTS=OFF \
       -DBUILD_EXAMPLES=OFF \

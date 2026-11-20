@@ -6,6 +6,14 @@ name: Infra lint (reusable)
 on:
   workflow_call:
     inputs:
+      runs_on:
+        description: >-
+          JSON value for runs-on. The default is the GitHub-hosted
+          ubuntu-24.04 label. A caller passes a JSON array of labels
+          to select a self-hosted runner.
+        required: false
+        type: string
+        default: '"ubuntu-24.04"'
       blocking:
         required: false
         type: boolean
@@ -40,6 +48,10 @@ on:
         description: Fail the job on lint errors
         type: boolean
         default: false
+      runs_on:
+        description: JSON value for runs-on. Default is the hosted ubuntu-24.04 label.
+        type: string
+        default: '"ubuntu-24.04"'
 
 # CI-025: workflow permissions are the union of the job permissions.
 permissions:
@@ -61,14 +73,15 @@ jobs:
     permissions:
       contents: read
       packages: read
-    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@c7751385f74edcf7f4ce1e64b408f225a38d9416
+    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@0e78652fa9f65b9d98033ac82bf9e5308ebb17a7
     with:
+      runs_on: ${{ inputs.runs_on }}
       blocking: ${{ inputs.blocking }}
       working_directory: ${{ inputs.working_directory || '.' }}
       shell_scripts: ${{ inputs.shell_scripts || '' }}
       dockerfiles: ${{ inputs.dockerfiles || '' }}
       # Must match uses: @pin (CI-018).
-      scripts_ref: c7751385f74edcf7f4ce1e64b408f225a38d9416
+      scripts_ref: 0e78652fa9f65b9d98033ac82bf9e5308ebb17a7
       container_image: ghcr.io/pirlruc/ci-lint@sha256:f9001c4c8726f72107545094237d4fc0592baca023cfa299a532634666d88111
       container_username: ${{ inputs.container_username }}
     secrets:

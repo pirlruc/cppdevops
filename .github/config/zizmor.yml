@@ -13,3 +13,4 @@ rules:
       - cpp-tests.yml
       - cpp-codeql.yml
       - cpp-dynamic.yml
+      - cpp-fuzz.yml

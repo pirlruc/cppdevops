@@ -3,6 +3,14 @@ name: C++ Threshold Drift (reusable)
 on:
   workflow_call:
     inputs:
+      runs_on:
+        description: >-
+          JSON value for runs-on. The default is the GitHub-hosted
+          ubuntu-24.04 label. A caller passes a JSON array of labels
+          to select a self-hosted runner.
+        required: false
+        type: string
+        default: '"ubuntu-24.04"'
       drift_script:
         required: false
         type: string
@@ -23,9 +31,10 @@ jobs:
   drift:
     permissions:
       contents: read
-    uses: pirlruc/commondevops/.github/workflows/common-threshold-drift.yml@2c5e1ebe9797828128e01f3941b5a02650abe59a
+    uses: pirlruc/commondevops/.github/workflows/common-threshold-drift.yml@ea35dbe8eeddddb64411705d46967a89b63e5f81
     with:
+      runs_on: ${{ inputs.runs_on }}
       drift_script: ${{ inputs.drift_script }}
-      scripts_ref: 2c5e1ebe9797828128e01f3941b5a02650abe59a
+      scripts_ref: ea35dbe8eeddddb64411705d46967a89b63e5f81
     secrets:
       checkout_token: ${{ secrets.checkout_token }}

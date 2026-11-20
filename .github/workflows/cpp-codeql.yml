@@ -3,6 +3,14 @@ name: C++ CodeQL (reusable)
 on:
   workflow_call:
     inputs:
+      runs_on:
+        description: >-
+          JSON value for runs-on. The default is the GitHub-hosted
+          ubuntu-24.04 label. A caller passes a JSON array of labels
+          to select a self-hosted runner.
+        required: false
+        type: string
+        default: '"ubuntu-24.04"'
       library_path:
         required: true
         type: string
@@ -77,7 +85,7 @@ jobs:
   codeql:
     # CI-024: CodeQL upload needs security-events; skip Dependabot secret path.
     if: inputs.run_codeql && github.event.pull_request.user.login != 'dependabot[bot]'
-    runs-on: ubuntu-24.04
+    runs-on: ${{ fromJSON(inputs.runs_on) }}
     # CodeQL action runs on the job container; keep toolchain from ci-cpp.
     # Default input is a digest. Callers that override must pass a digest too.
     # zizmor: ignore[unpinned-images]

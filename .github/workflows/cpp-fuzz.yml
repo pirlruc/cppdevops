@@ -8,6 +8,14 @@ name: C++ Fuzz (reusable)
 on:
   workflow_call:
     inputs:
+      runs_on:
+        description: >-
+          JSON value for runs-on. The default is the GitHub-hosted
+          ubuntu-24.04 label. A caller passes a JSON array of labels
+          to select a self-hosted runner.
+        required: false
+        type: string
+        default: '"ubuntu-24.04"'
       library_path:
         description: Path to the library folder
         required: true
@@ -44,6 +52,13 @@ on:
         required: false
         type: string
         default: ""
+      container_image:
+        description: >-
+          Image for the fuzz job. The default is ci-cpp. A library that
+          needs OpenCV passes ci-cpp-opencv.
+        required: false
+        type: string
+        default: ghcr.io/pirlruc/ci-cpp@sha256:8674685f88da7690e34418a32c52e37b832e339e290516a75a7dbf4f51932c30
     secrets:
       checkout_token:
         required: false
@@ -71,9 +86,11 @@ env:
 jobs:
   fuzz:
     if: inputs.run_fuzz
-    runs-on: ubuntu-24.04
+    runs-on: ${{ fromJSON(inputs.runs_on) }}
+    # The caller passes a digest. The default input is pinned.
+    # zizmor: ignore[unpinned-images]
     container:
-      image: ghcr.io/pirlruc/ci-cpp@sha256:8674685f88da7690e34418a32c52e37b832e339e290516a75a7dbf4f51932c30
+      image: ${{ inputs.container_image }}
       credentials:
         username: ${{ inputs.container_username || github.actor }}
         password: ${{ secrets.container_token || secrets.GITHUB_TOKEN }}
