@@ -192,12 +192,18 @@ jobs:
             engine="${RUNNER_TEMP}/libfuzzer-libcxx/libFuzzer.a"
           fi
           flags="-fsanitize=${sanitize} ${stdlib_flag} -g"
+          # The engine defines main, so it must not be on the compiler check link line.
+          engine_arg=()
+          if [ -n "${engine}" ]; then
+            engine_arg=(-DLIBFUZZER_ENGINE="${engine}")
+          fi
           # ci-cpp ships ninja and has no make, so the Unix Makefiles default cannot configure.
           sh "${GITHUB_WORKSPACE}/_cppdevops/scripts/cmake-ci.sh" -B build -G Ninja \
             -DCMAKE_CXX_COMPILER=clang++ \
             -DCMAKE_BUILD_TYPE=Debug \
             -DCMAKE_CXX_FLAGS="${flags}" \
-            -DCMAKE_EXE_LINKER_FLAGS="${flags} ${engine}"
+            -DCMAKE_EXE_LINKER_FLAGS="${flags}" \
+            "${engine_arg[@]}"
           cmake --build build --target "${FUZZ_TARGET}" -j
 
       - name: Run libFuzzer
