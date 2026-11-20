@@ -9,7 +9,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 - The release digest job checks out `pirlruc/commondevops` at `scripts_ref`. The previous pin checked out this repository and could not find `scripts/append-release-digests.sh`.
 - `cpp-fuzz` runs its steps with bash. The OpenCV image's `/bin/sh` is dash, which rejects `set -o pipefail`.
-- `cpp-fuzz` can install the manifest with vcpkg and link a libc++ libFuzzer. The system engine is libstdc++, so it cannot link ci-cpp-opencv.
+- `cpp-fuzz` can install the manifest with vcpkg and link a libc++ libFuzzer. The system engine is libstdc++, so it cannot link ci-cpp-opencv. The vcpkg cache key matches the tests job, so a warm tests cache is reused.
 - `cpp-devcontainer` checks out the containerdevops revision that puts `$HOME/.local/bin` on `GITHUB_PATH`. A self-hosted runner can then run hadolint in the next step.
 
 ## [6.7.0] - 2026-11-20

@@ -158,8 +158,8 @@ jobs:
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ github.workspace }}/.vcpkg-bin
-          key: vcpkg-fuzz-${{ inputs.vcpkg_triplet }}-${{ inputs.library_path }}-${{ hashFiles('**/vcpkg.json', '**/vcpkg-configuration.json') }}
-          restore-keys: vcpkg-fuzz-
+          key: vcpkg-${{ inputs.vcpkg_triplet }}-${{ inputs.library_path }}-${{ hashFiles('**/vcpkg.json', '**/vcpkg-configuration.json') }}
+          restore-keys: vcpkg-
 
       - name: Prepare vcpkg
         if: inputs.use_vcpkg
