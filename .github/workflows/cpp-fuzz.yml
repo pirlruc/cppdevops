@@ -59,6 +59,24 @@ on:
         required: false
         type: string
         default: ghcr.io/pirlruc/ci-cpp@sha256:8674685f88da7690e34418a32c52e37b832e339e290516a75a7dbf4f51932c30
+      use_vcpkg:
+        description: Run vcpkg manifest mode. The image must set VCPKG_ROOT.
+        required: false
+        type: boolean
+        default: false
+      vcpkg_triplet:
+        description: Triplet for manifest installs. ci-cpp images ship x64-linux-libcxx.
+        required: false
+        type: string
+        default: ""
+      cxx_stdlib:
+        description: >-
+          Pass -stdlib=libc++ and link a libc++ libFuzzer. Required when the
+          image's C++ libraries are libc++, because the system libFuzzer is
+          libstdc++. Empty keeps -fsanitize=fuzzer.
+        required: false
+        type: string
+        default: ""
     secrets:
       checkout_token:
         required: false
@@ -99,6 +117,9 @@ jobs:
     permissions:
       contents: read
       packages: read
+    env:
+      USE_VCPKG: ${{ inputs.use_vcpkg }}
+      VCPKG_TRIPLET: ${{ inputs.vcpkg_triplet }}
     defaults:
       run:
         # ci-cpp-opencv uses dash as /bin/sh, and dash rejects pipefail.
@@ -132,26 +153,57 @@ jobs:
             exit 1
           fi
 
+      - name: Restore vcpkg binary cache
+        if: inputs.use_vcpkg
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ github.workspace }}/.vcpkg-bin
+          key: vcpkg-${{ inputs.vcpkg_triplet }}-${{ inputs.library_path }}-${{ hashFiles('**/vcpkg.json', '**/vcpkg-configuration.json') }}
+          restore-keys: vcpkg-
+
+      - name: Prepare vcpkg
+        if: inputs.use_vcpkg
+        working-directory: ${{ github.workspace }}
+        env:
+          CHECKOUT_TOKEN: ${{ secrets.checkout_token }}
+        run: sh _cppdevops/scripts/prepare-vcpkg.sh
+
       - name: Build fuzz target
         id: build
         continue-on-error: true
         env:
           FUZZ_TARGET: ${{ inputs.fuzz_target }}
+          CXX_STDLIB: ${{ inputs.cxx_stdlib }}
         run: |
           set -euo pipefail
           if [ -z "${FUZZ_TARGET}" ]; then
             echo "run_fuzz is true but fuzz_target is empty" >&2
             exit 1
           fi
-          # libFuzzer in the Ubuntu clang package is built against libstdc++.
-          # Do not pass -stdlib=libc++ here or the link fails.
-          flags="-fsanitize=fuzzer,address -g"
+          # The system libFuzzer is libstdc++. A libc++ image links a rebuilt engine.
+          sanitize="fuzzer,address"
+          stdlib_flag=""
+          engine=""
+          if [ "${CXX_STDLIB}" = "libc++" ]; then
+            sanitize="address,fuzzer-no-link"
+            stdlib_flag="-stdlib=libc++"
+            bash "${GITHUB_WORKSPACE}/_cppdevops/scripts/build-libfuzzer-libcxx.sh" \
+              "${RUNNER_TEMP}/libfuzzer-libcxx"
+            engine="${RUNNER_TEMP}/libfuzzer-libcxx/libFuzzer.a"
+          fi
+          flags="-fsanitize=${sanitize} ${stdlib_flag} -g"
+          # The engine defines main, so it must not be on the compiler check link line.
+          engine_arg=()
+          if [ -n "${engine}" ]; then
+            engine_arg=(-DLIBFUZZER_ENGINE="${engine}")
+          fi
           # ci-cpp ships ninja and has no make, so the Unix Makefiles default cannot configure.
-          cmake -B build -G Ninja \
+          sh "${GITHUB_WORKSPACE}/_cppdevops/scripts/cmake-ci.sh" -B build -G Ninja \
             -DCMAKE_CXX_COMPILER=clang++ \
             -DCMAKE_BUILD_TYPE=Debug \
             -DCMAKE_CXX_FLAGS="${flags}" \
-            -DCMAKE_EXE_LINKER_FLAGS="${flags}"
+            -DCMAKE_EXE_LINKER_FLAGS="${flags}" \
+            "${engine_arg[@]}"
           cmake --build build --target "${FUZZ_TARGET}" -j
 
       - name: Run libFuzzer
