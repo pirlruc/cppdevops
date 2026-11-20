@@ -278,6 +278,8 @@ gitconfig under `RUNNER_TEMP`.
 
 *Last updated: 2026-11-20 — cpp-fuzz can install vcpkg and link a libc++ libFuzzer. The system engine is libstdc++ and cannot link ci-cpp-opencv.*
 
+*Last updated: 2026-11-20 — release digests pin commondevops `07912d8` and pass `scripts_ref`. The older pin checked out this repository and missed `scripts/append-release-digests.sh`.*
+
 *Last updated: 2026-11-07 — v6.5.0 branch. Guardrails 1.15.0. Scaffold 1.12.0. commondevops 6.0.1. containerdevops 6.4.0.*
 
 *Last updated: 2026-11-07 — Scorecard Code-Review, Fuzzing, and CII-Best-Practices stay open. See docs/scorecard-open-checks.md.*
