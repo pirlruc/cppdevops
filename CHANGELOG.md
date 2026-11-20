@@ -11,6 +11,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 - `cpp-fuzz` runs its steps with bash. The OpenCV image's `/bin/sh` is dash, which rejects `set -o pipefail`.
 - `cpp-fuzz` can install the manifest with vcpkg. Its cache key matches the tests job. A libc++ image links a rebuilt libFuzzer because the system engine is libstdc++.
 - `cpp-fuzz` passes that engine as `LIBFUZZER_ENGINE` instead of a global linker flag. The archive defines `main`, so CMake's compiler check cannot link it.
+- A libc++ fuzz run sets `alloc_dealloc_mismatch=0`. libc++ allocates a caught exception with `operator new` and libc++abi releases it with `free`.
 - `cpp-devcontainer` checks out the containerdevops revision that puts `$HOME/.local/bin` on `GITHUB_PATH`. A self-hosted runner can then run hadolint in the next step.
 
 ## [6.7.0] - 2026-11-20

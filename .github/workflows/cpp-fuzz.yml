@@ -212,12 +212,18 @@ jobs:
         env:
           FUZZ_TARGET: ${{ inputs.fuzz_target }}
           FUZZ_SECONDS: ${{ inputs.fuzz_seconds }}
+          CXX_STDLIB: ${{ inputs.cxx_stdlib }}
         run: |
           set -euo pipefail
           bin="$(find build -type f -name "${FUZZ_TARGET}" -print -quit)"
           if [ -z "${bin}" ]; then
             echo "fuzz binary not found: ${FUZZ_TARGET}" >&2
             exit 1
+          fi
+          # libc++ allocates exceptions with operator new. libc++abi frees them
+          # with free. ASan reports that on a caught nlohmann parse_error.
+          if [ "${CXX_STDLIB}" = "libc++" ]; then
+            export ASAN_OPTIONS="${ASAN_OPTIONS:+${ASAN_OPTIONS},}alloc_dealloc_mismatch=0"
           fi
           "${bin}" "-max_total_time=${FUZZ_SECONDS}" "-timeout=10"
 
