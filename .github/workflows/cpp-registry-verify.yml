@@ -15,6 +15,19 @@ on:
         required: false
         type: boolean
         default: true
+      ports_root:
+        description: >-
+          Passed as --x-builtin-ports-root. Empty verifies the vcpkg
+          checkout. A registry that depends on the Microsoft registry
+          cannot use this: those ports then vanish from the version database.
+        required: false
+        type: string
+        default: ""
+      versions_dir:
+        description: Passed as --x-builtin-registry-versions-dir when set.
+        required: false
+        type: string
+        default: ""
     secrets:
       checkout_token:
         required: false
@@ -55,4 +68,11 @@ jobs:
             echo "vcpkg is not on PATH" >&2
             exit 1
           fi
-          vcpkg x-ci-verify-versions
+          args=()
+          if [ -n "${{ inputs.ports_root }}" ]; then
+            args+=(--x-builtin-ports-root="${{ inputs.ports_root }}")
+          fi
+          if [ -n "${{ inputs.versions_dir }}" ]; then
+            args+=(--x-builtin-registry-versions-dir="${{ inputs.versions_dir }}")
+          fi
+          vcpkg x-ci-verify-versions "${args[@]}"

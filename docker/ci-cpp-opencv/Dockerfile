@@ -67,7 +67,7 @@ RUN curl --retry 5 --retry-delay 2 --retry-all-errors -fsSL \
       -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
       -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++" \
       -DCMAKE_SHARED_LINKER_FLAGS="-stdlib=libc++" \
-      -DBUILD_LIST=core,imgproc,imgcodecs \
+      -DBUILD_LIST=core,imgproc,imgcodecs,calib3d,features2d,flann,photo \
       -DBUILD_TESTS=OFF \
       -DBUILD_PERF_TESTS=OFF \
       -DBUILD_EXAMPLES=OFF \
@@ -152,6 +152,7 @@ RUN ldconfig \
  && if ! id -u 1000 >/dev/null 2>&1; then \
       useradd --uid 1000 --create-home --shell /bin/bash ci; \
     fi \
+ && /opt/vcpkg/vcpkg install --triplet x64-linux-libcxx ceres[eigensparse] sophus \
  && mkdir -p /workspace /vcpkg-cache \
  && chown -R 1000:1000 /workspace /vcpkg-cache /opt/vcpkg-triplets /opt/vcpkg-overlays \
  && find / -xdev -type f \( -perm -4000 -o -perm -2000 \) -exec chmod a-s {} +

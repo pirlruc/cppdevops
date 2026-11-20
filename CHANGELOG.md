@@ -5,6 +5,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [6.7.0] - 2026-11-20
+
+### Added
+
+- `cpp-fuzz` takes `container_image`. The default stays ci-cpp. A caller that links OpenCV passes ci-cpp-opencv.
+- `cpp-registry-verify` takes `ports_root` and `versions_dir` for `vcpkg x-ci-verify-versions`. A registry that depends on the Microsoft registry cannot use them: those ports then disappear from the version database.
+- `ci-cpp-opencv` builds OpenCV calib3d, features2d, flann, and photo, and preinstalls vcpkg `ceres[eigensparse]` and `sophus`.
+
 ## [6.6.4] - 2026-11-08
 
 ### Fixed
