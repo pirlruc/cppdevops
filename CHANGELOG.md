@@ -5,6 +5,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Fixed
+
+- `cpp-devcontainer` checks out the containerdevops revision that puts `$HOME/.local/bin` on `GITHUB_PATH`. A self-hosted runner can then run hadolint in the next step.
+
 ## [6.7.0] - 2026-11-20
 
 ### Added
