@@ -87,9 +87,9 @@ jobs:
   fuzz:
     if: inputs.run_fuzz
     runs-on: ${{ fromJSON(inputs.runs_on) }}
+    # The caller passes a digest. The default input is pinned.
+    # zizmor: ignore[unpinned-images]
     container:
-      # The caller passes a digest. The default input is pinned.
-      # zizmor: ignore[unpinned-images]
       image: ${{ inputs.container_image }}
       credentials:
         username: ${{ inputs.container_username || github.actor }}
