@@ -101,6 +101,8 @@ jobs:
       packages: read
     defaults:
       run:
+        # ci-cpp-opencv uses dash as /bin/sh, and dash rejects pipefail.
+        shell: bash
         working-directory: ${{ inputs.library_path }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
