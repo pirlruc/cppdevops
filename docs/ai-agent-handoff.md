@@ -276,7 +276,7 @@ gitconfig under `RUNNER_TEMP`.
 
 *Last updated: 2026-11-04 — filed documentation follow-up epics moved out of guardrails, methodologies, or github-scaffold. Not implemented here.*
 
-*Last updated: 2026-11-20 — v6.7.0. cpp-fuzz takes container_image. ci-cpp-opencv builds calib3d and photo and preinstalls ceres and sophus. x-ci-verify-versions cannot check NjordLabs/cpp-registry: replacing the builtin ports root hides Microsoft-registry dependencies.*
+*Last updated: 2026-11-20 — release digests pin commondevops `07912d8` and pass `scripts_ref`. The older pin checked out this repository and missed `scripts/append-release-digests.sh`.*
 
 *Last updated: 2026-11-07 — v6.5.0 branch. Guardrails 1.15.0. Scaffold 1.12.0. commondevops 6.0.1. containerdevops 6.4.0.*
 
