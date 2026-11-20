@@ -3,6 +3,14 @@ name: C++ Doc Verify (reusable)
 on:
   workflow_call:
     inputs:
+      runs_on:
+        description: >-
+          JSON value for runs-on. The default is the GitHub-hosted
+          ubuntu-24.04 label. A caller passes a JSON array of labels
+          to select a self-hosted runner.
+        required: false
+        type: string
+        default: '"ubuntu-24.04"'
       blocking:
         required: false
         type: boolean
@@ -51,8 +59,9 @@ jobs:
   verify:
     permissions:
       contents: read
-    uses: pirlruc/commondevops/.github/workflows/common-doc-verify.yml@2c5e1ebe9797828128e01f3941b5a02650abe59a
+    uses: pirlruc/commondevops/.github/workflows/common-doc-verify.yml@0e78652fa9f65b9d98033ac82bf9e5308ebb17a7
     with:
+      runs_on: ${{ inputs.runs_on }}
       blocking: ${{ inputs.blocking }}
       shell_scripts: ${{ inputs.shell_scripts }}
       ruff_paths: ${{ inputs.ruff_paths }}
@@ -61,6 +70,6 @@ jobs:
       run_link_lint: ${{ inputs.run_link_lint }}
       run_markdownlint: ${{ inputs.run_markdownlint }}
       run_lychee: ${{ inputs.run_lychee }}
-      scripts_ref: 2c5e1ebe9797828128e01f3941b5a02650abe59a
+      scripts_ref: 0e78652fa9f65b9d98033ac82bf9e5308ebb17a7
     secrets:
       checkout_token: ${{ secrets.checkout_token }}

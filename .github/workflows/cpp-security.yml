@@ -6,6 +6,14 @@ name: C++ Security (reusable)
 on:
   workflow_call:
     inputs:
+      runs_on:
+        description: >-
+          JSON value for runs-on. The default is the GitHub-hosted
+          ubuntu-24.04 label. A caller passes a JSON array of labels
+          to select a self-hosted runner.
+        required: false
+        type: string
+        default: '"ubuntu-24.04"'
       library_path:
         required: true
         type: string
@@ -57,6 +65,10 @@ on:
       upload_sarif:
         type: boolean
         default: true
+      runs_on:
+        description: JSON value for runs-on. Default is the hosted ubuntu-24.04 label.
+        type: string
+        default: '"ubuntu-24.04"'
 
 # CI-025: each job grants its own scopes. No top-level write.
 permissions: {}
@@ -77,11 +89,12 @@ jobs:
     permissions:
       contents: read
       packages: read
-    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@c7751385f74edcf7f4ce1e64b408f225a38d9416
+    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@0e78652fa9f65b9d98033ac82bf9e5308ebb17a7
     with:
+      runs_on: ${{ inputs.runs_on }}
       blocking: ${{ inputs.blocking }}
       working_directory: ${{ inputs.library_path }}
-      scripts_ref: c7751385f74edcf7f4ce1e64b408f225a38d9416
+      scripts_ref: 0e78652fa9f65b9d98033ac82bf9e5308ebb17a7
       container_image: ghcr.io/pirlruc/ci-lint@sha256:f9001c4c8726f72107545094237d4fc0592baca023cfa299a532634666d88111
       container_username: ${{ inputs.container_username }}
     secrets:
@@ -95,11 +108,12 @@ jobs:
       actions: read
       packages: read
       security-events: write
-    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@c7751385f74edcf7f4ce1e64b408f225a38d9416
+    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@0e78652fa9f65b9d98033ac82bf9e5308ebb17a7
     with:
+      runs_on: ${{ inputs.runs_on }}
       blocking: ${{ inputs.blocking }}
       working_directory: ${{ inputs.library_path }}
-      scripts_ref: c7751385f74edcf7f4ce1e64b408f225a38d9416
+      scripts_ref: 0e78652fa9f65b9d98033ac82bf9e5308ebb17a7
       upload_sarif: ${{ inputs.upload_sarif }}
       container_image: ghcr.io/pirlruc/ci-supply-chain@sha256:dc83deb4465d5989a03b14ccabef46c3f3426231048b962c69b8e434a7200d48
       container_username: ${{ inputs.container_username }}

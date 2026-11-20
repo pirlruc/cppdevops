@@ -8,6 +8,14 @@ name: C++ Mobile matrix (reusable)
 on:
   workflow_call:
     inputs:
+      runs_on:
+        description: >-
+          JSON value for runs-on. The default is the GitHub-hosted
+          ubuntu-24.04 label. A caller passes a JSON array of labels
+          to select a self-hosted runner.
+        required: false
+        type: string
+        default: '"ubuntu-24.04"'
       library_path:
         required: true
         type: string
@@ -47,7 +55,7 @@ env:
 
 jobs:
   android:
-    runs-on: ubuntu-24.04
+    runs-on: ${{ fromJSON(inputs.runs_on) }}
     timeout-minutes: 60
     permissions:
       contents: read

@@ -3,6 +3,14 @@ name: C++ Tests (reusable)
 on:
   workflow_call:
     inputs:
+      runs_on:
+        description: >-
+          JSON value for runs-on. The default is the GitHub-hosted
+          ubuntu-24.04 label. A caller passes a JSON array of labels
+          to select a self-hosted runner.
+        required: false
+        type: string
+        default: '"ubuntu-24.04"'
       library_path:
         required: true
         type: string
@@ -73,7 +81,7 @@ env:
 
 jobs:
   tests:
-    runs-on: ubuntu-24.04
+    runs-on: ${{ fromJSON(inputs.runs_on) }}
     # Default input is a digest. Callers that override must pass a digest too.
     # zizmor: ignore[unpinned-images]
     container:
@@ -194,7 +202,7 @@ jobs:
             coverage="${COVERAGE}"
 
   ubuntu-compile:
-    runs-on: ubuntu-24.04
+    runs-on: ${{ fromJSON(inputs.runs_on) }}
     steps:
       - name: Retired
         run: echo "ci-cpp-ubuntu stopped at 6.3.0; this job does not compile"
