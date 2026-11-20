@@ -33,12 +33,6 @@ commandTests:
       - "-c"
       - "test -f /usr/local/lib/libopencv_calib3d.so && test -f /usr/local/lib/libopencv_photo.so"
     exitCode: 0
-  - name: ceres and sophus
-    command: "bash"
-    args:
-      - "-c"
-      - "test -f /opt/vcpkg/installed/x64-linux-libcxx/include/ceres/ceres.h && test -f /opt/vcpkg/installed/x64-linux-libcxx/include/sophus/so3.hpp"
-    exitCode: 0
   - name: opencv linked to libc++
     command: "bash"
     args:

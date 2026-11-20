@@ -11,7 +11,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 - `cpp-fuzz` takes `container_image`. The default stays ci-cpp. A caller that links OpenCV passes ci-cpp-opencv.
 - `cpp-registry-verify` takes `ports_root` and `versions_dir` for `vcpkg x-ci-verify-versions`. A registry that depends on the Microsoft registry cannot use them: those ports then disappear from the version database.
-- `ci-cpp-opencv` builds OpenCV calib3d, features2d, flann, and photo, and preinstalls vcpkg `ceres[eigensparse]` and `sophus`.
+- `ci-cpp-opencv` builds OpenCV calib3d, features2d, flann, and photo. Ceres and Sophus stay a consumer `vcpkg install`: the image eigen overlay's `Eigen3Config` rejects Ceres 2.2's `3.3...5` range.
 
 ## [6.6.4] - 2026-11-08
 

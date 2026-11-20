@@ -153,7 +153,6 @@ RUN ldconfig \
       useradd --uid 1000 --create-home --shell /bin/bash ci; \
     fi \
  && mkdir -p /workspace /vcpkg-cache \
- && /opt/vcpkg/vcpkg install --triplet x64-linux-libcxx ceres[eigensparse] sophus \
  && chown -R 1000:1000 /workspace /vcpkg-cache /opt/vcpkg-triplets /opt/vcpkg-overlays \
  && find / -xdev -type f \( -perm -4000 -o -perm -2000 \) -exec chmod a-s {} +
 
