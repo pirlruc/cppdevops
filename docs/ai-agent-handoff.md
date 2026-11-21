@@ -99,6 +99,7 @@ python3 .github/scaffold/scripts/issues-sync.py \
 - `cpp-dynamic.yml` input `asan_options` defaults to `detect_leaks=1:halt_on_error=1`. Callers that link the image's libstdc++ OpenCV from a libc++ test can add `alloc_dealloc_mismatch=0`.
 - Coverage counts `include|src` and `modules/*/include|src`. If the image has gcovr but no `llvm-cov` or `gcov`, and the job is root, `check-coverage.sh` installs `llvm-18`.
 - `cpp-release.yml` grants `attestations: write` because `common-release.yml` requests it. `cpp-infra.yml` and `cpp-security.yml` forward `secrets.checkout_token` into commondevops.
+- `cpp-devcontainer` pins containerdevops `0be6d42`. That revision downloads the public script archive for a Dependabot pull request. The older pin skipped the checkout and hadolint never started.
 
 - **Wave 3 GitHub status drift:** MOBILE-MECH-001, AIREV-MECH-001, and
   DEP-MECH-001 are `done` in `docs/issues.yml`. GitHub issues
@@ -277,6 +278,8 @@ gitconfig under `RUNNER_TEMP`.
 *Last updated: 2026-11-04 — filed documentation follow-up epics moved out of guardrails, methodologies, or github-scaffold. Not implemented here.*
 
 *Last updated: 2026-11-20 — cpp-fuzz can install vcpkg and link a libc++ libFuzzer. The system engine is libstdc++ and cannot link ci-cpp-opencv.*
+
+*Last updated: 2026-11-21 — `cpp-devcontainer` pins containerdevops `0be6d42` so Dependabot can hadolint.*
 
 *Last updated: 2026-11-20 — release digests pin commondevops `07912d8` and pass `scripts_ref`. The older pin checked out this repository and missed `scripts/append-release-digests.sh`.*
 
