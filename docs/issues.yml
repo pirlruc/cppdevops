@@ -1563,3 +1563,32 @@ milestones:
           guardrail_refs:
             - CI-044
             - REL-PUB-005
+
+- name: Runner and image refresh
+  status: open
+  epics:
+    - id: CPPD-RUN-001
+      status: open
+      title: Let registry verify select its runner
+      overview:
+        problem: >-
+          cpp-registry-verify hardcodes ubuntu-24.04 while every other
+          reusable workflow takes runs_on.
+        goal: >-
+          A private registry can run the verify job on its own runner.
+      decision: >-
+        In the context of a private vcpkg registry, facing a hosted-runner
+        default, we decided to add a runs_on input, to achieve the same
+        runner contract as the other workflows, accepting that the
+        builtin-root flags still hide upstream ports.
+      acceptance_criteria:
+        - cpp-registry-verify takes runs_on and defaults to ubuntu-24.04
+      tasks:
+        - id: CPPD-RUN-001-T1
+          status: open
+          title: Add the runs_on input
+          instructions:
+            files:
+              - .github/workflows/cpp-registry-verify.yml
+          verification:
+            - rg -n "inputs.runs_on" .github/workflows/cpp-registry-verify.yml
