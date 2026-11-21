@@ -3,6 +3,12 @@
 All notable changes to this repository are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [6.7.2] - 2026-11-21
+
+### Fixed
+
+- The CodeQL findings gate reads `cpp.sarif` inside the `codeql.sarif` directory. CodeQL Action v4 writes a directory when `output` is set.
+
 ## [6.7.1] - 2026-11-21
 
 ### Added
