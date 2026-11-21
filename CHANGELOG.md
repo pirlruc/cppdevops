@@ -11,7 +11,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ### Changed
 
-- ci-cpp Debian and Alpine pin the current `dhi.io/python` digests. ci-cpp-opencv keeps its Ubuntu 24.04 digest until a local rebuild records a newer one.
+- ci-cpp Alpine pins the current `dhi.io/python` digest. The Debian digest stays: the newer base conflicts with the pinned `gcc-14` packages. ci-cpp-opencv keeps its Ubuntu 24.04 digest.
 - `cpp-codeql` uses CodeQL Action v4.39.3. The library pre-commit template uses clang-format v23.1.5 and semgrep v1.184.0.
 - Image and self-CI jobs no longer pass `COMMONDEVOPS_READ_TOKEN` or `CONTAINERDEVOPS_READ_TOKEN`. Those repositories are public, so `github.token` checks them out. `GUARDRAILS_READ_TOKEN` stays.
 
