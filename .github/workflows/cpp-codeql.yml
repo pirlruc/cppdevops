@@ -200,7 +200,7 @@ jobs:
           ADVISORY: ${{ env.ADVISORY }}
         run: |
           set -euo pipefail
-          count="$(python3 -c 'import json; from pathlib import Path; root = Path("codeql.sarif"); paths = [root] if root.is_file() else sorted(root.glob("*.sarif")); print(sum(len(run.get("results", [])) for path in paths for run in json.loads(path.read_text()).get("runs", [])))')"
+          count="$(python3 _cppdevops/scripts/count-codeql-findings.py codeql.sarif)"
           echo "codeql_findings=${count}"
           if [ "${count}" != "0" ]; then
             echo "::error::CodeQL reported ${count} findings. upload is never, so the SARIF artifact is the record."

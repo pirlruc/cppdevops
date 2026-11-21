@@ -3,6 +3,12 @@
 All notable changes to this repository are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [6.7.3] - 2026-11-21
+
+### Fixed
+
+- The CodeQL findings gate ignores results whose path is under `build/` or `vcpkg_installed/`. Those headers are dependencies, and `paths-ignore` does not drop alerts CodeQL attributes to a header included from `src/`.
+
 ## [6.7.2] - 2026-11-21
 
 ### Fixed
