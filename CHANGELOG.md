@@ -13,6 +13,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 - `cpp-fuzz` passes that engine as `LIBFUZZER_ENGINE` instead of a global linker flag. The archive defines `main`, so CMake's compiler check cannot link it.
 - A libc++ fuzz run sets `alloc_dealloc_mismatch=0`. libc++ allocates a caught exception with `operator new` and libc++abi releases it with `free`.
 - `cpp-devcontainer` checks out the containerdevops revision that puts `$HOME/.local/bin` on `GITHUB_PATH`. A self-hosted runner can then run hadolint in the next step.
+- `cpp-devcontainer` pins containerdevops `0be6d42`. A Dependabot pull request downloads that public script archive instead of failing the checkout.
 
 ## [6.7.0] - 2026-11-20
 
