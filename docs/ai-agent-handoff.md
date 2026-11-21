@@ -279,6 +279,8 @@ gitconfig under `RUNNER_TEMP`.
 
 *Last updated: 2026-11-20 — cpp-fuzz can install vcpkg and link a libc++ libFuzzer. The system engine is libstdc++ and cannot link ci-cpp-opencv.*
 
+*Last updated: 2026-11-21 — `cpp-registry-verify` takes `runs_on`. Public commondevops and containerdevops checkouts use `github.token`. `GUARDRAILS_READ_TOKEN` stays.*
+
 *Last updated: 2026-11-21 — `cpp-devcontainer` pins containerdevops `0be6d42` so Dependabot can hadolint.*
 
 *Last updated: 2026-11-20 — release digests pin commondevops `07912d8` and pass `scripts_ref`. The older pin checked out this repository and missed `scripts/append-release-digests.sh`.*

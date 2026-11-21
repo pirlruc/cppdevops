@@ -74,8 +74,6 @@ jobs:
       scripts_ref: 2c5e1ebe9797828128e01f3941b5a02650abe59a
     secrets:
       guardrails_token: ${{ secrets.GUARDRAILS_READ_TOKEN }}
-      containerdevops_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
-      checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
 
   published-ci-cpp-rescan:
     if: github.event_name != 'pull_request' && github.event.pull_request.user.login != 'dependabot[bot]'
@@ -95,8 +93,6 @@ jobs:
       results_artifact: published-ci-cpp-scan
       sarif_category: trivy-ci-cpp
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
-    secrets:
-      scripts_token: ${{ secrets.CONTAINERDEVOPS_READ_TOKEN }}
 
   security-aggregate:
     if: always()

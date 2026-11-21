@@ -3,8 +3,6 @@ name: Cppdevops CI (self)
 # Deterministic infra lint + threshold drift. Time-varying security stays on
 # cppdevops-security.yml (schedule). Jobs that need GUARDRAILS_READ_TOKEN
 # skip Dependabot (CI-024). pins and lint-dependabot stay token-free.
-# Cross-repo checkout uses COMMONDEVOPS_READ_TOKEN. Dependabot skips the jobs.
-# requests and COMMONDEVOPS_READ_TOKEN on Actions runs.
 
 on:
   push:
@@ -48,7 +46,6 @@ jobs:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       scripts_ref: 2c5e1ebe9797828128e01f3941b5a02650abe59a
     secrets:
-      checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
       packs_token: ${{ secrets.GUARDRAILS_READ_TOKEN }}
 
   lint-dependabot:
@@ -89,8 +86,6 @@ jobs:
       yaml_globs: .github/workflows/*.yml
       run_link_lint: true
       scripts_ref: 2c5e1ebe9797828128e01f3941b5a02650abe59a
-    secrets:
-      checkout_token: ${{ secrets.COMMONDEVOPS_READ_TOKEN }}
 
   infra-lint:
     if: github.event.pull_request.user.login != 'dependabot[bot]'
@@ -119,8 +114,8 @@ jobs:
       - name: Require GUARDRAILS_READ_TOKEN
         id: token
         env:
-          # COMMONDEVOPS_READ_TOKEN is not a fallback: it may lack contents:read on
-          # pirlruc/guardrails and then 403s. Cross-repo checkout needs this PAT.
+          # A token without contents:read on pirlruc/guardrails 403s.
+          # Cross-repo checkout needs this PAT.
           GUARDRAILS_TOKEN: ${{ secrets.GUARDRAILS_READ_TOKEN }}
         run: |
           set -euo pipefail
