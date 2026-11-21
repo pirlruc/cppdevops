@@ -17,3 +17,5 @@ milestones:
     description: Shared quality, coverage, security, mobile, and infra workflows
   - name: Continuous improvement
     description: Follow-up epics from reviews and ops findings
+  - name: Runner and image refresh
+    description: Registry verify runner input and the 6.7.1 image refresh
