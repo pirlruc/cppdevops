@@ -6,7 +6,7 @@
 |-------|-------|
 | **Folder** | cppdevops |
 | **Remote** | <https://github.com/pirlruc/cppdevops> |
-| **Branch** | `main`. **v6.6.2** image jobs take `container_token`. `cpp-infra` and `cpp-security` pin commondevops 6.1.1 (`c7751385f74edcf7f4ce1e64b408f225a38d9416`). Other callees stay on 6.1.0 (`2c5e1ebe9797828128e01f3941b5a02650abe59a`). containerdevops 6.5.0 (`b8c0746603eefdc89571b17c62d1e965b28ff31f`). Workflow containers use ci-cpp 6.6.0 linux/amd64 `sha256:8674685f88da7690e34418a32c52e37b832e339e290516a75a7dbf4f51932c30`. |
+| **Branch** | `main`. Published tip is **v6.8.0** (`b569a328dff6039a790924a63311475d21c4bccd`). Guardrails 1.17.0, scaffold 1.14.0, containerdevops 6.7.0 (`f0f9077`). commondevops callers are still mixed (`2c5e1ebe`, `0e78652f`, release digests `07912d8`). |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
