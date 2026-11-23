@@ -5,16 +5,19 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [6.8.0] - 2026-11-23
+
 ### Fixed
 
 - `cpp-codeql` no longer requests `security-events: write`. The analyze step sets `upload: never` (CI-042).
 - `ubuntu-compile` runs only when `run_ubuntu_compile` is true, and it has a timeout.
 - The vcpkg source archive is checked against a committed sha256 (CI-039).
+- gcc-14-base, libgcc-s1, and libstdc++6 are pinned at `dhi9`, which is the version clang depends on.
 
 ### Changed
 
 - `docs/guardrails` is 1.17.0 and `.github/scaffold` is 1.14.0.
-- Alpine and OpenCV publishes set OCI documentation and url labels.
+- Image builds and the Hub caller pin containerdevops 6.7.0. Alpine and OpenCV builds set OCI documentation and url labels.
 
 ## [6.7.3] - 2026-11-21
 

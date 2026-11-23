@@ -41,8 +41,8 @@ Contract reference: [`docs/workflows.md`](workflows.md).
 
 | Submodule / artifact | Pin |
 |----------------------|-----|
-| `docs/guardrails` | tag **1.15.0** → `2d4bb70e95449f6922781716857adeb22badf676` |
-| `.github/scaffold` | tag **1.12.0** → `9c443ea978851768f451b1df2020dd86dfb1a967` |
+| `docs/guardrails` | tag **1.17.0** → `9a17ebb269a5ab02899570dd3e40fb72e50ad762` |
+| `.github/scaffold` | tag **1.14.0** → `da8942edf17a0d2736d297c90338fd78b7ec31fb` |
 | methodologies (links only; not a submodule) | tag **1.9.1** |
 | `ghcr.io/pirlruc/ci-cpp` (debian, unsuffixed) | `6.6.0` `linux/amd64` `sha256:8674685f88da7690e34418a32c52e37b832e339e290516a75a7dbf4f51932c30`. Tag index `sha256:bee2ce53fe717e52d85cc1e13994808eb098a4d2f1e76ff37b84b087bdfc331c`. Includes vcpkg. Private package: `packages: read` and `container.credentials` |
 | `ghcr.io/pirlruc/ci-cpp` (alpine) | `6.4.0-alpine` `linux/amd64` `sha256:817f79358c86cf4045288f74768901daa2b0f5416807e50ab4a601e8d7a8f331`. Tag index `sha256:2665aeaa0f9eb9b0a355a1216671724227cf21f5eaa4da7592a0d2f9fc78520d`. Includes vcpkg |
@@ -50,7 +50,7 @@ Contract reference: [`docs/workflows.md`](workflows.md).
 | `ci-cpp-vcpkg` | `6.3.0` `linux/amd64` `sha256:e551e5f6f6ec5b65bd571fb13c549916fc0ac4e6156c2185f0a8eb5be2a2fe44`. Tag index `sha256:7df56682882f2472cd0dd13d9d9148ea7a3f0cdd5140f12014abd4be0ba5cda4`. OpenCV is not in this image |
 | `ci-cpp-opencv` | `6.4.0` `linux/amd64` `sha256:5c603b8864c017e82906a2a6c6aa6728a3cc8aba1b8f12c83947d57ed04aa484`. Tag index `sha256:f7e721a5593987ac9a8e9ae145f4e622ebf8e34355b9dadcbab3154b980468eb`. OpenCV 4.14.0, Eigen 3.4, libc++ triplet, analysis tools. `sha256:42ba66c3…` remains the 6.3.0 linux/amd64 image |
 | commondevops `uses:` | `9e28757e47375bbe02f1150e3612cdf69723dd29` (included in tag **5.3.3** and later). Token audit is **5.4.1** `d03953476f3d5fa1081a0834d9882007ff26dd91` |
-| containerdevops `uses:` | `2ad052e69d2587cdaf8ccac59b9dae5c60f5560b` (included in tag **6.2.0**) |
+| containerdevops `uses:` | `f0f9077ced9f79097e7597de1a2e00f8eb42e216` (tag **6.7.0**) |
 
 ## Delivery status
 
@@ -179,6 +179,7 @@ gitconfig under `RUNNER_TEMP`.
 
 ## Recent history
 
+- 2026-11-23: **v6.8.0** pins guardrails 1.17.0, scaffold 1.14.0, and containerdevops 6.7.0. CodeQL does not request `security-events: write`. gcc-14-base is `dhi9`.
 - 2026-10-28: **v6.3.2** grants `actions: read` on the CodeQL job so `codeql-action/analyze` can read the workflow run. No image republish. Do not move v6.1.0 through v6.3.1.
 - 2026-10-28: **v6.3.0** on `fadd4e7` published the images (<https://github.com/pirlruc/cppdevops/actions/runs/40762360977>). Security dispatch <https://github.com/pirlruc/cppdevops/actions/runs/40762499368> succeeded. **v6.3.1** records the 6.3.0 index and linux/amd64 manifests in the reusable defaults and the Hub/GHCR pages. No second publish. Do not move v6.1.0 through v6.3.0.
 - 2026-10-28: `feature-v631` grants the Scorecard job `actions: read`, pins commondevops 5.6.2 and containerdevops 6.3.6, adds `cpp-pins`, `cpp-threshold-drift`, `cpp-release`, `cpp-token-audit`, `cpp-doc-verify`, and `cpp-devcontainer`, and moves setuptools to 84.1.0. `templates/ci-quality.yml` drops `scripts_ref` on `cpp-infra` and grants `packages: read` plus `actions: read` on security. Merged as pull request 166.
@@ -272,6 +273,8 @@ gitconfig under `RUNNER_TEMP`.
 - 2026-11-03: Image consolidation on `feature-image-consolidation`. vcpkg folds into Debian and Alpine `ci-cpp`. `ci-cpp-opencv` gains a uv venv and llvm-cov. `ci-cpp-ubuntu` and `ci-cpp-vcpkg` directories are removed. Do not merge PRs #174 or #169. Do not `workflow_dispatch` with `publish: true`. Publish happens from the 6.4.0 release event. v6.4.1 is the later digest write-back and must not republish.
 
 - 2026-11-03: v6.4.0 published the folded images. v6.4.1 records the linux/amd64 manifests and does not republish. Debian `sha256:3f477649…`, Alpine `sha256:817f7935…`, OpenCV `sha256:5c603b88…`.
+
+*Last updated: 2026-11-23 — v6.8.0. Guardrails 1.17.0. Scaffold 1.14.0. containerdevops 6.7.0.*
 
 *Last updated: 2026-11-03 (v6.4.0 published, v6.4.1 digest write-back).*
 
