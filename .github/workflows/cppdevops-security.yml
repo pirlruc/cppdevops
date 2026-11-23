@@ -82,12 +82,12 @@ jobs:
       contents: read
       security-events: write
       packages: read
-    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@b8c0746603eefdc89571b17c62d1e965b28ff31f
+    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@f0f9077ced9f79097e7597de1a2e00f8eb42e216
     with:
       # Same digest as reusable cpp-* `container:` pins (CI-018). Do not float
       # on :latest; weekly rescan of a digest still picks up new CVEs.
       image: ghcr.io/pirlruc/ci-cpp@sha256:8674685f88da7690e34418a32c52e37b832e339e290516a75a7dbf4f51932c30
-      scripts_ref: b8c0746603eefdc89571b17c62d1e965b28ff31f
+      scripts_ref: f0f9077ced9f79097e7597de1a2e00f8eb42e216
       pkg_types: library
       ignorefile: docker/ci-cpp/.trivyignore.yaml
       results_artifact: published-ci-cpp-scan
