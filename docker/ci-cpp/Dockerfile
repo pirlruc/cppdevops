@@ -39,14 +39,14 @@ USER root
 # libclang-rt-18-dev Depends on lib32stdc++6, which conflicts with the DHI
 # libc. Extract the deb so the amd64 sanitizer runtimes are present.
 # The base image ships an older gcc-14-base. Current clang depends on
-# +deb13u0+dhi8, which apt treats as a downgrade of that trio.
+# +deb13u0+dhi9, which apt treats as a downgrade of that trio.
 ARG VCPKG_COMMIT=434307da09bc05b2c86996dccc8b2351fc0d5d37
 ARG VCPKG_SHA256=4198c355178260dd4875a21eb843fb83f81beb7597c7f37a7494779871510cde
 RUN apt-get update \
  && apt-get install -y --allow-downgrades --no-install-recommends \
-      gcc-14-base=14.2.0-19+deb13u0+dhi8 \
-      libgcc-s1=14.2.0-19+deb13u0+dhi8 \
-      libstdc++6=14.2.0-19+deb13u0+dhi8 \
+      gcc-14-base=14.2.0-19+deb13u0+dhi9 \
+      libgcc-s1=14.2.0-19+deb13u0+dhi9 \
+      libstdc++6=14.2.0-19+deb13u0+dhi9 \
       clang-18=1:18.1.8-18+b1 \
       clang-tidy-18=1:18.1.8-18+b1 \
       libc++-18-dev=1:18.1.8-18+b1 \
