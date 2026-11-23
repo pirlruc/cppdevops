@@ -1568,7 +1568,7 @@ milestones:
   status: open
   epics:
     - id: CPPD-RUN-001
-      status: open
+      status: done
       title: Let registry verify select its runner
       overview:
         problem: >-
@@ -1585,7 +1585,7 @@ milestones:
         - cpp-registry-verify takes runs_on and defaults to ubuntu-24.04
       tasks:
         - id: CPPD-RUN-001-T1
-          status: open
+          status: done
           title: Add the runs_on input
           instructions:
             files:

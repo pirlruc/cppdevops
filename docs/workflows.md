@@ -233,3 +233,9 @@ jobs:
 
 Seeded by `scripts/sync-library-tooling.sh` as create-once
 `.github/workflows/ci-quality.yml`.
+
+## cpp-registry-verify.yml
+
+`runs_on` is a JSON value for `runs-on`. The default is `"ubuntu-24.04"`.
+A caller passes a JSON array of labels to select a self-hosted runner
+(CPPD-RUN-001).

@@ -273,6 +273,8 @@ jobs:
       image_title: ci-cpp
       image_description: >-
         C++ analysis toolchain plus vcpkg, Alpine 3.24, Clang 20. Non-root 1000:1000, linux/amd64.
+      image_documentation: https://hub.docker.com/r/pirlruc/ci-cpp
+      image_url: https://hub.docker.com/r/pirlruc/ci-cpp
       dockerhub_readme: docs/docker-hub-ci-cpp.md
       sign: ${{ github.event.repository.visibility == 'public' }}
       blocking: true
@@ -393,6 +395,8 @@ jobs:
       image_title: ci-cpp-opencv
       image_description: >-
         Compile image with OpenCV 4.14.0, Eigen 3.4, a libc++ vcpkg, and analysis tools.
+      image_documentation: https://hub.docker.com/r/pirlruc/ci-cpp-opencv
+      image_url: https://hub.docker.com/r/pirlruc/ci-cpp-opencv
       dockerhub_readme: docs/docker-hub-ci-cpp-opencv.md
       dockerhub_short_description: C++ compile image with OpenCV 4.14 and Eigen 3.4
       sign: ${{ github.event.repository.visibility == 'public' }}

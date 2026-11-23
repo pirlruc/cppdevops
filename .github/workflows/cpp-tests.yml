@@ -202,7 +202,9 @@ jobs:
             coverage="${COVERAGE}"
 
   ubuntu-compile:
+    if: inputs.run_ubuntu_compile
     runs-on: ${{ fromJSON(inputs.runs_on) }}
+    timeout-minutes: 5
     steps:
       - name: Retired
         run: echo "ci-cpp-ubuntu stopped at 6.3.0; this job does not compile"

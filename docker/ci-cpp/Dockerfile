@@ -41,6 +41,7 @@ USER root
 # The base image ships an older gcc-14-base. Current clang depends on
 # +deb13u0+dhi8, which apt treats as a downgrade of that trio.
 ARG VCPKG_COMMIT=434307da09bc05b2c86996dccc8b2351fc0d5d37
+ARG VCPKG_SHA256=4198c355178260dd4875a21eb843fb83f81beb7597c7f37a7494779871510cde
 RUN apt-get update \
  && apt-get install -y --allow-downgrades --no-install-recommends \
       gcc-14-base=14.2.0-19+deb13u0+dhi8 \
@@ -85,6 +86,7 @@ RUN apt-get update \
  && chown -R 1000:1000 /workspace /home/ci \
  && curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors -o /tmp/vcpkg.tar.gz \
       "https://github.com/microsoft/vcpkg/archive/${VCPKG_COMMIT}.tar.gz" \
+ && echo "${VCPKG_SHA256}  /tmp/vcpkg.tar.gz" | sha256sum -c - \
  && tar -xzf /tmp/vcpkg.tar.gz -C /opt \
  && rm -f /tmp/vcpkg.tar.gz \
  && mv "/opt/vcpkg-${VCPKG_COMMIT}" /opt/vcpkg \
