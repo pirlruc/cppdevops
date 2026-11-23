@@ -86,7 +86,8 @@ RUN apt-get update \
  && chown -R 1000:1000 /workspace /home/ci \
  && curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors -o /tmp/vcpkg.tar.gz \
       "https://github.com/microsoft/vcpkg/archive/${VCPKG_COMMIT}.tar.gz" \
- && echo "${VCPKG_SHA256}  /tmp/vcpkg.tar.gz" | sha256sum -c - \
+ && printf '%s  %s\n' "${VCPKG_SHA256}" /tmp/vcpkg.tar.gz > /tmp/vcpkg.sha256 \
+ && sha256sum -c /tmp/vcpkg.sha256 \
  && tar -xzf /tmp/vcpkg.tar.gz -C /opt \
  && rm -f /tmp/vcpkg.tar.gz \
  && mv "/opt/vcpkg-${VCPKG_COMMIT}" /opt/vcpkg \
