@@ -96,11 +96,11 @@ jobs:
         password: ${{ secrets.container_token || secrets.GITHUB_TOKEN }}
       options: --user root
     timeout-minutes: 60
+    # upload is never, so this job must not hold security-events (CI-042, CI-052).
     permissions:
       actions: read
       contents: read
       packages: read
-      security-events: write
     env:
       USE_VCPKG: ${{ inputs.use_vcpkg }}
       VCPKG_TRIPLET: ${{ inputs.vcpkg_triplet }}

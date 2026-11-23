@@ -30,7 +30,8 @@ FROM docker.io/library/ubuntu:24.04@sha256:fe81560990fae86dc4743202b2cb4d3df98d0
 
 ENV DEBIAN_FRONTEND=noninteractive \
     OPENCV_VERSION=4.14.0 \
-    VCPKG_COMMIT=434307da09bc05b2c86996dccc8b2351fc0d5d37
+    VCPKG_COMMIT=434307da09bc05b2c86996dccc8b2351fc0d5d37 \
+    VCPKG_SHA256=4198c355178260dd4875a21eb843fb83f81beb7597c7f37a7494779871510cde
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
@@ -89,6 +90,8 @@ RUN curl --retry 5 --retry-delay 2 --retry-all-errors -fsSL \
 
 RUN curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors -o /tmp/vcpkg.tar.gz \
       "https://github.com/microsoft/vcpkg/archive/${VCPKG_COMMIT}.tar.gz" \
+ && printf '%s  %s\n' "${VCPKG_SHA256}" /tmp/vcpkg.tar.gz > /tmp/vcpkg.sha256 \
+ && sha256sum -c /tmp/vcpkg.sha256 \
  && tar -xzf /tmp/vcpkg.tar.gz -C /opt \
  && rm -f /tmp/vcpkg.tar.gz \
  && mv "/opt/vcpkg-${VCPKG_COMMIT}" /opt/vcpkg \
