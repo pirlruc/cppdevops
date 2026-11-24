@@ -5,6 +5,18 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [6.9.0] - 2026-11-24
+
+### Fixed
+
+- Hub description no longer updates `ci-cpp-ubuntu` or `ci-cpp-vcpkg`. Those Docker Hub repositories are gone (DOC-PUB-001).
+- The blocking ci-cpp rescan uses `trivy-image-ci-cpp`, the same category the image workflow uploads.
+- Self-CI job containers use the 6.8.0 Debian ci-lint and ci-supply-chain digests.
+
+### Changed
+
+- `docs/guardrails` is 1.17.1 and `.github/scaffold` is 1.14.2.
+
 ## [6.8.1] - 2026-11-24
 
 ### Fixed

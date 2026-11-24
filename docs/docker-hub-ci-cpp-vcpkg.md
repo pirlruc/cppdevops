@@ -1,5 +1,7 @@
 # ci-cpp-vcpkg
 
+Docker Hub no longer has `ghcr.io/pirlruc/ci-cpp-vcpkg`. Pull the 6.3.0 image from GHCR. vcpkg is in `ci-cpp` from 6.4.0.
+
 Stopped at 6.3.0. vcpkg now ships in
 [ci-cpp](https://hub.docker.com/r/pirlruc/ci-cpp) (Debian and Alpine). Keep
 the 6.3.0 digest below until a caller moves. This name is not rebuilt.
@@ -15,7 +17,7 @@ Eigen from the image are [ci-cpp-opencv](https://hub.docker.com/r/pirlruc/ci-cpp
 
 | Item | Value |
 |------|--------|
-| Docker Hub | `pirlruc/ci-cpp-vcpkg` |
+| Docker Hub | removed |
 | Architectures | `linux/amd64` |
 | User | non-root `1000:1000` |
 | Base | `ci-cpp` Debian `sha256:6b71cd22…` plus vcpkg |
@@ -38,14 +40,14 @@ Prefer a digest in production. Pin the `linux/amd64` image manifest. A tag
 index is not a pullable Actions `container:`.
 
 ```bash
-docker pull pirlruc/ci-cpp-vcpkg:6.3.0
-docker pull pirlruc/ci-cpp-vcpkg@sha256:e551e5f6f6ec5b65bd571fb13c549916fc0ac4e6156c2185f0a8eb5be2a2fe44
+docker pull ghcr.io/pirlruc/ci-cpp-vcpkg:6.3.0
+docker pull ghcr.io/pirlruc/ci-cpp-vcpkg@sha256:e551e5f6f6ec5b65bd571fb13c549916fc0ac4e6156c2185f0a8eb5be2a2fe44
 ```
 
 ## Quick start
 
 ```bash
-docker run --rm pirlruc/ci-cpp-vcpkg:6.3.0 vcpkg version
+docker run --rm ghcr.io/pirlruc/ci-cpp-vcpkg:6.3.0 vcpkg version
 ```
 
 ## What is inside

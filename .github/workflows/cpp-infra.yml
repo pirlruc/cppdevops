@@ -82,7 +82,7 @@ jobs:
       dockerfiles: ${{ inputs.dockerfiles || '' }}
       # Must match uses: @pin (CI-018).
       scripts_ref: 5d8b83da2f8f0c0c1bd894ef920619fe127c033e
-      container_image: ghcr.io/pirlruc/ci-lint@sha256:f9001c4c8726f72107545094237d4fc0592baca023cfa299a532634666d88111
+      container_image: ghcr.io/pirlruc/ci-lint@sha256:3ed6d8dcbb08abf82e563630f2c1218cf0e8f33bb883ed46770e147113af48b0
       container_username: ${{ inputs.container_username }}
     secrets:
       checkout_token: ${{ secrets.checkout_token }}

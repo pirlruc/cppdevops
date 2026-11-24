@@ -6,7 +6,7 @@
 |-------|-------|
 | **Folder** | cppdevops |
 | **Remote** | <https://github.com/pirlruc/cppdevops> |
-| **Branch** | `main`. Published tip is **v6.8.1**. Guardrails 1.17.0, scaffold 1.14.0, containerdevops 6.8.0 (`ae9dbee`), commondevops v6.9.0 (`5d8b83d`). |
+| **Branch** | `main`. Published tip is **v6.9.0** after this release. Guardrails 1.17.1, scaffold 1.14.2, containerdevops 6.8.0 (`ae9dbee`), commondevops v6.9.0 (`5d8b83d`). Hub updates `ci-cpp` and `ci-cpp-opencv` only. |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
@@ -274,6 +274,8 @@ gitconfig under `RUNNER_TEMP`.
 - 2026-11-03: Image consolidation on `feature-image-consolidation`. vcpkg folds into Debian and Alpine `ci-cpp`. `ci-cpp-opencv` gains a uv venv and llvm-cov. `ci-cpp-ubuntu` and `ci-cpp-vcpkg` directories are removed. Do not merge PRs #174 or #169. Do not `workflow_dispatch` with `publish: true`. Publish happens from the 6.4.0 release event. v6.4.1 is the later digest write-back and must not republish.
 
 - 2026-11-03: v6.4.0 published the folded images. v6.4.1 records the linux/amd64 manifests and does not republish. Debian `sha256:3f477649…`, Alpine `sha256:817f7935…`, OpenCV `sha256:5c603b88…`.
+
+*Last updated: 2026-11-24 — v6.9.0. Hub no longer writes ci-cpp-ubuntu or ci-cpp-vcpkg. Blocking category is trivy-image-ci-cpp. Job containers are ci-lint and ci-supply-chain 6.8.0 Debian. Guardrails 1.17.1. Scaffold 1.14.2.*
 
 *Last updated: 2026-11-23 — v6.8.0. Guardrails 1.17.0. Scaffold 1.14.0. containerdevops 6.7.0.*
 

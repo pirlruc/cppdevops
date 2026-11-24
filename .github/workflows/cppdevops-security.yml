@@ -36,7 +36,7 @@ jobs:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       working_directory: .
       scripts_ref: 5d8b83da2f8f0c0c1bd894ef920619fe127c033e
-      container_image: ghcr.io/pirlruc/ci-lint@sha256:f9001c4c8726f72107545094237d4fc0592baca023cfa299a532634666d88111
+      container_image: ghcr.io/pirlruc/ci-lint@sha256:3ed6d8dcbb08abf82e563630f2c1218cf0e8f33bb883ed46770e147113af48b0
   supply-chain:
     if: github.event.pull_request.user.login != 'dependabot[bot]'
     permissions:
@@ -49,7 +49,7 @@ jobs:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       working_directory: .
       scripts_ref: 5d8b83da2f8f0c0c1bd894ef920619fe127c033e
-      container_image: ghcr.io/pirlruc/ci-supply-chain@sha256:dc83deb4465d5989a03b14ccabef46c3f3426231048b962c69b8e434a7200d48
+      container_image: ghcr.io/pirlruc/ci-supply-chain@sha256:cceea28e7719138294d11396fa3b9ebdb078d5997de6b4454b9e3f14e33d5133
   scorecard:
     if: >-
       github.event.pull_request.user.login != 'dependabot[bot]' &&
@@ -91,7 +91,7 @@ jobs:
       pkg_types: library
       ignorefile: docker/ci-cpp/.trivyignore.yaml
       results_artifact: published-ci-cpp-scan
-      sarif_category: trivy-ci-cpp
+      sarif_category: trivy-image-ci-cpp
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
 
   published-ci-cpp-alpine-rescan:
