@@ -1,6 +1,7 @@
 # Push C++ image Docker Hub Overviews without rebuilding the images.
-# The called workflow is containerdevops 6.7.0.
+# The called workflow is containerdevops 6.8.0.
 # Push to main when a Hub page changes. A release event republishes images.
+# ci-cpp-ubuntu and ci-cpp-vcpkg have no Docker Hub repository.
 
 name: Hub description
 
@@ -15,6 +16,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: hub-description-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   ci-cpp:
     permissions:
@@ -25,30 +30,6 @@ jobs:
       dockerhub_readme: docs/docker-hub-ci-cpp.md
       dockerhub_short_description: >-
         C++ CI toolchain: Clang/libc++, CMake, Ninja, quality and coverage tools
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_DESCRIPTION_TOKEN: ${{ secrets.DOCKERHUB_DESCRIPTION_TOKEN }}
-
-  ci-cpp-ubuntu:
-    permissions:
-      contents: read
-    uses: pirlruc/containerdevops/.github/workflows/container-hub-description.yml@ae9dbee9e4537bd3a0b533de3bad011cb44b201e # 6.8.0
-    with:
-      dockerhub_image: pirlruc/ci-cpp-ubuntu
-      dockerhub_readme: docs/docker-hub-ci-cpp-ubuntu.md
-      dockerhub_short_description: Stopped at 6.3.0. Compile-only C++ toolchain on Ubuntu 24.04
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_DESCRIPTION_TOKEN: ${{ secrets.DOCKERHUB_DESCRIPTION_TOKEN }}
-
-  ci-cpp-vcpkg:
-    permissions:
-      contents: read
-    uses: pirlruc/containerdevops/.github/workflows/container-hub-description.yml@ae9dbee9e4537bd3a0b533de3bad011cb44b201e # 6.8.0
-    with:
-      dockerhub_image: pirlruc/ci-cpp-vcpkg
-      dockerhub_readme: docs/docker-hub-ci-cpp-vcpkg.md
-      dockerhub_short_description: Stopped at 6.3.0. vcpkg now ships in ci-cpp
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_DESCRIPTION_TOKEN: ${{ secrets.DOCKERHUB_DESCRIPTION_TOKEN }}

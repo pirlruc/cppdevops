@@ -113,11 +113,11 @@ Deviations: [`docs/guardrail-deviations.yml`](docs/guardrail-deviations.yml) onl
 | Image | Docker Hub | GitHub Packages |
 |-------|------------|-----------------|
 | `ci-cpp` | [`docs/docker-hub-ci-cpp.md`](docs/docker-hub-ci-cpp.md) | [`docs/github-packages-ci-cpp.md`](docs/github-packages-ci-cpp.md) |
-| `ci-cpp-ubuntu` | [`docs/docker-hub-ci-cpp-ubuntu.md`](docs/docker-hub-ci-cpp-ubuntu.md) | [`docs/github-packages-ci-cpp-ubuntu.md`](docs/github-packages-ci-cpp-ubuntu.md) |
-| `ci-cpp-vcpkg` | [`docs/docker-hub-ci-cpp-vcpkg.md`](docs/docker-hub-ci-cpp-vcpkg.md) | [`docs/github-packages-ci-cpp-vcpkg.md`](docs/github-packages-ci-cpp-vcpkg.md) |
+| `ci-cpp-ubuntu` (Hub removed, GHCR 6.3.0) | [`docs/docker-hub-ci-cpp-ubuntu.md`](docs/docker-hub-ci-cpp-ubuntu.md) | [`docs/github-packages-ci-cpp-ubuntu.md`](docs/github-packages-ci-cpp-ubuntu.md) |
+| `ci-cpp-vcpkg` (Hub removed, GHCR 6.3.0) | [`docs/docker-hub-ci-cpp-vcpkg.md`](docs/docker-hub-ci-cpp-vcpkg.md) | [`docs/github-packages-ci-cpp-vcpkg.md`](docs/github-packages-ci-cpp-vcpkg.md) |
 | `ci-cpp-opencv` | [`docs/docker-hub-ci-cpp-opencv.md`](docs/docker-hub-ci-cpp-opencv.md) | [`docs/github-packages-ci-cpp-opencv.md`](docs/github-packages-ci-cpp-opencv.md) |
 
-`ci-cpp-ubuntu` and `ci-cpp-vcpkg` stopped at 6.3.0. Their pages keep that digest. vcpkg is in `ci-cpp` from 6.4.0.
+`ci-cpp-ubuntu` and `ci-cpp-vcpkg` stopped at 6.3.0. Docker Hub no longer has those repositories. The GHCR digests on their pages still resolve. vcpkg is in `ci-cpp` from 6.4.0.
 
 ## Review protocol
 

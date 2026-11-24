@@ -1,5 +1,7 @@
 # ci-cpp-ubuntu
 
+Docker Hub no longer has `ghcr.io/pirlruc/ci-cpp-ubuntu`. Pull the 6.3.0 image from GHCR. vcpkg and the current toolchain are in `ci-cpp`.
+
 Stopped at 6.3.0. The compile job that used this image no longer runs.
 Keep the 6.3.0 digest below for anything that still pins it. This name is
 not rebuilt.
@@ -11,7 +13,7 @@ on Ubuntu 24.04. Not a product runtime — no `HEALTHCHECK`.
 
 | Item | Value |
 |------|--------|
-| Docker Hub | `pirlruc/ci-cpp-ubuntu` |
+| Docker Hub | removed |
 | Architectures | `linux/amd64` |
 | User | non-root `1000:1000` |
 | Base | Ubuntu 24.04 official |
@@ -36,15 +38,15 @@ Current rows are release 6.3.0. Actions `container:` needs the
 Prefer a digest in production. `latest` is never the only tag.
 
 ```bash
-docker pull pirlruc/ci-cpp-ubuntu:6.3.0
-docker pull pirlruc/ci-cpp-ubuntu@sha256:2a7622d8299d126f127847c09818de867170a3992efead0d1ecd7edd41c2a3d5
+docker pull ghcr.io/pirlruc/ci-cpp-ubuntu:6.3.0
+docker pull ghcr.io/pirlruc/ci-cpp-ubuntu@sha256:2a7622d8299d126f127847c09818de867170a3992efead0d1ecd7edd41c2a3d5
 ```
 
 ## Quick start
 
 ```bash
 docker run --rm -v "$PWD:/workspace:ro" -w /workspace \
-  pirlruc/ci-cpp-ubuntu:6.3.0 \
+  ghcr.io/pirlruc/ci-cpp-ubuntu:6.3.0 \
   clang++ --version
 ```
 

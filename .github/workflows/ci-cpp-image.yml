@@ -451,9 +451,9 @@ jobs:
     permissions:
       contents: write
       packages: read
-    uses: pirlruc/commondevops/.github/workflows/common-release-digests.yml@5d8b83da2f8f0c0c1bd894ef920619fe127c033e # v6.9.0
+    uses: pirlruc/commondevops/.github/workflows/common-release-digests.yml@a2af891c6d05fe2790bc5ddf761252c95185ce5f # v6.10.0
     with:
-      scripts_ref: 5d8b83da2f8f0c0c1bd894ef920619fe127c033e
+      scripts_ref: a2af891c6d05fe2790bc5ddf761252c95185ce5f
       images: >-
         ghcr.io/${{ github.repository_owner }}/ci-cpp:${{ github.event.release.tag_name }}
         ghcr.io/${{ github.repository_owner }}/ci-cpp:${{ github.event.release.tag_name }}-alpine

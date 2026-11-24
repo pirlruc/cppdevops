@@ -31,12 +31,12 @@ jobs:
     permissions:
       contents: read
       packages: read
-    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@5d8b83da2f8f0c0c1bd894ef920619fe127c033e # v6.9.0
+    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@a2af891c6d05fe2790bc5ddf761252c95185ce5f # v6.10.0
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       working_directory: .
-      scripts_ref: 5d8b83da2f8f0c0c1bd894ef920619fe127c033e
-      container_image: ghcr.io/pirlruc/ci-lint@sha256:f9001c4c8726f72107545094237d4fc0592baca023cfa299a532634666d88111
+      scripts_ref: a2af891c6d05fe2790bc5ddf761252c95185ce5f
+      container_image: ghcr.io/pirlruc/ci-lint@sha256:3ed6d8dcbb08abf82e563630f2c1218cf0e8f33bb883ed46770e147113af48b0
   supply-chain:
     if: github.event.pull_request.user.login != 'dependabot[bot]'
     permissions:
@@ -44,12 +44,12 @@ jobs:
       actions: read
       packages: read
       security-events: write
-    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@5d8b83da2f8f0c0c1bd894ef920619fe127c033e # v6.9.0
+    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@a2af891c6d05fe2790bc5ddf761252c95185ce5f # v6.10.0
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       working_directory: .
-      scripts_ref: 5d8b83da2f8f0c0c1bd894ef920619fe127c033e
-      container_image: ghcr.io/pirlruc/ci-supply-chain@sha256:dc83deb4465d5989a03b14ccabef46c3f3426231048b962c69b8e434a7200d48
+      scripts_ref: a2af891c6d05fe2790bc5ddf761252c95185ce5f
+      container_image: ghcr.io/pirlruc/ci-supply-chain@sha256:cceea28e7719138294d11396fa3b9ebdb078d5997de6b4454b9e3f14e33d5133
   scorecard:
     if: >-
       github.event.pull_request.user.login != 'dependabot[bot]' &&
@@ -59,7 +59,7 @@ jobs:
       contents: read
       security-events: write
       id-token: write
-    uses: pirlruc/commondevops/.github/workflows/common-scorecard.yml@5d8b83da2f8f0c0c1bd894ef920619fe127c033e # v6.9.0
+    uses: pirlruc/commondevops/.github/workflows/common-scorecard.yml@a2af891c6d05fe2790bc5ddf761252c95185ce5f # v6.10.0
     with:
       blocking: false
       publish_results: false
@@ -69,9 +69,9 @@ jobs:
   token-audit:
     if: github.event.pull_request.user.login != 'dependabot[bot]'
     permissions: {}
-    uses: pirlruc/commondevops/.github/workflows/common-token-audit.yml@5d8b83da2f8f0c0c1bd894ef920619fe127c033e # v6.9.0
+    uses: pirlruc/commondevops/.github/workflows/common-token-audit.yml@a2af891c6d05fe2790bc5ddf761252c95185ce5f # v6.10.0
     with:
-      scripts_ref: 5d8b83da2f8f0c0c1bd894ef920619fe127c033e
+      scripts_ref: a2af891c6d05fe2790bc5ddf761252c95185ce5f
     secrets:
       guardrails_token: ${{ secrets.GUARDRAILS_READ_TOKEN }}
 
@@ -91,7 +91,7 @@ jobs:
       pkg_types: library
       ignorefile: docker/ci-cpp/.trivyignore.yaml
       results_artifact: published-ci-cpp-scan
-      sarif_category: trivy-ci-cpp
+      sarif_category: trivy-image-ci-cpp
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
 
   published-ci-cpp-alpine-rescan:
