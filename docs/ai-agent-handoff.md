@@ -6,7 +6,7 @@
 |-------|-------|
 | **Folder** | cppdevops |
 | **Remote** | <https://github.com/pirlruc/cppdevops> |
-| **Branch** | `main`. Published tip is **v6.8.0** (`b569a328dff6039a790924a63311475d21c4bccd`). Guardrails 1.17.0, scaffold 1.14.0, containerdevops 6.7.0 (`f0f9077`). commondevops callers are still mixed (`2c5e1ebe`, `0e78652f`, release digests `07912d8`). |
+| **Branch** | `main`. Published tip is **v6.8.1**. Guardrails 1.17.0, scaffold 1.14.0, containerdevops 6.8.0 (`ae9dbee`), commondevops v6.9.0 (`5d8b83d`). |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
@@ -26,7 +26,7 @@ contexts `docker/ci-cpp/` (Debian and Alpine, both with vcpkg) and
 
 Standalone library callers should pin `pirlruc/cppdevops@<sha>` (`CI-018`)
 and pass the same value as `scripts_ref`. The published analysis image is
-ci-cpp 6.4.0 Debian. Actions pins the linux/amd64 manifest.
+ci-cpp 6.8.0 Debian. Actions pins the linux/amd64 manifest.
 Hub/Packages, one page per image:
 [`docs/docker-hub-ci-cpp.md`](docker-hub-ci-cpp.md),
 [`docs/docker-hub-ci-cpp-ubuntu.md`](docker-hub-ci-cpp-ubuntu.md),
@@ -44,11 +44,11 @@ Contract reference: [`docs/workflows.md`](workflows.md).
 | `docs/guardrails` | tag **1.17.0** → `9a17ebb269a5ab02899570dd3e40fb72e50ad762` |
 | `.github/scaffold` | tag **1.14.0** → `da8942edf17a0d2736d297c90338fd78b7ec31fb` |
 | methodologies (links only; not a submodule) | tag **1.9.1** |
-| `ghcr.io/pirlruc/ci-cpp` (debian, unsuffixed) | `6.6.0` `linux/amd64` `sha256:8674685f88da7690e34418a32c52e37b832e339e290516a75a7dbf4f51932c30`. Tag index `sha256:bee2ce53fe717e52d85cc1e13994808eb098a4d2f1e76ff37b84b087bdfc331c`. Includes vcpkg. Private package: `packages: read` and `container.credentials` |
-| `ghcr.io/pirlruc/ci-cpp` (alpine) | `6.4.0-alpine` `linux/amd64` `sha256:817f79358c86cf4045288f74768901daa2b0f5416807e50ab4a601e8d7a8f331`. Tag index `sha256:2665aeaa0f9eb9b0a355a1216671724227cf21f5eaa4da7592a0d2f9fc78520d`. Includes vcpkg |
+| `ghcr.io/pirlruc/ci-cpp` (debian, unsuffixed) | `6.8.0` `linux/amd64` `sha256:c805d32471c3d05997922ee7ffdf1f4cf3fc6cfbf09a5eaf4cbbae0639786e84`. Tag index `sha256:e10a4d70f2e27322e2af787a7cf5c0b50d651f50e17e50ce71b9056dd1d28305`. Includes vcpkg |
+| `ghcr.io/pirlruc/ci-cpp` (alpine) | `6.8.0-alpine` `linux/amd64` `sha256:fe26b9e8731a5d47c1b241f60f0d082c44bac4f85874ae3a414a5434f411e815`. Tag index `sha256:d39e93dc20fb688f2ca9fafecf43d0e33d0387fa2672638141803887bbe20bc2`. Includes vcpkg |
 | `ghcr.io/pirlruc/ci-cpp-ubuntu` | `6.3.0` `linux/amd64` `sha256:2a7622d8299d126f127847c09818de867170a3992efead0d1ecd7edd41c2a3d5`. Tag index `sha256:c5dc493c2059d61c8da58b001aeedff2ccb35ba28736eba73f3c378e814d06f8` |
 | `ci-cpp-vcpkg` | `6.3.0` `linux/amd64` `sha256:e551e5f6f6ec5b65bd571fb13c549916fc0ac4e6156c2185f0a8eb5be2a2fe44`. Tag index `sha256:7df56682882f2472cd0dd13d9d9148ea7a3f0cdd5140f12014abd4be0ba5cda4`. OpenCV is not in this image |
-| `ci-cpp-opencv` | `6.4.0` `linux/amd64` `sha256:5c603b8864c017e82906a2a6c6aa6728a3cc8aba1b8f12c83947d57ed04aa484`. Tag index `sha256:f7e721a5593987ac9a8e9ae145f4e622ebf8e34355b9dadcbab3154b980468eb`. OpenCV 4.14.0, Eigen 3.4, libc++ triplet, analysis tools. `sha256:42ba66c3…` remains the 6.3.0 linux/amd64 image |
+| `ci-cpp-opencv` | `6.8.0` `linux/amd64` `sha256:4aafa2849cf86791b8e66dac37ccb7fe0c934195b472f766e2542b06f1e2a845`. Tag index `sha256:7733da1f3fcbf536724bc4867076e879bdf3388190155a149a1343170b76c7f2`. OpenCV 4.14.0, Eigen 3.4, libc++ triplet, analysis tools |
 | commondevops `uses:` | `9e28757e47375bbe02f1150e3612cdf69723dd29` (included in tag **5.3.3** and later). Token audit is **5.4.1** `d03953476f3d5fa1081a0834d9882007ff26dd91` |
 | containerdevops `uses:` | `f0f9077ced9f79097e7597de1a2e00f8eb42e216` (tag **6.7.0**) |
 
@@ -66,7 +66,7 @@ Contract reference: [`docs/workflows.md`](workflows.md).
 | CPPD-ECO-001 | Done in yaml (checklist shipped; library pin bumps are still those repos) |
 | CPPD-WF-003 | Done — digest docs, fail-closed memcheck (CI-035), security digest pin (`2.1.0`) |
 | CPPD-PIN-001 | Done (this wave) |
-| Deviations remaining | SC-SIGN-001, CI-032, REL-PUB-004. CPP-BUILD-004 dropped with guardrails 1.12.0 |
+| Deviations remaining | None. `docs/guardrail-deviations.yml` is empty. |
 
 ## Mobile toolchain pins (`CPP-BUILD-012`)
 
@@ -287,6 +287,8 @@ gitconfig under `RUNNER_TEMP`.
 *Last updated: 2026-11-21 — `cpp-devcontainer` pins containerdevops `0be6d42` so Dependabot can hadolint.*
 
 *Last updated: 2026-11-20 — release digests pin commondevops `07912d8` and pass `scripts_ref`. The older pin checked out this repository and missed `scripts/append-release-digests.sh`.*
+
+*Last updated: 2026-11-24 — v6.8.1. Rescans pin ci-cpp 6.8.0. Alpine has an advisory OS scan. No deviations remain.*
 
 *Last updated: 2026-11-07 — v6.5.0 branch. Guardrails 1.15.0. Scaffold 1.12.0. commondevops 6.0.1. containerdevops 6.4.0.*
 

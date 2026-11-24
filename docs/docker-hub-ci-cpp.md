@@ -22,15 +22,19 @@ this image. OpenCV stays on
 
 ### Tags
 
-Current rows are release 6.4.0. Index digests are the tag. Actions rows are
-the `linux/amd64` image manifests. Actions `container:` cannot pull the tag
-index, and `ghcr.io/pirlruc/ci-cpp` is private.
+Current rows are release 6.8.0. Index digests are the tag. Actions rows are
+the `linux/amd64` image manifests. Actions `container:` pins the platform
+manifest, not the tag index.
 
 | Tag | Digest |
 |-----|--------|
-| `6.4.0` / `6.4.0-debian` / `latest` / `latest-debian` | `sha256:49d8078eaab4aab93114b9773dea66d51424849adf86633882cab5e1a75699f9` (tag index) |
+| `6.8.0` / `6.8.0-debian` / `latest` / `latest-debian` | `sha256:e10a4d70f2e27322e2af787a7cf5c0b50d651f50e17e50ce71b9056dd1d28305` (tag index) |
+| `6.8.0` `linux/amd64` (Actions) | `sha256:c805d32471c3d05997922ee7ffdf1f4cf3fc6cfbf09a5eaf4cbbae0639786e84` |
+| `6.8.0-alpine` / `latest-alpine` | `sha256:d39e93dc20fb688f2ca9fafecf43d0e33d0387fa2672638141803887bbe20bc2` (tag index) |
+| `6.8.0-alpine` `linux/amd64` (Actions) | `sha256:fe26b9e8731a5d47c1b241f60f0d082c44bac4f85874ae3a414a5434f411e815` |
+| `6.4.0` / `6.4.0-debian` | Previous Debian. `sha256:49d8078eaab4aab93114b9773dea66d51424849adf86633882cab5e1a75699f9` (tag index) |
 | `6.4.0` `linux/amd64` (Actions) | `sha256:3f4776490bcf197fc10983e416443d01f365134df44110c24176f5b2ded09475` |
-| `6.4.0-alpine` / `latest-alpine` | `sha256:2665aeaa0f9eb9b0a355a1216671724227cf21f5eaa4da7592a0d2f9fc78520d` (tag index) |
+| `6.4.0-alpine` | Previous Alpine. `sha256:2665aeaa0f9eb9b0a355a1216671724227cf21f5eaa4da7592a0d2f9fc78520d` (tag index) |
 | `6.4.0-alpine` `linux/amd64` (Actions) | `sha256:817f79358c86cf4045288f74768901daa2b0f5416807e50ab4a601e8d7a8f331` |
 | `6.3.0` / `6.3.0-debian` | Previous Debian, without vcpkg. `sha256:26422f6453e04c72d46792fe6ab70574eeb037f55c1ba31c962ab86cb8a71802` (tag index) |
 | `6.3.0` `linux/amd64` (Actions) | `sha256:88d24172b5b6ab74a4276a60bb341c238b072cb57169c690a21c2d2cfbeafbac` |
@@ -54,16 +58,16 @@ Debian owns the unsuffixed tags. Prefer a digest in production. `latest` is
 never the only tag.
 
 ```bash
-docker pull pirlruc/ci-cpp:6.4.0
-docker pull pirlruc/ci-cpp:6.4.0-alpine
-docker pull pirlruc/ci-cpp@sha256:3f4776490bcf197fc10983e416443d01f365134df44110c24176f5b2ded09475
+docker pull pirlruc/ci-cpp:6.8.0
+docker pull pirlruc/ci-cpp:6.8.0-alpine
+docker pull pirlruc/ci-cpp@sha256:c805d32471c3d05997922ee7ffdf1f4cf3fc6cfbf09a5eaf4cbbae0639786e84
 ```
 
 ## Quick start
 
 ```bash
 docker run --rm -v "$PWD:/workspace:ro" -w /workspace \
-  pirlruc/ci-cpp:6.4.0 \
+  pirlruc/ci-cpp:6.8.0 \
   clang++ --version
 ```
 
@@ -76,7 +80,7 @@ docker run --rm \
   --security-opt no-new-privileges \
   --tmpfs /tmp:rw,noexec,nosuid,size=256m \
   -v "$PWD:/workspace:ro" -w /workspace \
-  pirlruc/ci-cpp:6.4.0 \
+  pirlruc/ci-cpp:6.8.0 \
   clang++ --version
 ```
 

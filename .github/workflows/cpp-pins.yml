@@ -33,8 +33,8 @@ jobs:
   pins:
     permissions:
       contents: read
-    uses: pirlruc/commondevops/.github/workflows/common-pins-verify.yml@0e78652fa9f65b9d98033ac82bf9e5308ebb17a7
+    uses: pirlruc/commondevops/.github/workflows/common-pins-verify.yml@5d8b83da2f8f0c0c1bd894ef920619fe127c033e # v6.9.0
     with:
       runs_on: ${{ inputs.runs_on }}
       pin_script: ${{ inputs.pin_script }}
-      scripts_ref: 0e78652fa9f65b9d98033ac82bf9e5308ebb17a7
+      scripts_ref: 5d8b83da2f8f0c0c1bd894ef920619fe127c033e

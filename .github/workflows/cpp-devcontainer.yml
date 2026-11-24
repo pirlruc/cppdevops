@@ -51,7 +51,7 @@ jobs:
   devcontainer:
     permissions:
       contents: read
-    uses: pirlruc/containerdevops/.github/workflows/container-devcontainer.yml@0be6d42980453a8ff00882d4d114786067a82ab4
+    uses: pirlruc/containerdevops/.github/workflows/container-devcontainer.yml@ae9dbee9e4537bd3a0b533de3bad011cb44b201e # 6.8.0
     with:
       runs_on: ${{ inputs.runs_on }}
       dockerfile: ${{ inputs.dockerfile }}
@@ -59,7 +59,7 @@ jobs:
       working_directory: ${{ inputs.working_directory }}
       structure_test_config: ${{ inputs.structure_test_config }}
       blocking: ${{ inputs.blocking }}
-      scripts_ref: 0be6d42980453a8ff00882d4d114786067a82ab4
+      scripts_ref: ae9dbee9e4537bd3a0b533de3bad011cb44b201e
       runner_image: ${{ inputs.runner_image }}
     secrets:
       scripts_token: ${{ secrets.scripts_token }}

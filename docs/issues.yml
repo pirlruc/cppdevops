@@ -49,7 +49,7 @@ milestones:
       verification:
       - workflows lint clean
 - name: Phase 2 — Modernization
-  status: open
+  status: done
   epics:
   - id: CI-001
     status: done
@@ -1565,7 +1565,7 @@ milestones:
             - REL-PUB-005
 
 - name: Runner and image refresh
-  status: open
+  status: done
   epics:
     - id: CPPD-RUN-001
       status: done

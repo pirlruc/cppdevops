@@ -31,10 +31,10 @@ jobs:
   drift:
     permissions:
       contents: read
-    uses: pirlruc/commondevops/.github/workflows/common-threshold-drift.yml@ea35dbe8eeddddb64411705d46967a89b63e5f81
+    uses: pirlruc/commondevops/.github/workflows/common-threshold-drift.yml@5d8b83da2f8f0c0c1bd894ef920619fe127c033e # v6.9.0
     with:
       runs_on: ${{ inputs.runs_on }}
       drift_script: ${{ inputs.drift_script }}
-      scripts_ref: ea35dbe8eeddddb64411705d46967a89b63e5f81
+      scripts_ref: 5d8b83da2f8f0c0c1bd894ef920619fe127c033e
     secrets:
       checkout_token: ${{ secrets.checkout_token }}

@@ -89,12 +89,12 @@ jobs:
     permissions:
       contents: read
       packages: read
-    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@0e78652fa9f65b9d98033ac82bf9e5308ebb17a7
+    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@5d8b83da2f8f0c0c1bd894ef920619fe127c033e # v6.9.0
     with:
       runs_on: ${{ inputs.runs_on }}
       blocking: ${{ inputs.blocking }}
       working_directory: ${{ inputs.library_path }}
-      scripts_ref: 0e78652fa9f65b9d98033ac82bf9e5308ebb17a7
+      scripts_ref: 5d8b83da2f8f0c0c1bd894ef920619fe127c033e
       container_image: ghcr.io/pirlruc/ci-lint@sha256:f9001c4c8726f72107545094237d4fc0592baca023cfa299a532634666d88111
       container_username: ${{ inputs.container_username }}
     secrets:
@@ -108,12 +108,12 @@ jobs:
       actions: read
       packages: read
       security-events: write
-    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@0e78652fa9f65b9d98033ac82bf9e5308ebb17a7
+    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@5d8b83da2f8f0c0c1bd894ef920619fe127c033e # v6.9.0
     with:
       runs_on: ${{ inputs.runs_on }}
       blocking: ${{ inputs.blocking }}
       working_directory: ${{ inputs.library_path }}
-      scripts_ref: 0e78652fa9f65b9d98033ac82bf9e5308ebb17a7
+      scripts_ref: 5d8b83da2f8f0c0c1bd894ef920619fe127c033e
       upload_sarif: ${{ inputs.upload_sarif }}
       container_image: ghcr.io/pirlruc/ci-supply-chain@sha256:dc83deb4465d5989a03b14ccabef46c3f3426231048b962c69b8e434a7200d48
       container_username: ${{ inputs.container_username }}
