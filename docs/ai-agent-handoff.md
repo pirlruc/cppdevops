@@ -6,7 +6,7 @@
 |-------|-------|
 | **Folder** | cppdevops |
 | **Remote** | <https://github.com/pirlruc/cppdevops> |
-| **Branch** | `main`. Published tip is **v6.9.0** after this release. Guardrails 1.17.1, scaffold 1.14.2, containerdevops 6.8.0 (`ae9dbee`), commondevops v6.9.0 (`5d8b83d`). Hub updates `ci-cpp` and `ci-cpp-opencv` only. |
+| **Branch** | `main`. Published tip is **v6.9.0** after this release. Guardrails 1.17.1, scaffold 1.14.2, containerdevops 6.8.0 (`ae9dbee`), commondevops v6.10.0 (`a2af891`). Hub updates `ci-cpp` and `ci-cpp-opencv` only. |
 | **Role** | Reusable GitHub Actions workflows + C++ library bootstrap templates/scripts + `ci-cpp` image |
 | **Type** | CI infrastructure (not a C++ library) |
 
