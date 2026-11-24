@@ -15,6 +15,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 ### Changed
 
 - Reusable defaults and the public image pages pin the 6.8.0 linux/amd64 manifests.
+- Callers pin commondevops v6.9.0 and containerdevops 6.8.0.
 
 ## [6.8.0] - 2026-11-23
 

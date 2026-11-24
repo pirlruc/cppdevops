@@ -41,10 +41,10 @@ jobs:
     permissions:
       contents: read
       issues: read
-    uses: pirlruc/commondevops/.github/workflows/common-scaffold-verify.yml@2c5e1ebe9797828128e01f3941b5a02650abe59a
+    uses: pirlruc/commondevops/.github/workflows/common-scaffold-verify.yml@5d8b83da2f8f0c0c1bd894ef920619fe127c033e # v6.9.0
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
-      scripts_ref: 2c5e1ebe9797828128e01f3941b5a02650abe59a
+      scripts_ref: 5d8b83da2f8f0c0c1bd894ef920619fe127c033e
     secrets:
       packs_token: ${{ secrets.GUARDRAILS_READ_TOKEN }}
 
@@ -77,7 +77,7 @@ jobs:
   docs:
     permissions:
       contents: read
-    uses: pirlruc/commondevops/.github/workflows/common-doc-verify.yml@2c5e1ebe9797828128e01f3941b5a02650abe59a
+    uses: pirlruc/commondevops/.github/workflows/common-doc-verify.yml@5d8b83da2f8f0c0c1bd894ef920619fe127c033e # v6.9.0
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       shell_scripts: scripts/*.sh
@@ -85,21 +85,21 @@ jobs:
       yaml_files: docs/issues.yml docs/guardrail-deviations.yml .github/dependabot.yml
       yaml_globs: .github/workflows/*.yml
       run_link_lint: true
-      scripts_ref: 2c5e1ebe9797828128e01f3941b5a02650abe59a
+      scripts_ref: 5d8b83da2f8f0c0c1bd894ef920619fe127c033e
 
   infra-lint:
     if: github.event.pull_request.user.login != 'dependabot[bot]'
     permissions:
       contents: read
       packages: read
-    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@2c5e1ebe9797828128e01f3941b5a02650abe59a
+    uses: pirlruc/commondevops/.github/workflows/common-infra-lint.yml@5d8b83da2f8f0c0c1bd894ef920619fe127c033e # v6.9.0
     with:
       # Push/PR are blocking; workflow_dispatch honours the input.
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       working_directory: .
       shell_scripts: scripts/*.sh
       dockerfiles: docker/ci-cpp/Dockerfile docker/ci-cpp/Dockerfile.alpine docker/ci-cpp-opencv/Dockerfile
-      scripts_ref: 2c5e1ebe9797828128e01f3941b5a02650abe59a
+      scripts_ref: 5d8b83da2f8f0c0c1bd894ef920619fe127c033e
       container_image: ghcr.io/pirlruc/ci-lint@sha256:f9001c4c8726f72107545094237d4fc0592baca023cfa299a532634666d88111
   threshold-drift:
     if: github.event.pull_request.user.login != 'dependabot[bot]'

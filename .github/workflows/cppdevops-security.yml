@@ -31,11 +31,11 @@ jobs:
     permissions:
       contents: read
       packages: read
-    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@2c5e1ebe9797828128e01f3941b5a02650abe59a
+    uses: pirlruc/commondevops/.github/workflows/common-secrets-sast.yml@5d8b83da2f8f0c0c1bd894ef920619fe127c033e # v6.9.0
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       working_directory: .
-      scripts_ref: 2c5e1ebe9797828128e01f3941b5a02650abe59a
+      scripts_ref: 5d8b83da2f8f0c0c1bd894ef920619fe127c033e
       container_image: ghcr.io/pirlruc/ci-lint@sha256:f9001c4c8726f72107545094237d4fc0592baca023cfa299a532634666d88111
   supply-chain:
     if: github.event.pull_request.user.login != 'dependabot[bot]'
@@ -44,11 +44,11 @@ jobs:
       actions: read
       packages: read
       security-events: write
-    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@2c5e1ebe9797828128e01f3941b5a02650abe59a
+    uses: pirlruc/commondevops/.github/workflows/common-supply-chain.yml@5d8b83da2f8f0c0c1bd894ef920619fe127c033e # v6.9.0
     with:
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
       working_directory: .
-      scripts_ref: 2c5e1ebe9797828128e01f3941b5a02650abe59a
+      scripts_ref: 5d8b83da2f8f0c0c1bd894ef920619fe127c033e
       container_image: ghcr.io/pirlruc/ci-supply-chain@sha256:dc83deb4465d5989a03b14ccabef46c3f3426231048b962c69b8e434a7200d48
   scorecard:
     if: >-
@@ -59,7 +59,7 @@ jobs:
       contents: read
       security-events: write
       id-token: write
-    uses: pirlruc/commondevops/.github/workflows/common-scorecard.yml@2c5e1ebe9797828128e01f3941b5a02650abe59a
+    uses: pirlruc/commondevops/.github/workflows/common-scorecard.yml@5d8b83da2f8f0c0c1bd894ef920619fe127c033e # v6.9.0
     with:
       blocking: false
       publish_results: false
@@ -69,9 +69,9 @@ jobs:
   token-audit:
     if: github.event.pull_request.user.login != 'dependabot[bot]'
     permissions: {}
-    uses: pirlruc/commondevops/.github/workflows/common-token-audit.yml@2c5e1ebe9797828128e01f3941b5a02650abe59a
+    uses: pirlruc/commondevops/.github/workflows/common-token-audit.yml@5d8b83da2f8f0c0c1bd894ef920619fe127c033e # v6.9.0
     with:
-      scripts_ref: 2c5e1ebe9797828128e01f3941b5a02650abe59a
+      scripts_ref: 5d8b83da2f8f0c0c1bd894ef920619fe127c033e
     secrets:
       guardrails_token: ${{ secrets.GUARDRAILS_READ_TOKEN }}
 
@@ -82,12 +82,12 @@ jobs:
       contents: read
       security-events: write
       packages: read
-    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@f0f9077ced9f79097e7597de1a2e00f8eb42e216
+    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@ae9dbee9e4537bd3a0b533de3bad011cb44b201e # 6.8.0
     with:
       # Same digest as reusable cpp-* `container:` pins (CI-018). Do not float
       # on :latest; weekly rescan of a digest still picks up new CVEs.
       image: ghcr.io/pirlruc/ci-cpp@sha256:c805d32471c3d05997922ee7ffdf1f4cf3fc6cfbf09a5eaf4cbbae0639786e84
-      scripts_ref: f0f9077ced9f79097e7597de1a2e00f8eb42e216
+      scripts_ref: ae9dbee9e4537bd3a0b533de3bad011cb44b201e
       pkg_types: library
       ignorefile: docker/ci-cpp/.trivyignore.yaml
       results_artifact: published-ci-cpp-scan
@@ -101,10 +101,10 @@ jobs:
       contents: read
       security-events: write
       packages: read
-    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@f0f9077ced9f79097e7597de1a2e00f8eb42e216 # 6.7.0
+    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@ae9dbee9e4537bd3a0b533de3bad011cb44b201e # 6.8.0
     with:
       image: ghcr.io/pirlruc/ci-cpp:6.8.0-alpine@sha256:fe26b9e8731a5d47c1b241f60f0d082c44bac4f85874ae3a414a5434f411e815
-      scripts_ref: f0f9077ced9f79097e7597de1a2e00f8eb42e216
+      scripts_ref: ae9dbee9e4537bd3a0b533de3bad011cb44b201e
       pkg_types: library
       ignorefile: docker/ci-cpp/.trivyignore.yaml
       results_artifact: published-ci-cpp-alpine-scan
@@ -118,10 +118,10 @@ jobs:
       contents: read
       security-events: write
       packages: read
-    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@f0f9077ced9f79097e7597de1a2e00f8eb42e216 # 6.7.0
+    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@ae9dbee9e4537bd3a0b533de3bad011cb44b201e # 6.8.0
     with:
       image: ghcr.io/pirlruc/ci-cpp-opencv:6.8.0@sha256:4aafa2849cf86791b8e66dac37ccb7fe0c934195b472f766e2542b06f1e2a845
-      scripts_ref: f0f9077ced9f79097e7597de1a2e00f8eb42e216
+      scripts_ref: ae9dbee9e4537bd3a0b533de3bad011cb44b201e
       pkg_types: library
       ignorefile: docker/ci-cpp-opencv/.trivyignore.yaml
       results_artifact: published-ci-cpp-opencv-scan
@@ -135,10 +135,10 @@ jobs:
       contents: read
       security-events: write
       packages: read
-    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@f0f9077ced9f79097e7597de1a2e00f8eb42e216 # 6.7.0
+    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@ae9dbee9e4537bd3a0b533de3bad011cb44b201e # 6.8.0
     with:
       image: ghcr.io/pirlruc/ci-cpp:6.8.0@sha256:c805d32471c3d05997922ee7ffdf1f4cf3fc6cfbf09a5eaf4cbbae0639786e84
-      scripts_ref: f0f9077ced9f79097e7597de1a2e00f8eb42e216
+      scripts_ref: ae9dbee9e4537bd3a0b533de3bad011cb44b201e
       pkg_types: os,library
       ignorefile: none
       results_artifact: published-posture-ci-cpp
@@ -152,10 +152,10 @@ jobs:
       contents: read
       security-events: write
       packages: read
-    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@f0f9077ced9f79097e7597de1a2e00f8eb42e216 # 6.7.0
+    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@ae9dbee9e4537bd3a0b533de3bad011cb44b201e # 6.8.0
     with:
       image: ghcr.io/pirlruc/ci-cpp:6.8.0-alpine@sha256:fe26b9e8731a5d47c1b241f60f0d082c44bac4f85874ae3a414a5434f411e815
-      scripts_ref: f0f9077ced9f79097e7597de1a2e00f8eb42e216
+      scripts_ref: ae9dbee9e4537bd3a0b533de3bad011cb44b201e
       pkg_types: os,library
       ignorefile: none
       results_artifact: published-posture-ci-cpp-alpine
@@ -169,10 +169,10 @@ jobs:
       contents: read
       security-events: write
       packages: read
-    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@f0f9077ced9f79097e7597de1a2e00f8eb42e216 # 6.7.0
+    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@ae9dbee9e4537bd3a0b533de3bad011cb44b201e # 6.8.0
     with:
       image: ghcr.io/pirlruc/ci-cpp-opencv:6.8.0@sha256:4aafa2849cf86791b8e66dac37ccb7fe0c934195b472f766e2542b06f1e2a845
-      scripts_ref: f0f9077ced9f79097e7597de1a2e00f8eb42e216
+      scripts_ref: ae9dbee9e4537bd3a0b533de3bad011cb44b201e
       pkg_types: os,library
       ignorefile: none
       results_artifact: published-posture-ci-cpp-opencv
