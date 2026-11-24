@@ -92,6 +92,7 @@ python3 .github/scaffold/scripts/issues-sync.py \
 
 ## Known pitfalls
 
+- **Wednesday schedule:** The 2026-10-28 schedule run ended `startup_failure`. No Wednesday was queued after that. The workflow was disabled and enabled again at 08:23 UTC on 2026-11-24. The cron stays `17 6 * * 3`.
 - Host PATH has no `vcpkg`. `ci-cpp:debian-local` has `/opt/vcpkg/vcpkg`, and that tree has no `.git`, so `vcpkg x-ci-verify-versions` cannot read port git trees. Pointing `--vcpkg-root` at NjordLabs/cpp-registry fails because that checkout has no `scripts/vcpkg-tools.json`. Do not install vcpkg on the host.
 - Doc coverage lists headers with `os.walk(followlinks=True)` and must keep the path Clang opened. `Path.resolve()` follows an `include/` directory symlink into `modules/` and then every declaration looks private. `header_relative()` tries the opened path before the resolved path.
 - `cpp-fuzz` configures with `-G Ninja`. ci-cpp has ninja and no make, so a bare `cmake -B build` stops before it compiles the fuzz target.
@@ -287,6 +288,8 @@ gitconfig under `RUNNER_TEMP`.
 *Last updated: 2026-11-21 — `cpp-devcontainer` pins containerdevops `0be6d42` so Dependabot can hadolint.*
 
 *Last updated: 2026-11-20 — release digests pin commondevops `07912d8` and pass `scripts_ref`. The older pin checked out this repository and missed `scripts/append-release-digests.sh`.*
+
+*Last updated: 2026-11-24 — Re-enabled the Wednesday security workflow. The last schedule event is 2026-10-28 and it never started a job.*
 
 *Last updated: 2026-11-24 — v6.8.1. Rescans pin ci-cpp 6.8.0. Alpine has an advisory OS scan. No deviations remain.*
 
