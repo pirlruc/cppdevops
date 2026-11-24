@@ -1592,3 +1592,43 @@ milestones:
               - .github/workflows/cpp-registry-verify.yml
           verification:
             - rg -n "inputs.runs_on" .github/workflows/cpp-registry-verify.yml
+    - id: CPPD-BASE-001
+      status: open
+      title: Rebuild the C++ images when a newer base clears the OS alerts
+      decision: >-
+        In the context of the published v6.9.0 images, facing fixable
+        OS alerts in the current bases, we decided to republish only
+        after a newer base clears them, to achieve a scan that can
+        close those alerts, accepting that v6.9.0 stays the published
+        image until that base exists.
+      overview:
+        problem: >-
+          The published images still report linux-libc-dev on Debian,
+          curl and gzip on Alpine, and apt on Ubuntu. Those packages
+          are the versions the Dockerfiles pin. A rebuild of the same
+          bases does not clear them.
+        goal: >-
+          ci-cpp, its Alpine variant, and ci-cpp-opencv publish from a
+          base whose local os,library scan no longer reports those
+          packages.
+      acceptance_criteria:
+        - The Dockerfiles pin a newer base or package than the v6.9.0 release
+        - A local os,library scan of each rebuilt image is clean for those findings
+        - The release publishes the images that cleared
+      guardrail_refs:
+        - DOCKER-SEC-001
+        - DOCKER-BUILD-003
+      tasks:
+        - id: CPPD-BASE-001-T1
+          status: open
+          title: Move the bases and republish the images that scan clean
+          instructions:
+            files:
+              - docker/ci-cpp/Dockerfile
+              - docker/ci-cpp/Dockerfile.alpine
+              - docker/ci-cpp-opencv/Dockerfile
+          verification:
+            - docker build of the three Dockerfiles
+            - Trivy os,library on the built images
+          guardrail_refs:
+            - DOCKER-SEC-001
