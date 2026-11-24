@@ -17,8 +17,10 @@ Not a product runtime — no `HEALTHCHECK`.
 
 | Tag | Digest |
 |-----|--------|
-| `6.4.0` / `latest` | `sha256:f7e721a5593987ac9a8e9ae145f4e622ebf8e34355b9dadcbab3154b980468eb` (tag index) |
-| `6.4.0` `linux/amd64` (Actions) | `sha256:5c603b8864c017e82906a2a6c6aa6728a3cc8aba1b8f12c83947d57ed04aa484` |
+| `6.8.0` / `latest` | `sha256:7733da1f3fcbf536724bc4867076e879bdf3388190155a149a1343170b76c7f2` (tag index) |
+| `6.8.0` `linux/amd64` (Actions) | `sha256:4aafa2849cf86791b8e66dac37ccb7fe0c934195b472f766e2542b06f1e2a845` |
+| `6.4.0` | Previous image. `sha256:f7e721a5593987ac9a8e9ae145f4e622ebf8e34355b9dadcbab3154b980468eb` (tag index) |
+| `6.4.0` `linux/amd64` | `sha256:5c603b8864c017e82906a2a6c6aa6728a3cc8aba1b8f12c83947d57ed04aa484` |
 | `6.3.0` | Previous image, without the analysis tools. `sha256:5b45c9c5a158b7b861f7933aac01d08b110eb0f2b692e02d778c64a054264368` (tag index) |
 | `6.3.0` `linux/amd64` | `sha256:42ba66c3c4c1b4f9552d43f11fa6eace05608000434b35e520b79c560dda4773` |
 | `6.2.1` | Previous image. `sha256:406fe12b00792678a55b549f082487123bf9fe738200e5b0837a728437a2fb80` (tag index) |
@@ -35,7 +37,7 @@ Pin the `linux/amd64` image manifest. A tag index pull returns
 If the package is public, anonymous pulls work:
 
 ```bash
-docker pull ghcr.io/pirlruc/ci-cpp-opencv:6.4.0
+docker pull ghcr.io/pirlruc/ci-cpp-opencv:6.8.0
 ```
 
 ## License

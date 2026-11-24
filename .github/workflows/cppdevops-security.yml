@@ -86,7 +86,7 @@ jobs:
     with:
       # Same digest as reusable cpp-* `container:` pins (CI-018). Do not float
       # on :latest; weekly rescan of a digest still picks up new CVEs.
-      image: ghcr.io/pirlruc/ci-cpp@sha256:8674685f88da7690e34418a32c52e37b832e339e290516a75a7dbf4f51932c30
+      image: ghcr.io/pirlruc/ci-cpp@sha256:c805d32471c3d05997922ee7ffdf1f4cf3fc6cfbf09a5eaf4cbbae0639786e84
       scripts_ref: f0f9077ced9f79097e7597de1a2e00f8eb42e216
       pkg_types: library
       ignorefile: docker/ci-cpp/.trivyignore.yaml
@@ -94,9 +94,94 @@ jobs:
       sarif_category: trivy-ci-cpp
       blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
 
+  published-ci-cpp-alpine-rescan:
+    if: github.event_name != 'pull_request' && github.event.pull_request.user.login != 'dependabot[bot]'
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+      packages: read
+    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@f0f9077ced9f79097e7597de1a2e00f8eb42e216 # 6.7.0
+    with:
+      image: ghcr.io/pirlruc/ci-cpp:6.8.0-alpine@sha256:fe26b9e8731a5d47c1b241f60f0d082c44bac4f85874ae3a414a5434f411e815
+      scripts_ref: f0f9077ced9f79097e7597de1a2e00f8eb42e216
+      pkg_types: library
+      ignorefile: docker/ci-cpp/.trivyignore.yaml
+      results_artifact: published-ci-cpp-alpine-scan
+      sarif_category: trivy-image-ci-cpp-alpine
+      blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
+
+  published-ci-cpp-opencv-rescan:
+    if: github.event_name != 'pull_request' && github.event.pull_request.user.login != 'dependabot[bot]'
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+      packages: read
+    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@f0f9077ced9f79097e7597de1a2e00f8eb42e216 # 6.7.0
+    with:
+      image: ghcr.io/pirlruc/ci-cpp-opencv:6.8.0@sha256:4aafa2849cf86791b8e66dac37ccb7fe0c934195b472f766e2542b06f1e2a845
+      scripts_ref: f0f9077ced9f79097e7597de1a2e00f8eb42e216
+      pkg_types: library
+      ignorefile: docker/ci-cpp-opencv/.trivyignore.yaml
+      results_artifact: published-ci-cpp-opencv-scan
+      sarif_category: trivy-image-ci-cpp-opencv
+      blocking: ${{ github.event_name != 'workflow_dispatch' || inputs.blocking }}
+
+  published-posture-ci-cpp:
+    if: github.event_name != 'pull_request' && github.event.pull_request.user.login != 'dependabot[bot]'
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+      packages: read
+    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@f0f9077ced9f79097e7597de1a2e00f8eb42e216 # 6.7.0
+    with:
+      image: ghcr.io/pirlruc/ci-cpp:6.8.0@sha256:c805d32471c3d05997922ee7ffdf1f4cf3fc6cfbf09a5eaf4cbbae0639786e84
+      scripts_ref: f0f9077ced9f79097e7597de1a2e00f8eb42e216
+      pkg_types: os,library
+      ignorefile: none
+      results_artifact: published-posture-ci-cpp
+      sarif_category: trivy-posture-ci-cpp
+      blocking: false
+
+  published-posture-ci-cpp-alpine:
+    if: github.event_name != 'pull_request' && github.event.pull_request.user.login != 'dependabot[bot]'
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+      packages: read
+    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@f0f9077ced9f79097e7597de1a2e00f8eb42e216 # 6.7.0
+    with:
+      image: ghcr.io/pirlruc/ci-cpp:6.8.0-alpine@sha256:fe26b9e8731a5d47c1b241f60f0d082c44bac4f85874ae3a414a5434f411e815
+      scripts_ref: f0f9077ced9f79097e7597de1a2e00f8eb42e216
+      pkg_types: os,library
+      ignorefile: none
+      results_artifact: published-posture-ci-cpp-alpine
+      sarif_category: trivy-posture-ci-cpp-alpine
+      blocking: false
+
+  published-posture-ci-cpp-opencv:
+    if: github.event_name != 'pull_request' && github.event.pull_request.user.login != 'dependabot[bot]'
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+      packages: read
+    uses: pirlruc/containerdevops/.github/workflows/container-published-rescan.yml@f0f9077ced9f79097e7597de1a2e00f8eb42e216 # 6.7.0
+    with:
+      image: ghcr.io/pirlruc/ci-cpp-opencv:6.8.0@sha256:4aafa2849cf86791b8e66dac37ccb7fe0c934195b472f766e2542b06f1e2a845
+      scripts_ref: f0f9077ced9f79097e7597de1a2e00f8eb42e216
+      pkg_types: os,library
+      ignorefile: none
+      results_artifact: published-posture-ci-cpp-opencv
+      sarif_category: trivy-posture-ci-cpp-opencv
+      blocking: false
+
   security-aggregate:
     if: always()
-    needs: [secrets-sast, supply-chain, scorecard, token-audit, published-ci-cpp-rescan]
+    needs: [secrets-sast, supply-chain, scorecard, token-audit, published-ci-cpp-rescan, published-ci-cpp-alpine-rescan, published-ci-cpp-opencv-rescan, published-posture-ci-cpp, published-posture-ci-cpp-alpine, published-posture-ci-cpp-opencv]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
@@ -109,10 +194,15 @@ jobs:
           SCORE: ${{ needs.scorecard.result }}
           TOKEN: ${{ needs.token-audit.result }}
           RESCAN: ${{ needs.published-ci-cpp-rescan.result }}
+          ALPINE: ${{ needs.published-ci-cpp-alpine-rescan.result }}
+          OPENCV: ${{ needs.published-ci-cpp-opencv-rescan.result }}
+          POSTURE: ${{ needs.published-posture-ci-cpp.result }}
+          POSTURE_ALPINE: ${{ needs.published-posture-ci-cpp-alpine.result }}
+          POSTURE_OPENCV: ${{ needs.published-posture-ci-cpp-opencv.result }}
         run: |
           set -eu
           failed=""
-          for item in "secrets-sast=${SECRETS}" "supply-chain=${SUPPLY}" "scorecard=${SCORE}" "token-audit=${TOKEN}" "rescan=${RESCAN}"; do
+          for item in "secrets-sast=${SECRETS}" "supply-chain=${SUPPLY}" "scorecard=${SCORE}" "token-audit=${TOKEN}" "rescan=${RESCAN}" "alpine=${ALPINE}" "opencv=${OPENCV}" "posture=${POSTURE}" "posture-alpine=${POSTURE_ALPINE}" "posture-opencv=${POSTURE_OPENCV}"; do
             name=${item%%=*}
             result=${item#*=}
             if [ "${result}" != "success" ] && [ "${result}" != "skipped" ]; then

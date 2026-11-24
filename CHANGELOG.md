@@ -5,6 +5,17 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [6.8.1] - 2026-11-24
+
+### Fixed
+
+- Alpine ci-cpp has an advisory `os,library` scan (DOCKER-SEC-001). The blocking scan stays `library`.
+- The scheduled rescan reads the published 6.8.0 digests for ci-cpp, Alpine, and ci-cpp-opencv, and uploads the posture categories on the default branch.
+
+### Changed
+
+- Reusable defaults and the public image pages pin the 6.8.0 linux/amd64 manifests.
+
 ## [6.8.0] - 2026-11-23
 
 ### Fixed

@@ -32,10 +32,10 @@ on:
         type: string
         default: ""
       container_image:
-        description: Image for the analysis jobs. Default is ci-cpp, which includes vcpkg from 6.4.0. Callers on 6.3.0 still pass ci-cpp-vcpkg.
+        description: Image for the analysis jobs. Default is ci-cpp, which includes vcpkg from 6.8.0. Callers on 6.3.0 still pass ci-cpp-vcpkg.
         required: false
         type: string
-        default: ghcr.io/pirlruc/ci-cpp@sha256:8674685f88da7690e34418a32c52e37b832e339e290516a75a7dbf4f51932c30
+        default: ghcr.io/pirlruc/ci-cpp@sha256:c805d32471c3d05997922ee7ffdf1f4cf3fc6cfbf09a5eaf4cbbae0639786e84
       use_vcpkg:
         description: Run vcpkg manifest mode with a files binary cache. The image must set VCPKG_ROOT.
         required: false

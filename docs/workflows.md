@@ -17,7 +17,7 @@ Shared inputs:
 | `library_path` | string | (required on most) | Library root relative to the caller checkout |
 | `blocking` | bool | `false` | `false` → collect-then-fail stays advisory (`ADVISORY=true`); missing tools/thresholds always fail |
 | `scripts_ref` | string | `""` | Commit SHA matching the `uses:` pin. Required for cross-repo callers (CI-034). |
-| `container_image` | string | ci-cpp digest | quality, tests, codeql, dynamic. Debian and Alpine `ci-cpp` include vcpkg from 6.4.0. Callers still on 6.3.0 pass `ci-cpp-vcpkg`. |
+| `container_image` | string | ci-cpp digest | quality, tests, codeql, dynamic. Debian and Alpine `ci-cpp` include vcpkg from 6.8.0. Callers still on 6.3.0 pass `ci-cpp-vcpkg`. |
 | `use_vcpkg` | bool | `false` | Manifest mode plus a files binary cache. The image must set `VCPKG_ROOT`. Private ports need `checkout_token`. |
 | `vcpkg_triplet` | string | `""` | Sets `VCPKG_DEFAULT_TRIPLET` when non-empty. `ci-cpp` and `ci-cpp-opencv` ship `x64-linux-libcxx`. Docs accepts the input and does not install ports. |
 | `run_ios` | bool | `true` | Mobile matrix only. `false` skips the macOS iOS smoke job. |
@@ -43,7 +43,7 @@ clang-format, cpplint, clang-tidy, cppcheck, lizard, Metrix++.
 
 Numeric gates (CCN, coverage) come from `scripts/cpp.profile.thresholds.yml`
 (CI-021/022). Job runs in
-`container: ghcr.io/pirlruc/ci-cpp@sha256:3f4776490bcf197fc10983e416443d01f365134df44110c24176f5b2ded09475`
+`container: ghcr.io/pirlruc/ci-cpp@sha256:c805d32471c3d05997922ee7ffdf1f4cf3fc6cfbf09a5eaf4cbbae0639786e84`
 (same digest on `cpp-tests`, `cpp-docs`, `cpp-dynamic`, `cpp-codeql`,
 `cpp-fuzz`, and the published rescan). The package is private, so those
 jobs set `packages: read` and `container.credentials`.
@@ -208,7 +208,7 @@ jobs skip Dependabot (CI-024). The token-free `pins` job still runs.
 Weekly Wednesday 06:17 UTC (staggered vs commondevops Mon / containerdevops Tue)
 plus `workflow_dispatch`. Secrets/SAST + supply-chain via commondevops; published
 `ci-cpp` rescan via containerdevops at the same digest as reusable workflow
-`container:` pins (`ghcr.io/pirlruc/ci-cpp@sha256:3f477649…`, not `:latest`).
+`container:` pins (`ghcr.io/pirlruc/ci-cpp@sha256:c805d324…`, not `:latest`).
 
 ---
 
